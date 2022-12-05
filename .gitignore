@@ -3,6 +3,7 @@
 .env
 .netlify
 .redwood
+scratch
 dev.db*
 dist
 dist-babel
