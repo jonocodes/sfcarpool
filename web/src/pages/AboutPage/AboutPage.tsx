@@ -22,21 +22,21 @@ const AboutPage = () => {
           <h3>Why did you make this?</h3>
           The longer we wait to get the carpool running again, the less likely
           it will come back as people move away, retire, and become comfortable
-          with the issolation brough upon by the pandemic. We can bring it back,
+          with the isolation brought upon by the pandemic. We can bring it back,
           but it requires a critical mass of both drivers and passengers.
           <br />
           <br />I made this site in December 2022 after a few months of trying
-          various methods to stir up intrest at North Berkeley BART, with little
-          success. I managed to get picked up several times by one other
-          enthusiastic driver. I figuerd the two of us could start coordinating
-          over text and still meet at the line to give visiblilty to the cause.
-          And then I thought if we make that comminication public others could
+          various methods to stir up interest at North Berkeley BART, with
+          little success. I managed to get picked up several times by one other
+          enthusiastic driver. I figured the two of us could start coordinating
+          over text and still meet at the line to give visibility to the cause.
+          And then I thought if we make that communication public others could
           easily join as well and help it grow.
           <h3>Is this really still &quot;casual&quot;?</h3>
           Hopefully it is a short term solution to get back to where we were a
           few years back. Then we wont need to coordinate, and can just go to
           the line at the curb.
-          <h3>Is this just a glorified speadsheet?</h3>
+          <h3>Is this just a glorified spreadsheet?</h3>
           Yes.
           <h3>Why not use an already existing carpool app?</h3>
           There are several good resources for coordinating carpools, but I have

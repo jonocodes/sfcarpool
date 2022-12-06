@@ -7,7 +7,7 @@ const UpdatePage = () => {
       <div>
         <h2>Instructions</h2>
         <p>
-          Put you entry approxamately where it belongs in its row, and write the
+          Put you entry approximately where it belongs in its row, and write the
           time in it. A name/label is not required, but is helpful in case you
           want to identify and update your entries. Use the colors shown at the
           top. If there are not enough rows in a day, insert a new one. If your
@@ -15,8 +15,8 @@ const UpdatePage = () => {
           accordingly.
         </p>
         <p>
-          Note you cant yet specify recuring events. Every weekend the calendar
-          will be cleared, so you will need to enter your dates again.
+          Note you can not yet specify recurring events. Every weekend the
+          calendar will be cleared, so you will need to enter your dates again.
         </p>
 
         <iframe

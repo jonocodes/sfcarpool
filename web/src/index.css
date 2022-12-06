@@ -49,14 +49,7 @@ input.error, textarea.error {
   display: inline;
 }
 
-/* .link-active {
-  color: black;
-  background: orange;
-} */
-
 .active  {
-  /* background-color: red; */
-  /* color: #fff; */
   font-weight: bold;
   font-size: xx-large;
   text-decoration: none;
@@ -64,16 +57,11 @@ input.error, textarea.error {
 
 main {
   display: flex;
-  /* align-content: center; */
-  /* align-items: center; */
-  /* text-align: center; */
   justify-content: center;
 }
 
 main div{
   width: 900px;
-  /* justify-content: center;
-  justify-items: center; */
 }
 
 header{
