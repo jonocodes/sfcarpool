@@ -5,6 +5,7 @@ import SiteLayout from 'src/layouts/SiteLayout'
 const Routes = () => {
   return (
     <Router>
+      <Route path="/scheduler" page={SchedulerPage} name="scheduler" />
       <Set wrap={SiteLayout}>
         <Route path="/update" page={UpdatePage} name="update" />
         <Route path="/about" page={AboutPage} name="about" />
