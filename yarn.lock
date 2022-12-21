@@ -17184,6 +17184,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mobx-react-lite@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "mobx-react-lite@npm:3.4.0"
+  peerDependencies:
+    mobx: ^6.1.0
+    react: ^16.8.0 || ^17 || ^18
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: 7aa64fb8740d48de23c370385331063f0a0821a87ed7a1eb0324305e8ef2f5173806c3e5ff2bfb7696e5b80faf19de11e2d3c0b64268df21895d4eec4816e325
+  languageName: node
+  linkType: hard
+
+"mobx@npm:^6.7.0":
+  version: 6.7.0
+  resolution: "mobx@npm:6.7.0"
+  checksum: 91c09333073a6103d62cfcce133817402723eead9500a85ace8f39404b86ffdba19e9fc792fc626a9c872eeeae8437c445f80eedf6914f7f950b83d44f795b03
+  languageName: node
+  linkType: hard
+
 "module-not-found-error@npm:^1.0.1":
   version: 1.0.1
   resolution: "module-not-found-error@npm:1.0.1"
@@ -20508,7 +20530,10 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@redwoodjs/core": 3.5.0
+    mobx: ^6.7.0
+    mobx-react-lite: ^3.4.0
     react-rnd: 10.3.6
+    zustand: 4.0.0
   languageName: unknown
   linkType: soft
 
@@ -23124,6 +23149,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"use-sync-external-store@npm:1.2.0":
+  version: 1.2.0
+  resolution: "use-sync-external-store@npm:1.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: ac4814e5592524f242921157e791b022efe36e451fe0d4fd4d204322d5433a4fc300d63b0ade5185f8e0735ded044c70bcf6d2352db0f74d097a238cebd2da02
+  languageName: node
+  linkType: hard
+
 "use@npm:^3.1.0":
   version: 3.1.1
   resolution: "use@npm:3.1.1"
@@ -24347,6 +24381,23 @@ __metadata:
     compress-commons: ^4.1.0
     readable-stream: ^3.6.0
   checksum: ed9eb9387953576c43bdf7678705e8b0ff4e9149cf92b39fa845ddd5413b08daf68655b1ee8311e2dd7c88ddeb95908a785e8e48473016b2595870b0adf588d4
+  languageName: node
+  linkType: hard
+
+"zustand@npm:4.0.0":
+  version: 4.0.0
+  resolution: "zustand@npm:4.0.0"
+  dependencies:
+    use-sync-external-store: 1.2.0
+  peerDependencies:
+    immer: ">=9.0"
+    react: ">=16.8"
+  peerDependenciesMeta:
+    immer:
+      optional: true
+    react:
+      optional: true
+  checksum: b56c85068499370082da1dce050ece55ffbdd44513f97f16ddd119a62198e8068571c92b57174bae8430a1ab637650322884094aee4ca43c9f6d88d60154d08a
   languageName: node
   linkType: hard
 

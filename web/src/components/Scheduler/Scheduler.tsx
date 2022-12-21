@@ -1,186 +1,172 @@
 import React, { useState } from 'react'
 
+// import { makeAutoObservable } from 'mobx'
+import { observer } from 'mobx-react-lite'
 import { Rnd } from 'react-rnd'
+import { useStore } from 'zustand'
 
-import HomePageStories from 'src/pages/HomePage/HomePage.stories'
+import { generateEvent, formatTime, calcStringTime } from './helpers'
+// import SchedulerStore from './scheduleStore'
+import { zStore } from './zstore'
 
-function Store(initialState = {}) {
-  this.state = initialState
-}
+// function Store(initialState = {}) {
+//   this.state = initialState
+// }
 
-const store = new Store()
+// const store = new Store()
 
-function calcStringTime(str) {
-  const slice = str.split(':')
-  const h = Number(slice[0]) * 60 * 60
-  const i = Number(slice[1]) * 60
-  return h + i
-}
+// class SchedulerStore {
+//   // secondsPassed = 0
 
-function formatTime(val) {
-  const i1 = val % 3600
+//   events = []
+//   eventRowMap = []
 
-  const h = '' + (Math.floor(val / 36000) || '') + Math.floor((val / 3600) % 10)
-  const i = '' + Math.floor(i1 / 600) + Math.floor((i1 / 60) % 10)
-  return h + ':' + i
-}
+//   constructor() {
+//     makeAutoObservable(this)
+//   }
 
-function getTimeSlots(startTime, endTime) {
-  // TODO: this should read from args, not the global state
+//   addEvent(event) {
+//     this.events.push(event)
+//   }
 
-  let time = store.state.tableStartTime
-  // const times = [formatTime(time)]
-  const times = [time]
-  while (time < store.state.tableEndTime) {
-    // console.log(time)
-    time = time + store.state.config.widthTime
-    // times.push(formatTime(time))
-    times.push(time)
-  }
+//   // increaseTimer() {
+//   // this.secondsPassed += 1
+//   // }
+// }
 
-  return times
-}
+// const myStore = new SchedulerStore()
 
-function randInt(x, y) {
-  return x + Math.floor(Math.random() * y)
-}
+// function calcStringTime(str) {
+//   const slice = str.split(':')
+//   const h = Number(slice[0]) * 60 * 60
+//   const i = Number(slice[1]) * 60
+//   return h + i
+// }
 
-function randomEvent(rows) {
-  // TODO: this should read from args, not the global state
+// function formatTime(val) {
+//   const i1 = val % 3600
 
-  const times = getTimeSlots(435, 1231)
+//   const h = '' + (Math.floor(val / 36000) || '') + Math.floor((val / 3600) % 10)
+//   const i = '' + Math.floor(i1 / 600) + Math.floor((i1 / 60) % 10)
+//   return h + ':' + i
+// }
 
-  const randStartIndex = Math.floor(Math.random() * times.length)
-  const randEndIndex = randStartIndex + 2 + Math.floor(Math.random() * 8)
+// function addEvent(event) {
+//   console.log('addEvent')
+//   store.state.data.push(event)
+//   const index = store.state.data.length - 1
+//   store.state.dataRowMap[event.row].push(index)
+// }
 
-  // console.log(times)
+// function getGeometry(item) {
+//   const startTime = calcStringTime(item.start)
+//   const endTime = calcStringTime(item.end)
 
-  const event = {
-    row: randInt(0, store.state.rows.length),
-    start: formatTime(times[randStartIndex]),
-    end: formatTime(times[randEndIndex]),
-    text: 'random',
-    data: {
-      entry: randInt(0, 1000),
-      class: 'passenger',
-      likelihood: randInt(50, 100),
-    },
-  }
+//   const st = Math.ceil(
+//     (startTime - store.state.tableStartTime) / store.state.config.widthTime
+//   )
+//   const et = Math.floor(
+//     (endTime - store.state.tableStartTime) / store.state.config.widthTime
+//   )
 
-  console.log(event)
+//   return {
+//     x: store.state.config.widthTimeX * st,
+//     y: 0,
+//     width: store.state.config.widthTimeX * (et - st),
+//     height: store.state.config.timeLineY,
+//   }
+// }
 
-  return event
-}
+// // update row heights, and manage overlapping events in a row
+// function updateGeometries() {
+//   store.state.tableHeight = 0
 
-function getGeometry(item) {
-  const startTime = calcStringTime(item.start)
-  const endTime = calcStringTime(item.end)
+//   for (let rowNum = 0; rowNum < store.state.rows.length; rowNum++) {
+//     const items_map = store.state.dataRowMap[rowNum]
 
-  const st = Math.ceil(
-    (startTime - store.state.tableStartTime) / store.state.config.widthTime
-  )
-  const et = Math.floor(
-    (endTime - store.state.tableStartTime) / store.state.config.widthTime
-  )
+//     const events = []
+//     for (let i = 0; i < items_map.length; i++) {
+//       events.push(store.state.data[items_map[i]])
+//     }
 
-  return {
-    x: store.state.config.widthTimeX * st,
-    y: 0,
-    width: store.state.config.widthTimeX * (et - st),
-    height: store.state.config.timeLineY,
-  }
-}
+//     const codes = [],
+//       check = []
+//     let h = 0
+//     let c1, c2, s1, s2, e1, e2
+//     let i
 
-// update row heights, and manage overlapping events in a row
-function updateGeometries() {
-  store.state.tableHeight = 0
+//     const events = zStore((state) => state.events)
 
-  for (let rowNum = 0; rowNum < store.state.rows.length; rowNum++) {
-    const items_map = store.state.dataRowMap[rowNum]
+//     for (i = 0; i < events.length; i++) {
+//       const geometry = getGeometry(events[i]) // TODO: cache this for later use, or precompute
+//       events[i]['geometry'] = geometry
+//       // TODO: add geometry to zStore? left off here
+//       codes[i] = {
+//         code: i,
+//         x: geometry.x,
+//       }
+//     }
 
-    const events = []
-    for (let i = 0; i < items_map.length; i++) {
-      events.push(store.state.data[items_map[i]])
-    }
+//     codes.sort(function (a, b) {
+//       if (a.x < b.x) {
+//         return -1
+//       }
 
-    const codes = [],
-      check = []
-    let h = 0
-    let c1, c2, s1, s2, e1, e2
-    let i
+//       if (a.x > b.x) {
+//         return 1
+//       }
 
-    for (i = 0; i < events.length; i++) {
-      const geometry = getGeometry(events[i]) // TODO: cache this for later use, or precompute
-      events[i]['geometry'] = geometry
-      codes[i] = {
-        code: i,
-        x: geometry.x,
-      }
-    }
+//       return 0
+//     })
 
-    codes.sort(function (a, b) {
-      if (a.x < b.x) {
-        return -1
-      }
+//     for (i = 0; i < codes.length; i++) {
+//       c1 = codes[i].code
 
-      if (a.x > b.x) {
-        return 1
-      }
+//       const geometry1 = events[c1].geometry
 
-      return 0
-    })
+//       for (h = 0; h < check.length; h++) {
+//         let next = false
 
-    for (i = 0; i < codes.length; i++) {
-      c1 = codes[i].code
-      // const geometry1 = getGeometry(events[c1])
+//         for (let j = 0; j < check[h].length; j++) {
+//           c2 = check[h][j]
+//           const geometry2 = getGeometry(events[c2])
+//           s1 = geometry1.x
+//           e1 = geometry1.x + geometry1.width
+//           s2 = geometry2.x
+//           e2 = geometry2.x + geometry2.width
 
-      const geometry1 = events[c1].geometry //  getGeometry(events[c1])
+//           if (s1 < e2 && e1 > s2) {
+//             next = true
+//             continue
+//           }
+//         }
 
-      // $e1 = $($barList[c1])
+//         if (!next) {
+//           break
+//         }
+//       }
 
-      for (h = 0; h < check.length; h++) {
-        let next = false
+//       if (!check[h]) {
+//         check[h] = []
+//       }
 
-        for (let j = 0; j < check[h].length; j++) {
-          c2 = check[h][j]
-          const geometry2 = getGeometry(events[c2])
-          s1 = geometry1.x
-          e1 = geometry1.x + geometry1.width
-          s2 = geometry2.x
-          e2 = geometry2.x + geometry2.width
+//       events[c1].geometry.y =
+//         h * store.state.config.timeLineY + store.state.config.timeLinePaddingTop
 
-          if (s1 < e2 && e1 > s2) {
-            next = true
-            continue
-          }
-        }
+//       check[h][check[h].length] = c1
+//     }
 
-        if (!next) {
-          break
-        }
-      }
+//     const height =
+//       Math.max(check.length, 1) * store.state.config.timeLineY +
+//       store.state.config.timeLineBorder +
+//       store.state.config.timeLinePaddingTop +
+//       store.state.config.timeLinePaddingBottom
 
-      if (!check[h]) {
-        check[h] = []
-      }
+//     store.state.rowHeights[rowNum] = height
 
-      events[c1].geometry.y =
-        h * store.state.config.timeLineY + store.state.config.timeLinePaddingTop
-
-      check[h][check[h].length] = c1
-    }
-
-    const height =
-      Math.max(check.length, 1) * store.state.config.timeLineY +
-      store.state.config.timeLineBorder +
-      store.state.config.timeLinePaddingTop +
-      store.state.config.timeLinePaddingBottom
-
-    store.state.rowHeights[rowNum] = height
-
-    store.state.tableHeight += height
-  }
-}
+//     store.state.tableHeight += height
+//   }
+// }
 
 // function _resizeWindow() {
 //   // var $this = $(this);
@@ -210,23 +196,24 @@ const Menu = () => {
 
   let beforeTime = -1
 
-  for (
-    let t = store.state.tableStartTime;
-    t < store.state.tableEndTime;
-    t += store.state.config.widthTime
-  ) {
+  const config = zStore((state) => state.config)
+  const tableStartTime = zStore((state) => state.tableStartTime)
+  const tableEndTime = zStore((state) => state.tableEndTime)
+  const scrollWidth = zStore((state) => state.scrollWidth)
+
+  for (let t = tableStartTime; t < tableEndTime; t += config.widthTime) {
     if (
       beforeTime < 0 ||
       Math.floor(beforeTime / 3600) !== Math.floor(t / 3600)
     ) {
       const cn = Number(
         Math.min(
-          Math.ceil((t + store.state.config.widthTime) / 3600) * 3600,
-          store.state.tableEndTime
+          Math.ceil((t + config.widthTime) / 3600) * 3600,
+          tableEndTime
         ) - t
       )
-      const cellNum = Math.floor(cn / store.state.config.widthTime)
-      const width = cellNum * store.state.config.widthTimeX
+      const cellNum = Math.floor(cn / config.widthTime)
+      const width = cellNum * config.widthTimeX
 
       final.push(
         <div className="sc_time" style={{ width: width + 'px' }} key={t}>
@@ -238,24 +225,18 @@ const Menu = () => {
     }
   }
 
-  const scWidth = window.innerWidth // $this.width()
+  // const scWidth = window.innerWidth // $this.width()
   // const scMainWidth = scWidth - store.state.config.dataWidth - store.state.config.verticalScrollbar
 
   const scMainWidth = 960
 
   return (
     <div className="sc_menu">
-      <div
-        className="sc_header_cell"
-        style={{ width: store.state.config.dataWidth }}
-      >
+      <div className="sc_header_cell" style={{ width: config.dataWidth }}>
         <span>&nbsp;</span>
       </div>
       <div className="sc_header" style={{ width: scMainWidth + 'px' }}>
-        <div
-          className="sc_header_scroll"
-          style={{ width: store.state.scrollWidth + 'px' }}
-        >
+        <div className="sc_header_scroll" style={{ width: scrollWidth + 'px' }}>
           {final}
         </div>
       </div>
@@ -264,10 +245,18 @@ const Menu = () => {
 }
 
 const Event = (props) => {
-  const item = props.event
-  const config = store.state.config
+  // const item = props.event
+  // const config = store.state.config
+  const config = zStore((state) => state.config)
 
-  const geometry = item.geometry
+  // const setGeometry = zStore((state) => state.setGeometry)
+  // const geometry = item.geometry
+
+  const geometries = zStore((state) => state.geometries)
+  const events = zStore((state) => state.events)
+
+  const item = events[props.eventIndex]
+  const geometry = geometries[props.eventIndex]
 
   const [startTime, setStartTime] = useState(calcStringTime(item.start))
   const [endTime, setEndTime] = useState(calcStringTime(item.end))
@@ -340,29 +329,52 @@ const Event = (props) => {
 }
 
 const Row = (props) => {
-  const items_map = store.state.dataRowMap[props.rowNum]
+  const rowMap = zStore((state) => state.rowMap)
+  const items_map = rowMap[props.rowNum]
 
   const blankCells = []
 
-  for (let i = 0; i < store.state.cellsWide; i++) {
+  const config = zStore((state) => state.config)
+  const tableStartTime = zStore((state) => state.tableStartTime)
+  const cellsWide = zStore((state) => state.cellsWide)
+  const rowHeights = zStore((state) => state.rowHeights)
+
+  for (let i = 0; i < cellsWide; i++) {
+    const time = tableStartTime + i * config.widthTimeX
+
     blankCells.push(
       <div
         className="tl"
-        style={{ width: store.state.config.widthTimeX + 'px' }}
+        style={{ width: config.widthTimeX + 'px' }}
         key={i}
+        onClick={() => {
+          if (config.onScheduleClick) {
+            config.onScheduleClick(time, i, props.rowNum)
+          }
+        }}
+        //onKeyPress={this.handleKeyPress}
+        role="presentation"
       ></div>
     )
   }
 
+  const data = zStore((state) => state.events)
+  // const getGeometry = zStore((state) => state.getGeometry)
+
   const events = []
   for (let i = 0; i < items_map.length; i++) {
     // console.log(data[items_map[i]], i)
+    // const geometry = getGeometry(i)
     events.push(
-      <Event event={store.state.data[items_map[i]]} key={items_map[i]} />
+      <Event
+        event={data[items_map[i]]}
+        eventIndex={items_map[i]}
+        key={items_map[i]}
+      />
     )
   }
 
-  const height = store.state.rowHeights[props.rowNum]
+  const height = rowHeights[props.rowNum]
 
   return (
     <div className="timeline" style={{ height: height + 'px' }}>
@@ -372,24 +384,30 @@ const Row = (props) => {
   )
 }
 
-const Wrapper = () => {
+const Main = () => {
   const timelines = []
   const titles = []
 
-  for (let i = 0; i < store.state.rows.length; i++) {
+  const rows = zStore((state) => state.rows)
+  const rowHeights = zStore((state) => state.rowHeights)
+  const config = zStore((state) => state.config)
+  const tableHeight = zStore((state) => state.tableHeight)
+  const scrollWidth = zStore((state) => state.scrollWidth)
+
+  for (let i = 0; i < rows.length; i++) {
     timelines.push(<Row rowNum={i} key={i} />)
     titles.push(
       <div
         className="timeline"
-        style={{ height: store.state.rowHeights[i] + 'px' }}
+        style={{ height: rowHeights[i] + 'px' }}
         key={i}
       >
-        <span className="timeline-title">{store.state.rows[i]}</span>
+        <span className="timeline-title">{rows[i]}</span>
       </div>
     )
   }
 
-  const scWidth = window.innerWidth // $this.width()
+  // const scWidth = window.innerWidth // $this.width()
   // const scMainWidth = scWidth - store.state.config.dataWidth - store.state.config.verticalScrollbar
 
   const scMainWidth = 960
@@ -399,22 +417,19 @@ const Wrapper = () => {
       <div
         className="sc_data"
         style={{
-          height: store.state.tableHeight + 'px',
-          width: store.state.config.dataWidth + 'px',
+          height: tableHeight + 'px',
+          width: config.dataWidth + 'px',
         }}
       >
         <div
           className="sc_data_scroll"
-          style={{ width: store.state.config.dataWidth, top: '0' }}
+          style={{ width: config.dataWidth, top: '0' }}
         >
           {titles}
         </div>
       </div>
       <div className="sc_main_box" style={{ width: scMainWidth + 'px' }}>
-        <div
-          className="sc_main_scroll"
-          style={{ width: store.state.scrollWidth + 'px' }}
-        >
+        <div className="sc_main_scroll" style={{ width: scrollWidth + 'px' }}>
           <div className="sc_main">{timelines}</div>
         </div>
       </div>
@@ -422,86 +437,92 @@ const Wrapper = () => {
   )
 }
 
-const Scheduler = (props) => {
-  const configDefault = {
-    className: 'jq-schedule',
-    rows: {},
-    startTime: '07:00',
-    endTime: '19:30',
-    widthTimeX: 25,
-    widthTime: 600, // cell timestamp example 10 minutes
-    timeLineY: 50, // timeline height(px)
-    timeLineBorder: 1, // timeline height border
-    timeBorder: 1, // border width
-    timeLinePaddingTop: 0,
-    timeLinePaddingBottom: 0,
-    headTimeBorder: 1, // time border width
-    dataWidth: 160, // data width
-    verticalScrollbar: 0, // vertical scrollbar width
-    bundleMoveWidth: 1,
-    // width to move all schedules to the right of the clicked time cell
-    draggable: true,
-    resizable: true,
-    resizableLeft: false,
-    // event
-    onInitRow: null,
-    onChange: null,
-    onClick: null,
-    onAppendRow: null,
-    onAppendSchedule: null,
-    onScheduleClick: null,
-  }
+const Scheduler = () => {
+  // const Scheduler = observer(({ props, myStore }) => {
 
-  const config = { ...configDefault, ...props.config }
+  // props.store
 
-  store.state.config = config
+  // const configDefault = {
+  //   className: 'jq-schedule',
+  //   rows: {},
+  //   startTime: '07:00',
+  //   endTime: '19:30',
+  //   widthTimeX: 25,
+  //   widthTime: 600, // cell timestamp example 10 minutes
+  //   timeLineY: 50, // timeline height(px)
+  //   timeLineBorder: 1, // timeline height border
+  //   timeBorder: 1, // border width
+  //   timeLinePaddingTop: 0,
+  //   timeLinePaddingBottom: 0,
+  //   headTimeBorder: 1, // time border width
+  //   dataWidth: 160, // data width
+  //   verticalScrollbar: 0, // vertical scrollbar width
+  //   bundleMoveWidth: 1,
+  //   // width to move all schedules to the right of the clicked time cell
+  //   draggable: true,
+  //   resizable: true,
+  //   resizableLeft: false,
+  //   // event
+  //   onInitRow: null,
+  //   onChange: null,
+  //   onClick: null,
+  //   onAppendRow: null,
+  //   onAppendSchedule: null,
+  //   onScheduleClick: null,
+  // }
 
-  store.state.rowHeights = []
+  // const config = { ...configDefault, ...props.config }
 
-  store.state.tableHeight = 0
+  // store.state.config = config
 
-  // TODO: add subtitles to rows
-  store.state.rows = props.rows
+  // store.state.rowHeights = []
 
-  store.state.tableStartTime = calcStringTime(config.startTime)
-  store.state.tableEndTime = calcStringTime(config.endTime)
-  store.state.tableStartTime -= store.state.tableStartTime % config.widthTime
-  store.state.tableEndTime -= store.state.tableEndTime % config.widthTime
+  // store.state.tableHeight = 0
 
-  store.state.cellsWide = Math.floor(
-    (store.state.tableEndTime - store.state.tableStartTime) /
-      store.state.config.widthTime
-  )
+  // // TODO: add subtitles to rows
+  // store.state.rows = props.rows
 
-  store.state.scrollWidth =
-    store.state.config.widthTimeX * store.state.cellsWide
+  // store.state.tableStartTime = calcStringTime(config.startTime)
+  // store.state.tableEndTime = calcStringTime(config.endTime)
+  // store.state.tableStartTime -= store.state.tableStartTime % config.widthTime
+  // store.state.tableEndTime -= store.state.tableEndTime % config.widthTime
 
-  store.state.data = props.data
+  // store.state.cellsWide = Math.floor(
+  //   (store.state.tableEndTime - store.state.tableStartTime) /
+  //     store.state.config.widthTime
+  // )
 
-  const newEvent = randomEvent(123123)
+  // store.state.scrollWidth =
+  //   store.state.config.widthTimeX * store.state.cellsWide
 
-  store.state.data.push(newEvent)
+  // store.state.data = props.data
 
-  store.state.dataRowMap = []
-  for (let j = 0; j < store.state.rows.length; j++) {
-    // doing this since Array.fill([]) causes issues
-    store.state.dataRowMap.push([])
-  }
-  for (let i = 0; i < store.state.data.length; i++) {
-    store.state.dataRowMap[store.state.data[i].row].push(i)
-  }
+  // const bears = useStore((state) => state.bears)
 
-  updateGeometries()
+  // const events = useStore((st) => st.events)
+
+  // const newEvent = generateEvent(store.state) //randomEvent()
+
+  // store.state.data.push(newEvent)
+
+  // store.state.dataRowMap = []
+  // for (let j = 0; j < store.state.rows.length; j++) {
+  //   // doing this since Array.fill([]) causes issues
+  //   store.state.dataRowMap.push([])
+  // }
+  // for (let i = 0; i < store.state.data.length; i++) {
+  //   store.state.dataRowMap[store.state.data[i].row].push(i)
+  // }
+
+  // updateGeometries()
 
   return (
     <>
-      {/* <h1>Scheduler component</h1> */}
-
       <div className="container">
         <div style={{ padding: '0 0 40px' }}>
           <div id="schedule" className="jq-schedule">
             <Menu />
-            <Wrapper />
+            <Main />
           </div>
         </div>
       </div>
@@ -509,4 +530,4 @@ const Scheduler = (props) => {
   )
 }
 
-export default Scheduler
+export default observer(Scheduler)

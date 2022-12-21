@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "noEmit": true,
     "allowJs": true,
     "esModuleInterop": true,
