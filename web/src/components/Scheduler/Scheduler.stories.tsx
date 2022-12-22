@@ -1,10 +1,10 @@
 import type { ComponentMeta } from '@storybook/react'
 // import { observer } from 'mobx'
-import { observer } from 'mobx-react-lite'
-import create from 'zustand'
+// import { observer } from 'mobx-react-lite'
+// import create from 'zustand'
 
 import Scheduler from './Scheduler'
-import SchedulerStore from './scheduleStore'
+// import SchedulerStore from './scheduleStore'
 import { generateEvent } from './zstore'
 import { zStore } from './zstore'
 
@@ -84,7 +84,9 @@ import { zStore } from './zstore'
 //     },
 //   ]
 
-//   return <Scheduler config={config} rows={rows} data={data} />
+//   setupStore(data, rows, config)
+
+//   return <Scheduler />
 // }
 
 export const demo = () => {
@@ -141,7 +143,7 @@ export const demo = () => {
 
   // const something = zStore((state) => state.something)
 
-  // const ScheduleContext = React.createContext('light')
+  const ScheduleContext = React.createContext({ rows: rows, events: data })
 
   const config = {
     startTime: '07:00', // schedule start time(HH:ii)

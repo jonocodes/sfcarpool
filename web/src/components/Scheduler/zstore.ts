@@ -155,7 +155,7 @@ function randInt(x, y) {
   return x + Math.floor(Math.random() * y)
 }
 
-function getTimeSlots(tableStartTime, tableEndTime, widthTime) {
+export function getTimeSlots(tableStartTime, tableEndTime, widthTime) {
   // TODO: this should read from args, not the global state
 
   let time = tableStartTime
@@ -171,7 +171,7 @@ function getTimeSlots(tableStartTime, tableEndTime, widthTime) {
   return times
 }
 
-function _generateEvent(times, rowCount) {
+export function _generateEvent(times, rowCount) {
   // TODO: this should read from args, not the global state
 
   const randStartIndex = Math.floor(Math.random() * times.length)
@@ -195,10 +195,14 @@ function _generateEvent(times, rowCount) {
 }
 
 export function generateEvent() {
-  const rows = zStore((state) => state.rows)
-  const tableStartTime = zStore((state) => state.tableStartTime)
-  const tableEndTime = zStore((state) => state.tableEndTime)
-  const config = zStore((state) => state.config)
+  const rows = zStore.getState().rows
+  const tableStartTime = zStore.getState().tableStartTime
+  const tableEndTime = zStore.getState().tableEndTime
+  const config = zStore.getState().config
+  // const rows = zStore((state) => state.rows)
+  // const tableStartTime = zStore((state) => state.tableStartTime)
+  // const tableEndTime = zStore((state) => state.tableEndTime)
+  // const config = zStore((state) => state.config)
 
   const times = getTimeSlots(tableStartTime, tableEndTime, config.widthTime)
 
@@ -208,6 +212,24 @@ export function generateEvent() {
 // update row heights, and manage overlapping events in a row
 function updateGeometries() {
   let tableHeight = 0
+
+  // const [
+  //   events,
+  //   rows,
+  //   rowMap,
+  //   setTableHeight,
+  //   setRowHeight,
+  //   setGeometry,
+  //   config,
+  // ] = zStore((s) => [
+  //   s.events,
+  //   s.rows,
+  //   s.rowMap,
+  //   s.setTableHeight,
+  //   s.setRowHeight,
+  //   s.setGeometry,
+  //   s.config,
+  // ])
 
   const events = zStore((state) => state.events)
   const rows = zStore((state) => state.rows)
@@ -350,8 +372,9 @@ export const zStore = create<zState>((set) => ({
 
   setTableHeight: (height: number) => set(() => ({ tableHeight: height })),
 
-  init: (events: Event[], rows: string[], config: Config) =>
+  init: (events: Event[], rows: string[], userConf: Config) =>
     set(() => {
+      const config = { ...configDefault, ...userConf }
       let tableStartTime = calcStringTime(config.startTime)
       tableStartTime -= tableStartTime % config.widthTime
 
@@ -362,6 +385,10 @@ export const zStore = create<zState>((set) => ({
         (tableEndTime - tableStartTime) / config.widthTime
       )
 
+      console.log('init cellswide ', cellsWide)
+
+      // debugger
+
       return {
         events: events,
         rows: rows,
@@ -370,7 +397,7 @@ export const zStore = create<zState>((set) => ({
         tableEndTime: tableEndTime,
         cellsWide: cellsWide,
         scrollWidth: config.widthTimeX * cellsWide,
-        config: { ...configDefault, ...config },
+        config: config,
       }
     }),
 
@@ -382,15 +409,12 @@ export const zStore = create<zState>((set) => ({
     }),
 
   init3: () =>
-    set(() => {
+    set((state) => {
       updateGeometries()
-      return {}
+      return { geometries: state.geometries }
     }),
 
   addEvent: (event: Event) =>
-    // set((state) => ({
-    //   events: state.events.concat([event]),
-    // })),
     // TODO: update geometries and row map
     set((state) => {
       console.log(state.events.length)

@@ -3,11 +3,11 @@ import React, { useState } from 'react'
 // import { makeAutoObservable } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import { Rnd } from 'react-rnd'
-import { useStore } from 'zustand'
+// import { useStore } from 'zustand'
 
-import { generateEvent, formatTime, calcStringTime } from './helpers'
+import { formatTime, calcStringTime } from './helpers'
 // import SchedulerStore from './scheduleStore'
-import { zStore } from './zstore'
+import { zStore, generateEvent, _generateEvent, getTimeSlots } from './zstore'
 
 // function Store(initialState = {}) {
 //   this.state = initialState
@@ -231,12 +231,27 @@ const Menu = () => {
   const scMainWidth = 960
 
   return (
-    <div className="sc_menu">
-      <div className="sc_header_cell" style={{ width: config.dataWidth }}>
+    <div className="sc_menu" style={{ display: 'flex', flexDirection: 'row' }}>
+      <div
+        className="sc_header_cell"
+        style={{
+          width: config.dataWidth,
+        }}
+      >
         <span>&nbsp;</span>
       </div>
-      <div className="sc_header" style={{ width: scMainWidth + 'px' }}>
-        <div className="sc_header_scroll" style={{ width: scrollWidth + 'px' }}>
+      <div
+        className="sc_header"
+        style={{
+          //width: scMainWidth + 'px'
+          flex: 'auto',
+        }}
+      >
+        <div
+          className="sc_header_scroll"
+          id="sc_header_scroll"
+          style={{ width: scrollWidth + 'px' }}
+        >
           {final}
         </div>
       </div>
@@ -338,6 +353,11 @@ const Row = (props) => {
   const tableStartTime = zStore((state) => state.tableStartTime)
   const cellsWide = zStore((state) => state.cellsWide)
   const rowHeights = zStore((state) => state.rowHeights)
+  const addEvent = zStore((state) => state.addEvent)
+
+  const rows = zStore.getState().rows
+  // const rows = zStore((state) => state.rows)
+  const tableEndTime = zStore((state) => state.tableEndTime)
 
   for (let i = 0; i < cellsWide; i++) {
     const time = tableStartTime + i * config.widthTimeX
@@ -348,9 +368,26 @@ const Row = (props) => {
         style={{ width: config.widthTimeX + 'px' }}
         key={i}
         onClick={() => {
-          if (config.onScheduleClick) {
-            config.onScheduleClick(time, i, props.rowNum)
-          }
+          // // const rows = zStore.getState().rows
+          // // const rows = zStore((state) => state.rows)
+          // // const tableStartTime = zStore((state) => state.tableStartTime)
+          // // const tableEndTime = zStore((state) => state.tableEndTime)
+          // // const config = zStore((state) => state.config)
+
+          // const times = getTimeSlots(
+          //   tableStartTime,
+          //   tableEndTime,
+          //   config.widthTime
+          // )
+
+          // const randEvent = _generateEvent(times, rows.length)
+
+          const randEvent = generateEvent()
+          // myStore.addEvent(randEvent)
+          addEvent(randEvent)
+          // if (config.onScheduleClick) {
+          //   config.onScheduleClick(time, i, props.rowNum)
+          // }
         }}
         //onKeyPress={this.handleKeyPress}
         role="presentation"
@@ -384,6 +421,10 @@ const Row = (props) => {
   )
 }
 
+// function scrollSync() {
+//   console.log('scroll')
+// }
+
 const Main = () => {
   const timelines = []
   const titles = []
@@ -393,6 +434,22 @@ const Main = () => {
   const config = zStore((state) => state.config)
   const tableHeight = zStore((state) => state.tableHeight)
   const scrollWidth = zStore((state) => state.scrollWidth)
+
+  const handleScroll = (event) => {
+    // console.log('scrollTop: ', event.currentTarget.scrollTop)
+    // console.log('offsetHeight: ', event.currentTarget.offsetHeight)
+
+    const left = event.currentTarget.scrollLeft
+    console.log(
+      'scrollLeft: ',
+      left,
+      document.getElementById('sc_header_scroll').scrollLeft
+    )
+    // console.log('offestWidth: ', event.currentTarget.offestWidth)
+    // document.getElementById('sc_header_scroll')?.scroll(0, left)
+
+    document.getElementById('sc_header_scroll').scrollLeft += -10
+  }
 
   for (let i = 0; i < rows.length; i++) {
     timelines.push(<Row rowNum={i} key={i} />)
@@ -413,12 +470,13 @@ const Main = () => {
   const scMainWidth = 960
 
   return (
-    <div className="sc_wrapper">
+    <div className="sc_wrapper" style={{ display: 'flex' }}>
       <div
         className="sc_data"
         style={{
           height: tableHeight + 'px',
           width: config.dataWidth + 'px',
+          flexShrink: 0,
         }}
       >
         <div
@@ -428,7 +486,15 @@ const Main = () => {
           {titles}
         </div>
       </div>
-      <div className="sc_main_box" style={{ width: scMainWidth + 'px' }}>
+      <div
+        className="sc_main_box"
+        onScroll={handleScroll}
+        style={
+          {
+            // width: scMainWidth + 'px'
+          }
+        }
+      >
         <div className="sc_main_scroll" style={{ width: scrollWidth + 'px' }}>
           <div className="sc_main">{timelines}</div>
         </div>

@@ -6,59 +6,59 @@ export function formatTime(val) {
   return h + ':' + i
 }
 
-function randInt(x, y) {
-  return x + Math.floor(Math.random() * y)
-}
+// function randInt(x, y) {
+//   return x + Math.floor(Math.random() * y)
+// }
 
-function getTimeSlots(tableStartTime, tableEndTime, widthTime) {
-  // TODO: this should read from args, not the global state
+// function getTimeSlots(tableStartTime, tableEndTime, widthTime) {
+//   // TODO: this should read from args, not the global state
 
-  let time = tableStartTime
-  // const times = [formatTime(time)]
-  const times = [time]
-  while (time < tableEndTime) {
-    // console.log(time)
-    time = time + widthTime
-    // times.push(formatTime(time))
-    times.push(time)
-  }
+//   let time = tableStartTime
+//   // const times = [formatTime(time)]
+//   const times = [time]
+//   while (time < tableEndTime) {
+//     // console.log(time)
+//     time = time + widthTime
+//     // times.push(formatTime(time))
+//     times.push(time)
+//   }
 
-  return times
-}
+//   return times
+// }
 
-function _generateEvent(times, rowCount) {
-  // TODO: this should read from args, not the global state
+// function _generateEvent(times, rowCount) {
+//   // TODO: this should read from args, not the global state
 
-  const randStartIndex = Math.floor(Math.random() * times.length)
-  const randEndIndex = randStartIndex + 2 + Math.floor(Math.random() * 8)
+//   const randStartIndex = Math.floor(Math.random() * times.length)
+//   const randEndIndex = randStartIndex + 2 + Math.floor(Math.random() * 8)
 
-  const event = {
-    row: randInt(0, rowCount),
-    start: formatTime(times[randStartIndex]),
-    end: formatTime(times[randEndIndex]),
-    text: 'random',
-    data: {
-      entry: randInt(0, 1000),
-      class: 'passenger',
-      likelihood: randInt(50, 100),
-    },
-  }
+//   const event = {
+//     row: randInt(0, rowCount),
+//     start: formatTime(times[randStartIndex]),
+//     end: formatTime(times[randEndIndex]),
+//     text: 'random',
+//     data: {
+//       entry: randInt(0, 1000),
+//       class: 'passenger',
+//       likelihood: randInt(50, 100),
+//     },
+//   }
 
-  console.log(event)
+//   console.log(event)
 
-  return event
-}
+//   return event
+// }
 
-export function generateEvent(
-  tableStartTime,
-  tableEndTime,
-  widthTime,
-  rowCount
-) {
-  const times = getTimeSlots(tableStartTime, tableEndTime, widthTime)
+// export function generateEvent(
+//   tableStartTime,
+//   tableEndTime,
+//   widthTime,
+//   rowCount
+// ) {
+//   const times = getTimeSlots(tableStartTime, tableEndTime, widthTime)
 
-  return _generateEvent(times, store.rows.length)
-}
+//   return _generateEvent(times, store.rows.length)
+// }
 
 export function calcStringTime(str) {
   const slice = str.split(':')
