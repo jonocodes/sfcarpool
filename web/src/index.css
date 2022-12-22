@@ -108,13 +108,14 @@ header{
 }
 .jq-schedule .sc_menu .sc_header_scroll,
 .jq-schedule .sc_data .sc_data_scroll {
-  position: absolute;
-  left: 0;
-  top: 0;
+  /* position: absolute; */
+  /* left: 0; */
+  /* top: 0; */
 }
 .jq-schedule .sc_menu .sc_header_cell,
 .jq-schedule .sc_header .sc_time,
-.jq-schedule .sc_main_scroll .sc_time {
+.jq-schedule .sc_main_scroll .sc_time,
+.sc_header_cell {
   color: #fff;
   padding: 0;
   line-height: 26px;

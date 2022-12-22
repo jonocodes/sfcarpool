@@ -210,7 +210,7 @@ export function generateEvent() {
 }
 
 // update row heights, and manage overlapping events in a row
-function updateGeometries() {
+export function updateGeometries() {
   let tableHeight = 0
 
   // const [
@@ -257,7 +257,11 @@ function updateGeometries() {
       const geometry = getGeometry(items[i], config) // TODO: cache this for later use, or precompute
       // items[i]['geometry'] = geometry
 
-      setGeometry(geometry, i)
+      const eventIndex = rowMap[rowNum][i]
+
+      // console.log('setGeometryA', eventIndex, geometry)
+
+      setGeometry(geometry, eventIndex)
       // TODO: add geometry to zStore? left off here
       codes[i] = {
         code: i,
@@ -311,7 +315,11 @@ function updateGeometries() {
       const geometry = getGeometry(items[c1], config)
       geometry.y = h * config.timeLineY + config.timeLinePaddingTop
 
-      setGeometry(geometry, c1)
+      const eventIndex = rowMap[rowNum][c1]
+
+      // console.log('setGeometryB', eventIndex, geometry)
+
+      setGeometry(geometry, eventIndex)
 
       // items[c1].geometry.y = h * config.timeLineY + config.timeLinePaddingTop
 

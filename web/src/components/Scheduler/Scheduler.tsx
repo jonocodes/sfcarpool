@@ -7,7 +7,7 @@ import { Rnd } from 'react-rnd'
 
 import { formatTime, calcStringTime } from './helpers'
 // import SchedulerStore from './scheduleStore'
-import { zStore, generateEvent, _generateEvent, getTimeSlots } from './zstore'
+import { zStore, generateEvent, _generateEvent, getTimeSlots, updateGeometries } from './zstore'
 
 // function Store(initialState = {}) {
 //   this.state = initialState
@@ -77,187 +77,6 @@ import { zStore, generateEvent, _generateEvent, getTimeSlots } from './zstore'
 //   }
 // }
 
-// // update row heights, and manage overlapping events in a row
-// function updateGeometries() {
-//   store.state.tableHeight = 0
-
-//   for (let rowNum = 0; rowNum < store.state.rows.length; rowNum++) {
-//     const items_map = store.state.dataRowMap[rowNum]
-
-//     const events = []
-//     for (let i = 0; i < items_map.length; i++) {
-//       events.push(store.state.data[items_map[i]])
-//     }
-
-//     const codes = [],
-//       check = []
-//     let h = 0
-//     let c1, c2, s1, s2, e1, e2
-//     let i
-
-//     const events = zStore((state) => state.events)
-
-//     for (i = 0; i < events.length; i++) {
-//       const geometry = getGeometry(events[i]) // TODO: cache this for later use, or precompute
-//       events[i]['geometry'] = geometry
-//       // TODO: add geometry to zStore? left off here
-//       codes[i] = {
-//         code: i,
-//         x: geometry.x,
-//       }
-//     }
-
-//     codes.sort(function (a, b) {
-//       if (a.x < b.x) {
-//         return -1
-//       }
-
-//       if (a.x > b.x) {
-//         return 1
-//       }
-
-//       return 0
-//     })
-
-//     for (i = 0; i < codes.length; i++) {
-//       c1 = codes[i].code
-
-//       const geometry1 = events[c1].geometry
-
-//       for (h = 0; h < check.length; h++) {
-//         let next = false
-
-//         for (let j = 0; j < check[h].length; j++) {
-//           c2 = check[h][j]
-//           const geometry2 = getGeometry(events[c2])
-//           s1 = geometry1.x
-//           e1 = geometry1.x + geometry1.width
-//           s2 = geometry2.x
-//           e2 = geometry2.x + geometry2.width
-
-//           if (s1 < e2 && e1 > s2) {
-//             next = true
-//             continue
-//           }
-//         }
-
-//         if (!next) {
-//           break
-//         }
-//       }
-
-//       if (!check[h]) {
-//         check[h] = []
-//       }
-
-//       events[c1].geometry.y =
-//         h * store.state.config.timeLineY + store.state.config.timeLinePaddingTop
-
-//       check[h][check[h].length] = c1
-//     }
-
-//     const height =
-//       Math.max(check.length, 1) * store.state.config.timeLineY +
-//       store.state.config.timeLineBorder +
-//       store.state.config.timeLinePaddingTop +
-//       store.state.config.timeLinePaddingBottom
-
-//     store.state.rowHeights[rowNum] = height
-
-//     store.state.tableHeight += height
-//   }
-// }
-
-// function _resizeWindow() {
-//   // var $this = $(this);
-
-//   // const setting = methods._loadSettingData.apply($this)
-
-//   // const saveData = methods._loadData.apply($this)
-
-//   const scWidth = window.innerWidth // $this.width()
-//   const scMainWidth =
-//     scWidth -
-//     store.state.config.dataWidth -
-//     store.state.config.verticalScrollbar
-//   const cellNum = Math.floor(
-//     (tableEndTime - tableStartTime) / store.state.config.widthTime
-//   )
-//   $this.find('.sc_header_cell').width(store.state.config.dataWidth)
-//   $this.find('.sc_data,.sc_data_scroll').width(store.state.config.dataWidth)
-//   $this.find('.sc_header').width(scMainWidth)
-//   $this.find('.sc_main_box').width(scMainWidth)
-//   $this.find('.sc_header_scroll').width(store.state.config.widthTimeX * cellNum)
-//   $this.find('.sc_main_scroll').width(store.state.config.widthTimeX * cellNum)
-// }
-
-const Menu = () => {
-  const final = []
-
-  let beforeTime = -1
-
-  const config = zStore((state) => state.config)
-  const tableStartTime = zStore((state) => state.tableStartTime)
-  const tableEndTime = zStore((state) => state.tableEndTime)
-  const scrollWidth = zStore((state) => state.scrollWidth)
-
-  for (let t = tableStartTime; t < tableEndTime; t += config.widthTime) {
-    if (
-      beforeTime < 0 ||
-      Math.floor(beforeTime / 3600) !== Math.floor(t / 3600)
-    ) {
-      const cn = Number(
-        Math.min(
-          Math.ceil((t + config.widthTime) / 3600) * 3600,
-          tableEndTime
-        ) - t
-      )
-      const cellNum = Math.floor(cn / config.widthTime)
-      const width = cellNum * config.widthTimeX
-
-      final.push(
-        <div className="sc_time" style={{ width: width + 'px' }} key={t}>
-          {formatTime(t)}
-        </div>
-      )
-
-      beforeTime = t
-    }
-  }
-
-  // const scWidth = window.innerWidth // $this.width()
-  // const scMainWidth = scWidth - store.state.config.dataWidth - store.state.config.verticalScrollbar
-
-  const scMainWidth = 960
-
-  return (
-    <div className="sc_menu" style={{ display: 'flex', flexDirection: 'row' }}>
-      <div
-        className="sc_header_cell"
-        style={{
-          width: config.dataWidth,
-        }}
-      >
-        <span>&nbsp;</span>
-      </div>
-      <div
-        className="sc_header"
-        style={{
-          //width: scMainWidth + 'px'
-          flex: 'auto',
-        }}
-      >
-        <div
-          className="sc_header_scroll"
-          id="sc_header_scroll"
-          style={{ width: scrollWidth + 'px' }}
-        >
-          {final}
-        </div>
-      </div>
-    </div>
-  )
-}
 
 const Event = (props) => {
   // const item = props.event
@@ -301,22 +120,36 @@ const Event = (props) => {
       minWidth={config.widthTimeX}
       minHeight={config.timeLineY}
       maxHeight={config.timeLineY}
-      dragGrid={[config.widthTimeX, config.timeLineY]}
+      dragGrid={[config.widthTimeX, config.timeLineY + config.timeLineBorder]}
       resizeGrid={[config.widthTimeX, 1]}
-      onDrag={(e, d) => {
-        console.log('onDrag', d)
-        const delta = (d.deltaX / config.widthTimeX) * config.widthTime
+      onDrag={(e, data) => {
+        console.log('onDrag', data)
+        const delta = (data.deltaX / config.widthTimeX) * config.widthTime
         setStartTime(startTime + delta)
         setEndTime(endTime + delta)
       }}
+      onDragStop={(e, data)=>{
+        console.log('onDragStop', data)
+        // TODO: update geometries
+        // updateGeometries()
+      }}
       onResize={(e, dir, ref, delta, pos) => {
         console.log('onResize', dir, delta, pos)
+
         const deltaTime = (delta.width / config.widthTimeX) * config.widthTime
+
         if (dir === 'right') {
+          // resize only
           setResizeRight(deltaTime)
         } else {
-          setResizeLeft(deltaTime)
+          // resize and move x ?
+          setResizeLeft(deltaTime * -1)
+          // setEndTime(endTime + deltaTime)
         }
+      }}
+      onResizeStop={(e, dir, ref, delta, pos)=>{
+        console.log('onResizeStop', dir, delta, pos)
+        // TODO: update geometries
       }}
     >
       <div
@@ -421,9 +254,59 @@ const Row = (props) => {
   )
 }
 
-// function scrollSync() {
-//   console.log('scroll')
-// }
+const Menu = () => {
+  const final = []
+
+  let beforeTime = -1
+
+  const config = zStore((state) => state.config)
+  const tableStartTime = zStore((state) => state.tableStartTime)
+  const tableEndTime = zStore((state) => state.tableEndTime)
+  const scrollWidth = zStore((state) => state.scrollWidth)
+
+  for (let t = tableStartTime; t < tableEndTime; t += config.widthTime) {
+    if (
+      beforeTime < 0 ||
+      Math.floor(beforeTime / 3600) !== Math.floor(t / 3600)
+    ) {
+      const cn = Number(
+        Math.min(
+          Math.ceil((t + config.widthTime) / 3600) * 3600,
+          tableEndTime
+        ) - t
+      )
+      const cellNum = Math.floor(cn / config.widthTime)
+      const width = cellNum * config.widthTimeX
+
+      final.push(
+        <div className="sc_time" style={{ width: width + 'px' }} key={t}>
+          {formatTime(t)}
+        </div>
+      )
+
+      beforeTime = t
+    }
+  }
+
+  return (
+    <div className="sc_menu" style={{ display: 'flex', flexDirection: 'row' }}>
+      <div
+        className="sc_header"
+        style={{
+          flex: 'auto',
+        }}
+      >
+        <div
+          className="sc_header_scroll"
+          id="sc_header_scroll"
+          style={{ width: scrollWidth + 'px' }}
+        >
+          {final}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const Main = () => {
   const timelines = []
@@ -434,22 +317,6 @@ const Main = () => {
   const config = zStore((state) => state.config)
   const tableHeight = zStore((state) => state.tableHeight)
   const scrollWidth = zStore((state) => state.scrollWidth)
-
-  const handleScroll = (event) => {
-    // console.log('scrollTop: ', event.currentTarget.scrollTop)
-    // console.log('offsetHeight: ', event.currentTarget.offsetHeight)
-
-    const left = event.currentTarget.scrollLeft
-    console.log(
-      'scrollLeft: ',
-      left,
-      document.getElementById('sc_header_scroll').scrollLeft
-    )
-    // console.log('offestWidth: ', event.currentTarget.offestWidth)
-    // document.getElementById('sc_header_scroll')?.scroll(0, left)
-
-    document.getElementById('sc_header_scroll').scrollLeft += -10
-  }
 
   for (let i = 0; i < rows.length; i++) {
     timelines.push(<Row rowNum={i} key={i} />)
@@ -464,21 +331,23 @@ const Main = () => {
     )
   }
 
-  // const scWidth = window.innerWidth // $this.width()
-  // const scMainWidth = scWidth - store.state.config.dataWidth - store.state.config.verticalScrollbar
-
-  const scMainWidth = 960
-
   return (
     <div className="sc_wrapper" style={{ display: 'flex' }}>
       <div
         className="sc_data"
         style={{
-          height: tableHeight + 'px',
           width: config.dataWidth + 'px',
           flexShrink: 0,
         }}
       >
+        <div
+          className="sc_header_cell"
+          style={{
+            width: config.dataWidth,
+          }}
+        >
+          <span>&nbsp;</span>
+        </div>
         <div
           className="sc_data_scroll"
           style={{ width: config.dataWidth, top: '0' }}
@@ -488,14 +357,9 @@ const Main = () => {
       </div>
       <div
         className="sc_main_box"
-        onScroll={handleScroll}
-        style={
-          {
-            // width: scMainWidth + 'px'
-          }
-        }
       >
         <div className="sc_main_scroll" style={{ width: scrollWidth + 'px' }}>
+          <Menu />
           <div className="sc_main">{timelines}</div>
         </div>
       </div>
@@ -504,90 +368,12 @@ const Main = () => {
 }
 
 const Scheduler = () => {
-  // const Scheduler = observer(({ props, myStore }) => {
-
-  // props.store
-
-  // const configDefault = {
-  //   className: 'jq-schedule',
-  //   rows: {},
-  //   startTime: '07:00',
-  //   endTime: '19:30',
-  //   widthTimeX: 25,
-  //   widthTime: 600, // cell timestamp example 10 minutes
-  //   timeLineY: 50, // timeline height(px)
-  //   timeLineBorder: 1, // timeline height border
-  //   timeBorder: 1, // border width
-  //   timeLinePaddingTop: 0,
-  //   timeLinePaddingBottom: 0,
-  //   headTimeBorder: 1, // time border width
-  //   dataWidth: 160, // data width
-  //   verticalScrollbar: 0, // vertical scrollbar width
-  //   bundleMoveWidth: 1,
-  //   // width to move all schedules to the right of the clicked time cell
-  //   draggable: true,
-  //   resizable: true,
-  //   resizableLeft: false,
-  //   // event
-  //   onInitRow: null,
-  //   onChange: null,
-  //   onClick: null,
-  //   onAppendRow: null,
-  //   onAppendSchedule: null,
-  //   onScheduleClick: null,
-  // }
-
-  // const config = { ...configDefault, ...props.config }
-
-  // store.state.config = config
-
-  // store.state.rowHeights = []
-
-  // store.state.tableHeight = 0
-
-  // // TODO: add subtitles to rows
-  // store.state.rows = props.rows
-
-  // store.state.tableStartTime = calcStringTime(config.startTime)
-  // store.state.tableEndTime = calcStringTime(config.endTime)
-  // store.state.tableStartTime -= store.state.tableStartTime % config.widthTime
-  // store.state.tableEndTime -= store.state.tableEndTime % config.widthTime
-
-  // store.state.cellsWide = Math.floor(
-  //   (store.state.tableEndTime - store.state.tableStartTime) /
-  //     store.state.config.widthTime
-  // )
-
-  // store.state.scrollWidth =
-  //   store.state.config.widthTimeX * store.state.cellsWide
-
-  // store.state.data = props.data
-
-  // const bears = useStore((state) => state.bears)
-
-  // const events = useStore((st) => st.events)
-
-  // const newEvent = generateEvent(store.state) //randomEvent()
-
-  // store.state.data.push(newEvent)
-
-  // store.state.dataRowMap = []
-  // for (let j = 0; j < store.state.rows.length; j++) {
-  //   // doing this since Array.fill([]) causes issues
-  //   store.state.dataRowMap.push([])
-  // }
-  // for (let i = 0; i < store.state.data.length; i++) {
-  //   store.state.dataRowMap[store.state.data[i].row].push(i)
-  // }
-
-  // updateGeometries()
 
   return (
     <>
       <div className="container">
         <div style={{ padding: '0 0 40px' }}>
           <div id="schedule" className="jq-schedule">
-            <Menu />
             <Main />
           </div>
         </div>

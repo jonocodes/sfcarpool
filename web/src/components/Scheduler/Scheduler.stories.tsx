@@ -8,86 +8,86 @@ import Scheduler from './Scheduler'
 import { generateEvent } from './zstore'
 import { zStore } from './zstore'
 
-// export const basicWeek = () => {
-//   const config = {
-//     startTime: '06:00', // schedule start time(HH:ii)
-//     endTime: '10:00', // schedule end time(HH:ii)
-//     widthTimeX: 20,
-//     widthTime: 60 * 5, // 5 minutes
-//     timeLineY: 60, // height(px)
-//     dataWidth: 120,
-//     verticalScrollbar: 20, // scrollbar (px)
-//     timeLineBorder: 2, // border(top and bottom)
-//     bundleMoveWidth: 6, // width to move all schedules to the right of the clicked time line cell
-//     // draggable: isDraggable,
-//     // resizable: isResizable,
-//     resizableLeft: true,
-//   }
+export const basicWeek = () => {
+  const config = {
+    startTime: '06:00', // schedule start time(HH:ii)
+    endTime: '10:00', // schedule end time(HH:ii)
+    widthTimeX: 20,
+    widthTime: 60 * 5, // 5 minutes
+    timeLineY: 60, // height(px)
+    dataWidth: 120,
+    verticalScrollbar: 20, // scrollbar (px)
+    timeLineBorder: 2, // border(top and bottom)
+    bundleMoveWidth: 6, // width to move all schedules to the right of the clicked time line cell
+    // draggable: isDraggable,
+    // resizable: isResizable,
+    resizableLeft: true,
+  }
 
-//   const rows = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+  const rows = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 
-//   const data = [
-//     {
-//       row: 0, // monday
-//       start: '8:00',
-//       end: '8:10',
-//       text: 'JK',
-//       data: {
-//         entry: 8,
-//         class: 'passenger',
-//         likelihood: 20,
-//       },
-//     },
-//     {
-//       row: 1, //tuesday
-//       start: '6:30',
-//       end: '7:10',
-//       text: 'Jono',
-//       data: {
-//         entry: 4,
-//         class: 'passenger',
-//         likelihood: 95,
-//       },
-//     },
-//     {
-//       row: 1, // tuesday
-//       start: '7:05',
-//       end: '7:30',
-//       text: 'Jodi',
-//       data: {
-//         entry: 5,
-//         class: 'driver',
-//         likelihood: 70,
-//       },
-//     },
-//     {
-//       row: 1, // tuesday
-//       start: '7:40',
-//       end: '8:50',
-//       text: 'Jono',
-//       data: {
-//         entry: 9,
-//         class: 'passenger',
-//         likelihood: 70,
-//       },
-//     },
-//     {
-//       row: 4, // friday
-//       start: '8:40',
-//       end: '8:50',
-//       text: 'Jono',
-//       data: {
-//         entry: 10,
-//         class: 'passenger',
-//         likelihood: 70,
-//       },
-//     },
-//   ]
+  const data = [
+    {
+      row: 0, // monday
+      start: '8:00',
+      end: '8:10',
+      text: 'JK',
+      data: {
+        entry: 8,
+        class: 'passenger',
+        likelihood: 20,
+      },
+    },
+    {
+      row: 1, //tuesday
+      start: '6:30',
+      end: '7:10',
+      text: 'Jono',
+      data: {
+        entry: 4,
+        class: 'passenger',
+        likelihood: 95,
+      },
+    },
+    {
+      row: 1, // tuesday
+      start: '7:05',
+      end: '7:30',
+      text: 'Jodi',
+      data: {
+        entry: 5,
+        class: 'driver',
+        likelihood: 70,
+      },
+    },
+    {
+      row: 1, // tuesday
+      start: '7:40',
+      end: '8:50',
+      text: 'Jono',
+      data: {
+        entry: 9,
+        class: 'passenger',
+        likelihood: 70,
+      },
+    },
+    {
+      row: 4, // friday
+      start: '8:40',
+      end: '8:50',
+      text: 'Jono',
+      data: {
+        entry: 10,
+        class: 'passenger',
+        likelihood: 70,
+      },
+    },
+  ]
 
-//   setupStore(data, rows, config)
+  setupStore(data, rows, config)
 
-//   return <Scheduler />
-// }
+  return <Scheduler />
+}
 
 export const demo = () => {
   const data = [
@@ -105,13 +105,13 @@ export const demo = () => {
       text: 'Text Area',
       data: {},
     },
-    // {  // updateGeometries does not visit this?
-    //   row: 1,
-    //   start: '16:00',
-    //   end: '17:00',
-    //   text: 'Text Area',
-    //   data: {},
-    // },
+    {
+      row: 1,
+      start: '16:00',
+      end: '17:00',
+      text: 'Text Area',
+      data: {},
+    },
   ]
 
   // const myStore = new SchedulerStore()
