@@ -2,8 +2,36 @@
   "version": "0.3.0",
   "configurations": [
     {
+      "name": "Run Chrome (redwood)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:8910",
+      "webRoot": "${workspaceFolder}/web"
+    },
+    {
+      "name": "Run Chrome (storybook)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:7910",
+      "webRoot": "${workspaceFolder}/web"
+    },
+    {
+      "name": "Run Firefox (storybook) - not working",
+      "type": "firefox",
+      "request": "launch",
+      "url": "http://localhost:8910",
+      "reAttach": true,
+      "file": "${workspaceFolder}/web"
+    },
+    {
       "command": "yarn redwood dev --apiDebugPort 18911",
       "name": "Run Dev Server",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "command": "yarn redwood storybook",
+      "name": "Run Dev storybook",
       "request": "launch",
       "type": "node-terminal"
     },

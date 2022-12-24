@@ -1,5 +1,6 @@
 // import { number } from 'prop-types'
-import create from 'zustand'
+import { RowProps } from 'react-bootstrap'
+import create, { createStore } from 'zustand'
 
 import { calcStringTime, formatTime } from './helpers'
 
@@ -8,9 +9,8 @@ import { calcStringTime, formatTime } from './helpers'
 //   likenyhood
 // }
 
-const configDefault = {
+const configDefault: Config = {
   className: 'jq-schedule',
-  rows: {},
   startTime: '07:00',
   endTime: '19:30',
   widthTimeX: 25,
@@ -29,11 +29,11 @@ const configDefault = {
   resizable: true,
   resizableLeft: false,
   // event
-  onInitRow: null,
-  onChange: null,
+  // onInitRow: null,
+  // onChange: null,
   onClick: null,
-  onAppendRow: null,
-  onAppendSchedule: null,
+  // onAppendRow: null,
+  // onAppendSchedule: null,
   onScheduleClick: null,
 }
 
@@ -41,7 +41,11 @@ interface ScheduleClickFunction {
   (time: number, colNum: number, rowNum: number): void
 }
 
-interface Config {
+interface EventClickFunction {
+  (event: Event, rowNum: number): void
+}
+
+export interface Config {
   className?: string
   startTime?: string
   endTime?: string
@@ -63,7 +67,7 @@ interface Config {
   // event
   // onInitRow: null
   // onChange: null
-  // onClick: null
+  onClick?: EventClickFunction
   // onAppendRow: null
   // onAppendSchedule: null
   onScheduleClick?: ScheduleClickFunction
@@ -86,6 +90,22 @@ interface Geometry {
   y: number
   width: number
   height: number
+}
+
+interface Computed {
+  rowMap: number[][]
+  geometries: Geometry[]
+  rowHeights: number[]
+  tableHeight: number
+
+  // setTableHeight: (height: number) => void
+  // setRowHeight: (height: number, index: number) => void
+  // setGeometry: (geometry: Geometry, index: number) => void
+
+  tableStartTime: number
+  tableEndTime: number
+  cellsWide: number
+  scrollWidth: number
 }
 
 interface zState {
@@ -134,18 +154,18 @@ function generateRowMap(rows, events) {
   return dataRowMap
 }
 
-function getGeometry(event, config) {
+function calculateGeometry(event, config, tableStartTime) {
   const startTime = calcStringTime(event.start)
   const endTime = calcStringTime(event.end)
 
-  const tableStartTime = zStore((state) => state.tableStartTime)
+  // const tableStartTime = computed.tableStartTime
 
   const st = Math.ceil((startTime - tableStartTime) / config.widthTime)
   const et = Math.floor((endTime - tableStartTime) / config.widthTime)
 
   return {
     x: config.widthTimeX * st,
-    y: 0,
+    y: 0, // NOTE: this is set outside this function
     width: config.widthTimeX * (et - st),
     height: config.timeLineY,
   }
@@ -156,13 +176,10 @@ function randInt(x, y) {
 }
 
 export function getTimeSlots(tableStartTime, tableEndTime, widthTime) {
-  // TODO: this should read from args, not the global state
-
   let time = tableStartTime
   // const times = [formatTime(time)]
   const times = [time]
   while (time < tableEndTime) {
-    // console.log(time)
     time = time + widthTime
     // times.push(formatTime(time))
     times.push(time)
@@ -172,8 +189,6 @@ export function getTimeSlots(tableStartTime, tableEndTime, widthTime) {
 }
 
 export function _generateEvent(times, rowCount) {
-  // TODO: this should read from args, not the global state
-
   const randStartIndex = Math.floor(Math.random() * times.length)
   const randEndIndex = randStartIndex + 2 + Math.floor(Math.random() * 8)
 
@@ -207,6 +222,36 @@ export function generateEvent() {
   const times = getTimeSlots(tableStartTime, tableEndTime, config.widthTime)
 
   return _generateEvent(times, rows.length)
+}
+
+export function setup(events: Event[], rows: string[], userConf: Config) {
+  const config = { ...configDefault, ...userConf }
+  let tableStartTime = calcStringTime(config.startTime)
+  tableStartTime -= tableStartTime % config.widthTime
+  // tableStartTime = 0
+
+  let tableEndTime = calcStringTime(config.endTime)
+  tableEndTime -= tableEndTime % config.widthTime
+  // tableEndTime = 0
+
+  const cellsWide = Math.floor(
+    (tableEndTime - tableStartTime) / config.widthTime
+  )
+
+  console.log('init cellswide ', cellsWide)
+
+  // debugger
+
+  return {
+    events: events,
+    rows: rows,
+    rowMap: generateRowMap(rows, events), // TODO: update this better?
+    tableStartTime: tableStartTime,
+    tableEndTime: tableEndTime,
+    cellsWide: cellsWide,
+    scrollWidth: config.widthTimeX * cellsWide,
+    config: config,
+  }
 }
 
 // update row heights, and manage overlapping events in a row
@@ -254,15 +299,14 @@ export function updateGeometries() {
     let i
 
     for (i = 0; i < items.length; i++) {
-      const geometry = getGeometry(items[i], config) // TODO: cache this for later use, or precompute
-      // items[i]['geometry'] = geometry
-
       const eventIndex = rowMap[rowNum][i]
 
-      // console.log('setGeometryA', eventIndex, geometry)
+      const geometry = calculateGeometry(items[i], config) // TODO: cache this for later use, or precompute
+
+      // const geometry = getOrSetGeometry(eventIndex, config)
 
       setGeometry(geometry, eventIndex)
-      // TODO: add geometry to zStore? left off here
+
       codes[i] = {
         code: i,
         x: geometry.x,
@@ -284,14 +328,14 @@ export function updateGeometries() {
     for (i = 0; i < codes.length; i++) {
       c1 = codes[i].code
 
-      const geometry1 = getGeometry(items[c1], config) // items[c1].geometry
+      const geometry1 = calculateGeometry(items[c1], config) // items[c1].geometry
 
       for (h = 0; h < check.length; h++) {
         let next = false
 
         for (let j = 0; j < check[h].length; j++) {
           c2 = check[h][j]
-          const geometry2 = getGeometry(items[c2], config)
+          const geometry2 = calculateGeometry(items[c2], config)
           s1 = geometry1.x
           e1 = geometry1.x + geometry1.width
           s2 = geometry2.x
@@ -312,7 +356,7 @@ export function updateGeometries() {
         check[h] = []
       }
 
-      const geometry = getGeometry(items[c1], config)
+      const geometry = calculateGeometry(items[c1], config)
       geometry.y = h * config.timeLineY + config.timeLinePaddingTop
 
       const eventIndex = rowMap[rowNum][c1]
@@ -341,11 +385,231 @@ export function updateGeometries() {
   setTableHeight(tableHeight)
 }
 
+// update row heights, and manage overlapping events in a row
+export function calculateGeometries(
+  config,
+  events,
+  rows,
+  rowMap,
+  tableStartTime
+) {
+  let tableHeight = 0
+  const geometries = []
+  const rowHeights = []
+
+  for (let rowNum = 0; rowNum < rows.length; rowNum++) {
+    const items_map = rowMap[rowNum]
+
+    const items = []
+    for (let i = 0; i < items_map.length; i++) {
+      items.push(events[items_map[i]])
+    }
+
+    const codes = [],
+      check = []
+    let h = 0
+    let c1, c2, s1, s2, e1, e2
+    let i
+
+    for (i = 0; i < items.length; i++) {
+      const eventIndex = rowMap[rowNum][i]
+
+      const geometry = calculateGeometry(items[i], config, tableStartTime) // TODO: cache this for later use, or precompute
+
+      // const geometry = getOrSetGeometry(eventIndex, config)
+
+      // setGeometry(geometry, eventIndex)
+      geometries[eventIndex] = items[i]
+
+      codes[i] = {
+        code: i,
+        x: geometry.x,
+      }
+    }
+
+    codes.sort(function (a, b) {
+      if (a.x < b.x) {
+        return -1
+      }
+
+      if (a.x > b.x) {
+        return 1
+      }
+
+      return 0
+    })
+
+    for (i = 0; i < codes.length; i++) {
+      c1 = codes[i].code
+
+      const geometry1 = calculateGeometry(items[c1], config, tableStartTime) // items[c1].geometry
+
+      for (h = 0; h < check.length; h++) {
+        let next = false
+
+        for (let j = 0; j < check[h].length; j++) {
+          c2 = check[h][j]
+          const geometry2 = calculateGeometry(items[c2], config, tableStartTime)
+          s1 = geometry1.x
+          e1 = geometry1.x + geometry1.width
+          s2 = geometry2.x
+          e2 = geometry2.x + geometry2.width
+
+          if (s1 < e2 && e1 > s2) {
+            next = true
+            continue
+          }
+        }
+
+        if (!next) {
+          break
+        }
+      }
+
+      if (!check[h]) {
+        check[h] = []
+      }
+
+      const geometry = calculateGeometry(items[c1], config, tableStartTime)
+      geometry.y = h * config.timeLineY + config.timeLinePaddingTop
+
+      const eventIndex = rowMap[rowNum][c1]
+
+      // console.log('setGeometryB', eventIndex, geometry)
+
+      // setGeometry(geometry, eventIndex)
+      geometries[eventIndex] = geometry
+
+      // items[c1].geometry.y = h * config.timeLineY + config.timeLinePaddingTop
+
+      check[h][check[h].length] = c1
+    }
+
+    const height =
+      Math.max(check.length, 1) * config.timeLineY +
+      config.timeLineBorder +
+      config.timeLinePaddingTop +
+      config.timeLinePaddingBottom
+
+    // store.state.rowHeights[rowNum] = height
+    // setRowHeight(height, rowNum)
+    rowHeights[rowNum] = height
+
+    // store.state.tableHeight += height
+    tableHeight += height
+  }
+  // setTableHeight(tableHeight)
+
+  return {
+    tableHeight: tableHeight,
+    geometries: geometries,
+    rowHeights: rowHeights,
+  }
+}
+
+interface SchedulerProps {
+  // bears: number
+  config: Config
+  events: Event[]
+  rows: string[]
+  computed: Computed
+}
+
+interface SchedulerState extends SchedulerProps {
+  // addBear: () => void
+  addEvent: (event: Event) => void
+}
+
+type SchedulerStore = ReturnType<typeof createSchedulerStore>
+
+function initComputed(userConf, rows, events): Computed {
+  const config = { ...configDefault, ...userConf }
+  let tableStartTime = calcStringTime(config.startTime)
+  tableStartTime -= tableStartTime % config.widthTime
+  // tableStartTime = 0
+
+  let tableEndTime = calcStringTime(config.endTime)
+  tableEndTime -= tableEndTime % config.widthTime
+  // tableEndTime = 0
+
+  const cellsWide = Math.floor(
+    (tableEndTime - tableStartTime) / config.widthTime
+  )
+
+  const rowMap = generateRowMap(rows, events)
+
+  const geos = calculateGeometries(config, events, rows, rowMap, tableStartTime)
+
+  return {
+    // config: config,
+    tableEndTime: tableEndTime,
+    tableStartTime: tableStartTime,
+    cellsWide,
+    rowMap: rowMap,
+    geometries: geos.geometries,
+    rowHeights: geos.rowHeights,
+    tableHeight: geos.tableHeight,
+    scrollWidth: config.widthTimeX * cellsWide,
+  }
+}
+
+export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
+  const config = { ...configDefault, ...initProps.config }
+  initComputed(config, initProps.rows, initProps.events)
+
+  const DEFAULT_PROPS: SchedulerProps = {
+    // bears: 0,
+
+    config: config,
+    events: initProps.events,
+    rows: initProps.rows,
+
+    computed: initComputed(config, initProps.rows, initProps.events),
+
+    // rowMap: [],
+    // geometries: [],
+
+    // rowHeights: [],
+    // tableHeight: 0,
+    // tableStartTime: 0,
+    // tableEndTime: 0,
+    // cellsWide: 0,
+    // scrollWidth: 0,
+  }
+
+  console.log(DEFAULT_PROPS.computed)
+
+  return createStore<SchedulerState>()((set) => ({
+    DEFAULT_PROPS,
+    // ...DEFAULT_PROPS,
+    // ...initProps,
+    // addBear: () => set((state) => ({ bears: ++state.bears })),
+
+    events: initProps.events,
+    rows: initProps.rows,
+    config: config,
+    computed: DEFAULT_PROPS.computed,
+
+    addEvent: (event: Event) =>
+      // TODO: update geometries and row map
+      set((state) => {
+        console.log(state.events.length)
+        return {
+          events: state.events.concat([event]),
+        }
+      }),
+  }))
+}
+
 export const zStore = create<zState>((set) => ({
   bears: 0,
 
-  events: [],
+  config: {},
+  events: <Event[]>[],
   rows: [],
+
+  computed: <Computed>{},
+
   rowMap: [],
   geometries: [],
 
@@ -355,7 +619,6 @@ export const zStore = create<zState>((set) => ({
   tableEndTime: 0,
   cellsWide: 0,
   scrollWidth: 0,
-  config: {},
 
   increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
   removeAllBears: () => set({ bears: 0 }),
@@ -365,6 +628,10 @@ export const zStore = create<zState>((set) => ({
   //   state.geometries[index] = geometry
   //   return { geometries: state.geometries }
   // }),
+
+  // setEvents: (events: Event[])=>
+  //   set((state: )=>({state.events})
+  // ),
 
   setGeometry: (geometry: Geometry, index: number) =>
     set((state) => {
@@ -385,9 +652,11 @@ export const zStore = create<zState>((set) => ({
       const config = { ...configDefault, ...userConf }
       let tableStartTime = calcStringTime(config.startTime)
       tableStartTime -= tableStartTime % config.widthTime
+      tableStartTime = 0
 
       let tableEndTime = calcStringTime(config.endTime)
       tableEndTime -= tableEndTime % config.widthTime
+      tableEndTime = 0
 
       const cellsWide = Math.floor(
         (tableEndTime - tableStartTime) / config.widthTime

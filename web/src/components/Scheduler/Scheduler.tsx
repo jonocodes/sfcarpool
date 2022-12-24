@@ -1,13 +1,23 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 // import { makeAutoObservable } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import { Rnd } from 'react-rnd'
 // import { useStore } from 'zustand'
 
+import { useStore } from 'zustand'
+
+import { SchedulerContext } from 'src/pages/SchedulerPage/SchedulerPage'
+
 import { formatTime, calcStringTime } from './helpers'
 // import SchedulerStore from './scheduleStore'
-import { zStore, generateEvent, _generateEvent, getTimeSlots, updateGeometries } from './zstore'
+import {
+  zStore,
+  generateEvent,
+  _generateEvent,
+  getTimeSlots,
+  updateGeometries,
+} from './zstore'
 
 // function Store(initialState = {}) {
 //   this.state = initialState
@@ -77,23 +87,26 @@ import { zStore, generateEvent, _generateEvent, getTimeSlots, updateGeometries }
 //   }
 // }
 
-
 const Event = (props) => {
   // const item = props.event
   // const config = store.state.config
-  const config = zStore((state) => state.config)
 
-  // const setGeometry = zStore((state) => state.setGeometry)
+  const store = useContext(SchedulerContext)
+  if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
+
+  const config = useStore(store, (state) => state.config)
+
+  // const setGeometry = useStore(store, (state) => state.setGeometry)
   // const geometry = item.geometry
 
-  const geometries = zStore((state) => state.geometries)
-  const events = zStore((state) => state.events)
+  const geometries = useStore(store, (state) => state.computed.geometries)
+  const events = useStore(store, (state) => state.events)
 
-  const item = events[props.eventIndex]
+  const event = events[props.eventIndex]
   const geometry = geometries[props.eventIndex]
 
-  const [startTime, setStartTime] = useState(calcStringTime(item.start))
-  const [endTime, setEndTime] = useState(calcStringTime(item.end))
+  const [startTime, setStartTime] = useState(calcStringTime(event.start))
+  const [endTime, setEndTime] = useState(calcStringTime(event.end))
 
   const [resizeRight, setResizeRight] = useState(0)
   const [resizeLeft, setResizeLeft] = useState(0)
@@ -117,23 +130,28 @@ const Event = (props) => {
         width: geometry.width,
         height: geometry.height,
       }}
+      // TODO: use config.draggable and config.resizable flags here
+
       minWidth={config.widthTimeX}
       minHeight={config.timeLineY}
       maxHeight={config.timeLineY}
       dragGrid={[config.widthTimeX, config.timeLineY + config.timeLineBorder]}
       resizeGrid={[config.widthTimeX, 1]}
       onDrag={(e, data) => {
+        // if (config.draggable) {
         console.log('onDrag', data)
         const delta = (data.deltaX / config.widthTimeX) * config.widthTime
         setStartTime(startTime + delta)
         setEndTime(endTime + delta)
+        // }
       }}
-      onDragStop={(e, data)=>{
+      onDragStop={(e, data) => {
         console.log('onDragStop', data)
         // TODO: update geometries
         // updateGeometries()
       }}
       onResize={(e, dir, ref, delta, pos) => {
+        // if (config.resizable) {
         console.log('onResize', dir, delta, pos)
 
         const deltaTime = (delta.width / config.widthTimeX) * config.widthTime
@@ -146,23 +164,29 @@ const Event = (props) => {
           setResizeLeft(deltaTime * -1)
           // setEndTime(endTime + deltaTime)
         }
+        // }
       }}
-      onResizeStop={(e, dir, ref, delta, pos)=>{
+      onResizeStop={(e, dir, ref, delta, pos) => {
         console.log('onResizeStop', dir, delta, pos)
         // TODO: update geometries
       }}
     >
       <div
-        className="sc_bar"
+        className={`sc_bar ${event.data.class}`}
         style={{
           width: '100%',
           height: config.timeLineY + 'px',
+        }}
+        onClick={() => {
+          if (config.onClick) {
+            config.onClick(event, props.rowNum)
+          }
         }}
       >
         <span className="head">
           <span className="time">{timeStr}</span>
         </span>
-        <span className="text">{item.text}</span>
+        <span className="text">{event.text}</span>
         <div
           className="ui-resizable-handle ui-resizable-e"
           style={{ zIndex: '90' }}
@@ -177,23 +201,29 @@ const Event = (props) => {
 }
 
 const Row = (props) => {
-  const rowMap = zStore((state) => state.rowMap)
+  const store = useContext(SchedulerContext)
+  if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
+
+  const rowMap = useStore(store, (state) => state.computed.rowMap)
   const items_map = rowMap[props.rowNum]
 
   const blankCells = []
 
-  const config = zStore((state) => state.config)
-  const tableStartTime = zStore((state) => state.tableStartTime)
-  const cellsWide = zStore((state) => state.cellsWide)
-  const rowHeights = zStore((state) => state.rowHeights)
-  const addEvent = zStore((state) => state.addEvent)
+  const config = useStore(store, (state) => state.config)
+  const tableStartTime = useStore(
+    store,
+    (state) => state.computed.tableStartTime
+  )
+  const cellsWide = useStore(store, (state) => state.computed.cellsWide)
+  const rowHeights = useStore(store, (state) => state.computed.rowHeights)
+  const addEvent = useStore(store, (state) => state.addEvent)
 
-  const rows = zStore.getState().rows
-  // const rows = zStore((state) => state.rows)
-  const tableEndTime = zStore((state) => state.tableEndTime)
+  // const rows = zStore.getState().rows
+  const rows = useStore(store, (state) => state.rows)
+  const tableEndTime = useStore(store, (state) => state.computed.tableEndTime)
 
   for (let i = 0; i < cellsWide; i++) {
-    const time = tableStartTime + i * config.widthTimeX
+    // const time = tableStartTime + i * config.widthTimeX
 
     blankCells.push(
       <div
@@ -202,10 +232,10 @@ const Row = (props) => {
         key={i}
         onClick={() => {
           // // const rows = zStore.getState().rows
-          // // const rows = zStore((state) => state.rows)
-          // // const tableStartTime = zStore((state) => state.tableStartTime)
-          // // const tableEndTime = zStore((state) => state.tableEndTime)
-          // // const config = zStore((state) => state.config)
+          // // const rows = useStore(store, (state) => state.rows)
+          // // const tableStartTime = useStore(store, (state) => state.tableStartTime)
+          // // const tableEndTime = useStore(store, (state) => state.tableEndTime)
+          // // const config = useStore(store, (state) => state.config)
 
           // const times = getTimeSlots(
           //   tableStartTime,
@@ -228,8 +258,8 @@ const Row = (props) => {
     )
   }
 
-  const data = zStore((state) => state.events)
-  // const getGeometry = zStore((state) => state.getGeometry)
+  const data = useStore(store, (state) => state.events)
+  // const getGeometry = useStore(store, (state) => state.getGeometry)
 
   const events = []
   for (let i = 0; i < items_map.length; i++) {
@@ -259,10 +289,16 @@ const Menu = () => {
 
   let beforeTime = -1
 
-  const config = zStore((state) => state.config)
-  const tableStartTime = zStore((state) => state.tableStartTime)
-  const tableEndTime = zStore((state) => state.tableEndTime)
-  const scrollWidth = zStore((state) => state.scrollWidth)
+  const store = useContext(SchedulerContext)
+  if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
+
+  const config = useStore(store, (state) => state.config)
+  const tableStartTime = useStore(
+    store,
+    (state) => state.computed.tableStartTime
+  )
+  const tableEndTime = useStore(store, (state) => state.computed.tableEndTime)
+  const scrollWidth = useStore(store, (state) => state.computed.scrollWidth)
 
   for (let t = tableStartTime; t < tableEndTime; t += config.widthTime) {
     if (
@@ -312,11 +348,15 @@ const Main = () => {
   const timelines = []
   const titles = []
 
-  const rows = zStore((state) => state.rows)
-  const rowHeights = zStore((state) => state.rowHeights)
-  const config = zStore((state) => state.config)
-  const tableHeight = zStore((state) => state.tableHeight)
-  const scrollWidth = zStore((state) => state.scrollWidth)
+  const store = useContext(SchedulerContext)
+  if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
+  // const bears = useStore(store, (state) => state.bears)
+
+  const rows = useStore(store, (state) => state.rows)
+  const rowHeights = useStore(store, (state) => state.computed.rowHeights)
+  const config = useStore(store, (state) => state.config)
+  // const tableHeight = useStore(store, (state) => state.computed.tableHeight)
+  const scrollWidth = useStore(store, (state) => state.computed.scrollWidth)
 
   for (let i = 0; i < rows.length; i++) {
     timelines.push(<Row rowNum={i} key={i} />)
@@ -355,9 +395,7 @@ const Main = () => {
           {titles}
         </div>
       </div>
-      <div
-        className="sc_main_box"
-      >
+      <div className="sc_main_box" style={{ overflowY: 'hidden' }}>
         <div className="sc_main_scroll" style={{ width: scrollWidth + 'px' }}>
           <Menu />
           <div className="sc_main">{timelines}</div>
@@ -368,7 +406,6 @@ const Main = () => {
 }
 
 const Scheduler = () => {
-
   return (
     <>
       <div className="container">

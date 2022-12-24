@@ -7,6 +7,7 @@ import Scheduler from './Scheduler'
 // import SchedulerStore from './scheduleStore'
 import { generateEvent } from './zstore'
 import { zStore } from './zstore'
+import { Config } from './zstore'
 
 export const basicWeek = () => {
   const config = {
@@ -145,7 +146,7 @@ export const demo = () => {
 
   const ScheduleContext = React.createContext({ rows: rows, events: data })
 
-  const config = {
+  const config: Config = {
     startTime: '07:00', // schedule start time(HH:ii)
     endTime: '21:00', // schedule end time(HH:ii)
     widthTime: 60 * 10, // cell timestamp example 10 minutes
@@ -153,21 +154,24 @@ export const demo = () => {
     verticalScrollbar: 20, // scrollbar (px)
     timeLineBorder: 2, // border(top and bottom)
     bundleMoveWidth: 6, // width to move all schedules to the right of the clicked time line cell
-    // draggable: isDraggable,
-    // resizable: isResizable,s
+    draggable: false,
+    // resizable: isResizable,
     resizableLeft: true,
 
     onScheduleClick: function (time, colNum, rowNum) {
-      console.log('onScheduleClick', time, colNum, rowNum)
+      console.log('onScheduleClick external method', time, colNum, rowNum)
 
       const randEvent = generateEvent()
       // myStore.addEvent(randEvent)
-      addEvent(randEvent)
+      // addEvent(randEvent) // infinate rerenders?
 
       // console.log(events.length)
 
       // store.state.data.push(randEvent)
     },
+    onClick: function (event, rowNum) {
+      console.log('onScheduleClick external method', event, rowNum)
+    }
   }
 
   setupStore(data, rows, config)

@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 
 import { generateEvent } from './helpers'
 
-class SchedulerStore {
+class SchedulerStoreOLD {
   // secondsPassed = 0
 
   events = []
