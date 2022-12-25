@@ -17,6 +17,7 @@ import {
   _generateEvent,
   getTimeSlots,
   updateGeometries,
+  getStore,
 } from './zstore'
 
 // function Store(initialState = {}) {
@@ -94,6 +95,8 @@ const Event = (props) => {
   const store = useContext(SchedulerContext)
   if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
 
+  // const store = getStore(SchedulerContext)
+
   const config = useStore(store, (state) => state.config)
 
   // const setGeometry = useStore(store, (state) => state.setGeometry)
@@ -110,6 +113,11 @@ const Event = (props) => {
 
   const [resizeRight, setResizeRight] = useState(0)
   const [resizeLeft, setResizeLeft] = useState(0)
+
+  // const modalVisible = usePageStore((state) => state.modalVisible)
+  // const showModal = usePageStore((state) => state.showModal)
+  // const hideModal = usePageStore((state) => state.hideModal)
+  // document.getElementById('exampleModal')
 
   const timeStr =
     formatTime(startTime + resizeLeft) + '-' + formatTime(endTime + resizeRight)
@@ -419,4 +427,4 @@ const Scheduler = () => {
   )
 }
 
-export default observer(Scheduler)
+export default Scheduler
