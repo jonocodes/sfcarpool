@@ -209,55 +209,55 @@ export function _generateEvent(times, rowCount) {
     },
   }
 
-  console.log(event)
+  console.log('generated', event)
 
   return event
 }
 
-export function generateEvent() {
-  const rows = zStore.getState().rows
-  const tableStartTime = zStore.getState().tableStartTime
-  const tableEndTime = zStore.getState().tableEndTime
-  const config = zStore.getState().config
-  // const rows = zStore((state) => state.rows)
-  // const tableStartTime = zStore((state) => state.tableStartTime)
-  // const tableEndTime = zStore((state) => state.tableEndTime)
-  // const config = zStore((state) => state.config)
+// export function generateEvent() {
+//   const rows = zStore.getState().rows
+//   const tableStartTime = zStore.getState().tableStartTime
+//   const tableEndTime = zStore.getState().tableEndTime
+//   const config = zStore.getState().config
+//   // const rows = zStore((state) => state.rows)
+//   // const tableStartTime = zStore((state) => state.tableStartTime)
+//   // const tableEndTime = zStore((state) => state.tableEndTime)
+//   // const config = zStore((state) => state.config)
 
-  const times = getTimeSlots(tableStartTime, tableEndTime, config.widthTime)
+//   const times = getTimeSlots(tableStartTime, tableEndTime, config.widthTime)
 
-  return _generateEvent(times, rows.length)
-}
+//   return _generateEvent(times, rows.length)
+// }
 
-export function setup(events: Event[], rows: string[], userConf: Config) {
-  const config = { ...configDefault, ...userConf }
-  let tableStartTime = calcStringTime(config.startTime)
-  tableStartTime -= tableStartTime % config.widthTime
-  // tableStartTime = 0
+// export function setup(events: Event[], rows: string[], userConf: Config) {
+//   const config = { ...configDefault, ...userConf }
+//   let tableStartTime = calcStringTime(config.startTime)
+//   tableStartTime -= tableStartTime % config.widthTime
+//   // tableStartTime = 0
 
-  let tableEndTime = calcStringTime(config.endTime)
-  tableEndTime -= tableEndTime % config.widthTime
-  // tableEndTime = 0
+//   let tableEndTime = calcStringTime(config.endTime)
+//   tableEndTime -= tableEndTime % config.widthTime
+//   // tableEndTime = 0
 
-  const cellsWide = Math.floor(
-    (tableEndTime - tableStartTime) / config.widthTime
-  )
+//   const cellsWide = Math.floor(
+//     (tableEndTime - tableStartTime) / config.widthTime
+//   )
 
-  console.log('init cellswide ', cellsWide)
+//   console.log('init cellswide ', cellsWide)
 
-  // debugger
+//   // debugger
 
-  return {
-    events: events,
-    rows: rows,
-    rowMap: generateRowMap(rows, events), // TODO: update this better?
-    tableStartTime: tableStartTime,
-    tableEndTime: tableEndTime,
-    cellsWide: cellsWide,
-    scrollWidth: config.widthTimeX * cellsWide,
-    config: config,
-  }
-}
+//   return {
+//     events: events,
+//     rows: rows,
+//     rowMap: generateRowMap(rows, events), // TODO: update this better?
+//     tableStartTime: tableStartTime,
+//     tableEndTime: tableEndTime,
+//     cellsWide: cellsWide,
+//     scrollWidth: config.widthTimeX * cellsWide,
+//     config: config,
+//   }
+// }
 
 // update row heights, and manage overlapping events in a row
 export function calculateGeometries(
@@ -436,9 +436,9 @@ function initComputed(userConf, rows, events): Computed {
 
 export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
   const config = { ...configDefault, ...initProps.config }
-  initComputed(config, initProps.rows, initProps.events)
+  // initComputed(config, initProps.rows, initProps.events)
 
-  const DEFAULT_PROPS: SchedulerProps = {
+  const DEFAULT_PROPS = {
     // bears: 0,
 
     config: config,
@@ -463,13 +463,32 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
     config: config,
     computed: DEFAULT_PROPS.computed,
     onClickEvent: null,
+    currentEvent: null,
 
     addEvent: (event: Event) =>
       // TODO: update geometries and row map
       set((state) => {
-        console.log(state.events.length)
+        state.events.push(event)
+        const computed = initComputed(config, initProps.rows, state.events)
+
         return {
-          events: state.events.concat([event]),
+          currentEvent: event,
+          events: state.events,
+          computed: computed,
+        }
+      }),
+
+    updateEvent: (eventIndex: number, event: Event) =>
+      set((state) => {
+        state.events[eventIndex] = event
+        const computed = initComputed(config, initProps.rows, state.events)
+
+        console.log('updateEvent', eventIndex, event)
+
+        return {
+          currentEvent: event,
+          events: state.events,
+          computed: computed,
         }
       }),
   }))

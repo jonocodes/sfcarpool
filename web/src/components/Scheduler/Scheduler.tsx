@@ -98,6 +98,7 @@ const Event = (props) => {
   // const store = getStore(SchedulerContext)
 
   const config = useStore(store, (state) => state.config)
+  const updateEvent = useStore(store, (state) => state.updateEvent)
 
   // const setGeometry = useStore(store, (state) => state.setGeometry)
   // const geometry = item.geometry
@@ -149,14 +150,55 @@ const Event = (props) => {
         // if (config.draggable) {
         console.log('onDrag', data)
         const delta = (data.deltaX / config.widthTimeX) * config.widthTime
+
+        // event.start = formatTime(startTime + delta)
+        // event.end = formatTime(endTime + delta)
+
+        event.start = formatTime(startTime + delta)
+        event.end = formatTime(endTime + delta)
+
         setStartTime(startTime + delta)
         setEndTime(endTime + delta)
         // }
       }}
+      onDragStart={(e, data) => {
+        console.log('onDragStart', data)
+      }}
       onDragStop={(e, data) => {
-        console.log('onDragStop', data)
+        console.log(
+          'onDragStop',
+          data,
+          Math.abs(geometry.x - data.x),
+          config.widthTimeX
+        )
         // TODO: update geometries
         // updateGeometries()
+
+        // setEvent(event)
+        // updateEvent(props.eventIndex, event)
+
+        const delta = (data.deltaX / config.widthTimeX) * config.widthTime
+
+        // event.start = formatTime(startTime + delta)
+        // event.end = formatTime(endTime + delta)
+
+        // setStartTime(startTime + delta)
+        // setEndTime(endTime + delta)
+
+        // event = event.stast + data.deltaX
+
+        if (Math.abs(geometry.x - data.x) < config.widthTimeX) {
+          console.log(
+            'that drag seemed like a click!',
+            Math.abs(geometry.x - data.x),
+            config.widthTimeX
+          )
+          if (config.onClick) {
+            config.onClick(event, props.rowNum)
+          }
+        } else {
+          updateEvent(props.eventIndex, event)
+        }
       }}
       onResize={(e, dir, ref, delta, pos) => {
         // if (config.resizable) {
@@ -185,11 +227,17 @@ const Event = (props) => {
           width: '100%',
           height: config.timeLineY + 'px',
         }}
-        onClick={() => {
-          if (config.onClick) {
-            config.onClick(event, props.rowNum)
-          }
-        }}
+        // onClick={() => {
+        //   console.log('onClick moving', moving)
+        //   // if (config.onClick && moving === false) {
+        //   //   config.onClick(event, props.rowNum)
+        //   // }
+        // }}
+        // onKeyDown={() => {
+        //   if (config.onClick && !moving) {
+        //     config.onClick(event, props.rowNum)
+        //   }
+        // }}
       >
         <span className="head">
           <span className="time">{timeStr}</span>
@@ -244,21 +292,22 @@ const Row = (props) => {
           // // const tableStartTime = useStore(store, (state) => state.tableStartTime)
           // // const tableEndTime = useStore(store, (state) => state.tableEndTime)
           // // const config = useStore(store, (state) => state.config)
-
           // const times = getTimeSlots(
           //   tableStartTime,
           //   tableEndTime,
           //   config.widthTime
           // )
-
           // const randEvent = _generateEvent(times, rows.length)
-
-          const randEvent = generateEvent()
+          // const randEvent = generateEvent()
           // myStore.addEvent(randEvent)
-          addEvent(randEvent)
+          // addEvent(randEvent)
           // if (config.onScheduleClick) {
           //   config.onScheduleClick(time, i, props.rowNum)
           // }
+
+          if (config.onScheduleClick) {
+            config.onScheduleClick(1234, i, props.rowNum)
+          }
         }}
         //onKeyPress={this.handleKeyPress}
         role="presentation"

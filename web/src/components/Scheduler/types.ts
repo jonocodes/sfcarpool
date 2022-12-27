@@ -31,6 +31,8 @@ export interface Computed {
   tableEndTime: number
   cellsWide: number
   scrollWidth: number
+
+  // TODO: add time slots ?
 }
 
 export interface ScheduleClickFunction {
@@ -40,7 +42,6 @@ export interface ScheduleClickFunction {
 export interface EventClickFunction {
   (event: Event, rowNum: number): void
 }
-
 
 export interface Config {
   className?: string
@@ -77,9 +78,11 @@ export interface SchedulerProps {
   rows: string[]
   computed: Computed
   onClickEvent: Event | null
+  currentEvent: Event | null
 }
 
 export interface SchedulerState extends SchedulerProps {
   // addBear: () => void
   addEvent: (event: Event) => void
+  updateEvent: (index: number, event: Event) => void
 }
