@@ -7,9 +7,11 @@ import { Rnd } from 'react-rnd'
 
 import { useStore } from 'zustand'
 
-import { SchedulerContext } from 'src/pages/SchedulerPage/SchedulerPage'
+// import { SchedulerContext } from 'src/pages/SchedulerPage/SchedulerPage'
 
 import { formatTime, calcStringTime } from './helpers'
+import { SchedulerContext } from './zstore'
+
 // import SchedulerStore from './scheduleStore'
 import {
   zStore,

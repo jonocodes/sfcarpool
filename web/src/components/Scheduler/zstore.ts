@@ -1,5 +1,5 @@
 // import { number } from 'prop-types'
-import { useContext } from 'react'
+import { createContext, useContext } from 'react'
 
 import { RowProps } from 'react-bootstrap'
 import create, { createStore, StoreApi } from 'zustand'
@@ -213,6 +213,10 @@ export function _generateEvent(times, rowCount) {
 
   return event
 }
+
+type SchedulerStore = ReturnType<typeof createSchedulerStore>
+
+export const SchedulerContext = createContext<SchedulerStore | null>(null)
 
 // export function generateEvent() {
 //   const rows = zStore.getState().rows
@@ -438,22 +442,22 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
   const config = { ...configDefault, ...initProps.config }
   // initComputed(config, initProps.rows, initProps.events)
 
-  const DEFAULT_PROPS = {
-    // bears: 0,
+  // const DEFAULT_PROPS = {
+  //   // bears: 0,
 
-    config: config,
-    events: initProps.events,
-    rows: initProps.rows,
+  //   config: config,
+  //   events: initProps.events,
+  //   rows: initProps.rows,
 
-    computed: initComputed(config, initProps.rows, initProps.events),
+  //   computed: initComputed(config, initProps.rows, initProps.events),
 
-    onClickEvent: null,
-  }
+  //   onClickEvent: null,
+  // }
 
-  console.log(DEFAULT_PROPS.computed)
+  // console.log(DEFAULT_PROPS.computed)
 
   return createStore<SchedulerState>()((set) => ({
-    DEFAULT_PROPS,
+    // DEFAULT_PROPS,
     // ...DEFAULT_PROPS,
     // ...initProps,
     // addBear: () => set((state) => ({ bears: ++state.bears })),
@@ -461,12 +465,28 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
     events: initProps.events,
     rows: initProps.rows,
     config: config,
-    computed: DEFAULT_PROPS.computed,
+    computed: initComputed(config, initProps.rows, initProps.events),
     onClickEvent: null,
     currentEvent: null,
 
+    mergeConfig: (moreConfig: Config) =>
+      // TODO: this is causing an infiniate loop!
+
+      set((state) => {
+        const newConfig = {
+          ...moreConfig,
+          ...config,
+        }
+
+        const computed = initComputed(newConfig, initProps.rows, state.events)
+
+        return {
+          config: newConfig,
+          computed: computed,
+        }
+      }),
+
     addEvent: (event: Event) =>
-      // TODO: update geometries and row map
       set((state) => {
         state.events.push(event)
         const computed = initComputed(config, initProps.rows, state.events)

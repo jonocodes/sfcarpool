@@ -1,10 +1,13 @@
-import { Config } from 'src/components/Scheduler/types'
-import Week from 'src/components/Week/Week'
+import type { ComponentMeta } from '@storybook/react'
 
-const SchedulerPage = () => {
+import { Config } from 'src/components/Scheduler/types'
+
+import Week from './Week'
+
+export const generated = () => {
   const myConfig: Config = {
     startTime: '06:00',
-    endTime: '11:00',
+    endTime: '10:00',
   }
 
   const rows = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
@@ -67,20 +70,10 @@ const SchedulerPage = () => {
     },
   ]
 
-  return (
-    <>
-      {/* <SchedulerContext.Provider value={store}> */}
-      <Week rows={rows} data={data} config={myConfig} />
-
-      {/* <Week rows={rows} data={data} config={myConfig} /> */}
-
-      {/* <Button variant="primary" onClick={addRandomEvent}>
-            Create random event
-          </Button> */}
-      {/* </SchedulerContext.Provider> */}
-    </>
-  )
+  return <Week rows={rows} data={data} config={myConfig} />
 }
 
-// export default SchedulerPage
-export default SchedulerPage
+export default {
+  title: 'Components/Week',
+  component: Week,
+} as ComponentMeta<typeof Week>

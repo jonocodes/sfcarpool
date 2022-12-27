@@ -13,7 +13,7 @@
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:7910",
-      "webRoot": "${workspaceFolder}/web"
+      "webRoot": "${workspaceFolder}/"
     },
     {
       "name": "Run Firefox (storybook) - not working",

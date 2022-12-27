@@ -5,9 +5,9 @@ import type { ComponentMeta } from '@storybook/react'
 
 import Scheduler from './Scheduler'
 // import SchedulerStore from './scheduleStore'
-import { generateEvent } from './zstore'
-import { zStore } from './zstore'
-import { Config } from './zstore'
+// import { generateEvent } from './zstore'
+// import { zStore } from './zstore'
+// import { Config } from './zstore'
 
 export const basicWeek = () => {
   const config = {
@@ -85,7 +85,7 @@ export const basicWeek = () => {
     },
   ]
 
-  setupStore(data, rows, config)
+  // setupStore(data, rows, config)
 
   return <Scheduler />
 }
@@ -118,7 +118,7 @@ export const demo = () => {
   // const myStore = new SchedulerStore()
   // myStore.events = observer(data)
 
-  const rows = ['Title Area1', 'Title Area2']
+  // const rows = ['Title Area1', 'Title Area2']
 
   // const useStore = create((set) => ({
   //   bears: 0,
@@ -138,15 +138,15 @@ export const demo = () => {
   // const bears = zStore((state) => state.bears)
   // const increasePopulation = zStore((state) => state.increasePopulation)
 
-  const addEvent = zStore((state) => state.addEvent)
+  // const addEvent = zStore((state) => state.addEvent)
 
   // const events = zStore((state) => state.events)
 
   // const something = zStore((state) => state.something)
 
-  const ScheduleContext = React.createContext({ rows: rows, events: data })
+  // const ScheduleContext = React.createContext({ rows: rows, events: data })
 
-  const config: Config = {
+  const config = {
     startTime: '07:00', // schedule start time(HH:ii)
     endTime: '21:00', // schedule end time(HH:ii)
     widthTime: 60 * 10, // cell timestamp example 10 minutes
@@ -161,7 +161,7 @@ export const demo = () => {
     onScheduleClick: function (time, colNum, rowNum) {
       console.log('onScheduleClick external method', time, colNum, rowNum)
 
-      const randEvent = generateEvent()
+      // const randEvent = generateEvent()
       // myStore.addEvent(randEvent)
       // addEvent(randEvent) // infinate rerenders?
 
@@ -171,24 +171,24 @@ export const demo = () => {
     },
     onClick: function (event, rowNum) {
       console.log('onScheduleClick external method', event, rowNum)
-    }
+    },
   }
 
-  setupStore(data, rows, config)
+  // setupStore(data, rows, config)
 
   return <Scheduler />
 }
 
-function setupStore(data, rows, config) {
-  const initStore = zStore((state) => state.init)
-  initStore(data, rows, config)
+// function setupStore(data, rows, config) {
+//   const initStore = zStore((state) => state.init)
+//   initStore(data, rows, config)
 
-  // const init2 = zStore((state) => state.init2)
-  const init3 = zStore((state) => state.init3)
+//   // const init2 = zStore((state) => state.init2)
+//   const init3 = zStore((state) => state.init3)
 
-  // init2()
-  init3()
-}
+//   // init2()
+//   init3()
+// }
 
 export default {
   title: 'Components/Scheduler',
