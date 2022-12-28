@@ -4,10 +4,10 @@ import { Config } from 'src/components/Scheduler/types'
 
 import Week from './Week'
 
-export const generated = () => {
+export const carpool = () => {
   const myConfig: Config = {
     startTime: '06:00',
-    endTime: '10:00',
+    endTime: '9:00',
   }
 
   const rows = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
@@ -70,7 +70,14 @@ export const generated = () => {
     },
   ]
 
-  return <Week rows={rows} data={data} config={myConfig} />
+  return (
+    <Week
+      rows={rows}
+      data={data}
+      config={myConfig}
+      provideCreateRandom={true}
+    />
+  )
 }
 
 export default {

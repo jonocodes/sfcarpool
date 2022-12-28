@@ -194,7 +194,7 @@ export function getTimeSlots(tableStartTime, tableEndTime, widthTime) {
 }
 
 export function _generateEvent(times, rowCount) {
-  const randStartIndex = Math.floor(Math.random() * times.length)
+  const randStartIndex = Math.floor(Math.random() * (times.length - 8))
   const randEndIndex = randStartIndex + 2 + Math.floor(Math.random() * 8)
 
   const event = {
@@ -217,51 +217,6 @@ export function _generateEvent(times, rowCount) {
 type SchedulerStore = ReturnType<typeof createSchedulerStore>
 
 export const SchedulerContext = createContext<SchedulerStore | null>(null)
-
-// export function generateEvent() {
-//   const rows = zStore.getState().rows
-//   const tableStartTime = zStore.getState().tableStartTime
-//   const tableEndTime = zStore.getState().tableEndTime
-//   const config = zStore.getState().config
-//   // const rows = zStore((state) => state.rows)
-//   // const tableStartTime = zStore((state) => state.tableStartTime)
-//   // const tableEndTime = zStore((state) => state.tableEndTime)
-//   // const config = zStore((state) => state.config)
-
-//   const times = getTimeSlots(tableStartTime, tableEndTime, config.widthTime)
-
-//   return _generateEvent(times, rows.length)
-// }
-
-// export function setup(events: Event[], rows: string[], userConf: Config) {
-//   const config = { ...configDefault, ...userConf }
-//   let tableStartTime = calcStringTime(config.startTime)
-//   tableStartTime -= tableStartTime % config.widthTime
-//   // tableStartTime = 0
-
-//   let tableEndTime = calcStringTime(config.endTime)
-//   tableEndTime -= tableEndTime % config.widthTime
-//   // tableEndTime = 0
-
-//   const cellsWide = Math.floor(
-//     (tableEndTime - tableStartTime) / config.widthTime
-//   )
-
-//   console.log('init cellswide ', cellsWide)
-
-//   // debugger
-
-//   return {
-//     events: events,
-//     rows: rows,
-//     rowMap: generateRowMap(rows, events), // TODO: update this better?
-//     tableStartTime: tableStartTime,
-//     tableEndTime: tableEndTime,
-//     cellsWide: cellsWide,
-//     scrollWidth: config.widthTimeX * cellsWide,
-//     config: config,
-//   }
-// }
 
 // update row heights, and manage overlapping events in a row
 export function calculateGeometries(
@@ -378,6 +333,8 @@ export function calculateGeometries(
   }
   // setTableHeight(tableHeight)
 
+  console.log('updateGeometries finished', tableHeight, geometries, rowHeights)
+
   return {
     tableHeight: tableHeight,
     geometries: geometries,
@@ -407,7 +364,7 @@ export function calculateGeometries(
 //   return store;
 // }
 
-function initComputed(userConf, rows, events): Computed {
+function refreshComputed(userConf, rows, events): Computed {
   const config = { ...configDefault, ...userConf }
   let tableStartTime = calcStringTime(config.startTime)
   tableStartTime -= tableStartTime % config.widthTime
@@ -465,7 +422,7 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
     events: initProps.events,
     rows: initProps.rows,
     config: config,
-    computed: initComputed(config, initProps.rows, initProps.events),
+    computed: refreshComputed(config, initProps.rows, initProps.events),
     onClickEvent: null,
     currentEvent: null,
 
@@ -478,7 +435,11 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
           ...config,
         }
 
-        const computed = initComputed(newConfig, initProps.rows, state.events)
+        const computed = refreshComputed(
+          newConfig,
+          initProps.rows,
+          state.events
+        )
 
         return {
           config: newConfig,
@@ -489,7 +450,7 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
     addEvent: (event: Event) =>
       set((state) => {
         state.events.push(event)
-        const computed = initComputed(config, initProps.rows, state.events)
+        const computed = refreshComputed(config, initProps.rows, state.events)
 
         return {
           currentEvent: event,
@@ -501,7 +462,7 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
     updateEvent: (eventIndex: number, event: Event) =>
       set((state) => {
         state.events[eventIndex] = event
-        const computed = initComputed(config, initProps.rows, state.events)
+        const computed = refreshComputed(config, initProps.rows, state.events)
 
         console.log('updateEvent', eventIndex, event)
 

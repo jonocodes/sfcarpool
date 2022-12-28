@@ -1,4 +1,4 @@
-import { useContext, useRef} from 'react'
+import { useContext, useRef } from 'react'
 
 import {
   Button,
@@ -22,6 +22,8 @@ import {
   // updateGeometries,
   // zStore,
 } from 'src/components/Scheduler/zstore'
+
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 // type SchedulerStore = ReturnType<typeof createSchedulerStore>
 
@@ -197,14 +199,8 @@ const EventModal = (props) => {
               </div>
 
               <div className="col-md-6">
-                <label htmlFor="customRange1" className="form-label">
-                  Likelihood <span id="likelihood"></span>
-                </label>
-                <input
-                  type="range"
-                  className="form-range"
-                  id="likelihoodSlider"
-                />
+                <Form.Label>Likelihood</Form.Label>
+                <Form.Range defaultValue={event.data.likelihood} />
               </div>
             </div>
           </div>
@@ -230,7 +226,9 @@ const Week = (props) => {
     timeLineY: 60, // height(px)
     dataWidth: 120,
     verticalScrollbar: 20, // scrollbar (px)
-    timeLineBorder: 2, // border(top and bottom)
+    timeLineBorder: 0, // border(top and bottom)
+    timeLinePaddingTop: 0,
+    timeLinePaddingBottom: 20,
     bundleMoveWidth: 6, // width to move all schedules to the right of the clicked time line cell
     // draggable: isDraggable,
     // resizable: isResizable,
@@ -250,14 +248,24 @@ const Week = (props) => {
     onScheduleClick: function (time, colNum, rowNum) {
       console.log('onScheduleClick external method', time, colNum, rowNum)
 
-      const tableStartTime = computed.tableStartTime
-      const tableEndTime = computed.tableEndTime
+      const startTime = computed.tableStartTime + colNum * config.widthTime
+      const endTime = startTime + 4 * config.widthTime
 
-      const times = getTimeSlots(tableStartTime, tableEndTime, config.widthTime)
+      const randId = 0 + Math.floor(Math.random() * 1000)
 
-      const newEvent = _generateEvent(times, props.rows.length)
-      // console.log('generated', newEvent)
-      addEvent(newEvent)
+      const event = {
+        row: rowNum,
+        start: formatTime(startTime),
+        end: formatTime(endTime),
+        text: 'new',
+        data: {
+          entry: randId,
+          class: 'passenger',
+          likelihood: 95,
+        },
+      }
+
+      addEvent(event)
     },
   }
 

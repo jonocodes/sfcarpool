@@ -107,12 +107,15 @@ const Event = (props) => {
 
   const geometries = useStore(store, (state) => state.computed.geometries)
   const events = useStore(store, (state) => state.events)
+  const computed = useStore(store, (state) => state.computed)
 
   const event = events[props.eventIndex]
   const geometry = geometries[props.eventIndex]
 
   const [startTime, setStartTime] = useState(calcStringTime(event.start))
   const [endTime, setEndTime] = useState(calcStringTime(event.end))
+
+  const [row, setRow] = useState(event.row)
 
   const [resizeRight, setResizeRight] = useState(0)
   const [resizeLeft, setResizeLeft] = useState(0)
@@ -146,61 +149,83 @@ const Event = (props) => {
       minWidth={config.widthTimeX}
       minHeight={config.timeLineY}
       maxHeight={config.timeLineY}
-      dragGrid={[config.widthTimeX, config.timeLineY + config.timeLineBorder]}
+      dragGrid={[config.widthTimeX, 1]}
       resizeGrid={[config.widthTimeX, 1]}
       onDrag={(e, data) => {
         // if (config.draggable) {
-        console.log('onDrag', data)
-        const delta = (data.deltaX / config.widthTimeX) * config.widthTime
+        console.log('onDrag', data, geometry)
+        const deltaTime = (data.deltaX / config.widthTimeX) * config.widthTime
 
-        // event.start = formatTime(startTime + delta)
-        // event.end = formatTime(endTime + delta)
+        event.start = formatTime(startTime + deltaTime)
+        event.end = formatTime(endTime + deltaTime)
 
-        event.start = formatTime(startTime + delta)
-        event.end = formatTime(endTime + delta)
-
-        setStartTime(startTime + delta)
-        setEndTime(endTime + delta)
-        // }
+        setStartTime(startTime + deltaTime)
+        setEndTime(endTime + deltaTime)
       }}
       onDragStart={(e, data) => {
         console.log('onDragStart', data)
       }}
       onDragStop={(e, data) => {
+        const deltaX = data.lastX - geometry.x //- data.lastX
+        const deltaY = data.lastY - geometry.y
+
         console.log(
           'onDragStop',
           data,
-          Math.abs(geometry.x - data.x),
-          config.widthTimeX
+          deltaX,
+          config.widthTimeX,
+          deltaY,
+          config.timeLineY
         )
-        // TODO: update geometries
-        // updateGeometries()
 
-        // setEvent(event)
-        // updateEvent(props.eventIndex, event)
+        let origTopY = 0
 
-        const delta = (data.deltaX / config.widthTimeX) * config.widthTime
+        // const extraSpace =
+        //   config.timeBorder +
+        //   config.timeLinePaddingTop +
+        //   config.timeLinePaddingBottom
 
-        // event.start = formatTime(startTime + delta)
-        // event.end = formatTime(endTime + delta)
+        for (let i = 0; i < event.row; i++) {
+          origTopY += computed.rowHeights[i] //+ extraSpace
+          console.log(origTopY)
+        }
 
-        // setStartTime(startTime + delta)
-        // setEndTime(endTime + delta)
+        const newTopY = origTopY + data.lastY
 
-        // event = event.stast + data.deltaX
+        let newRow = 0
 
-        if (Math.abs(geometry.x - data.x) < config.widthTimeX) {
+        let currentY = computed.rowHeights[newRow]
+
+        while (currentY <= newTopY) {
+          newRow += 1
+          currentY += computed.rowHeights[newRow] // + extraSpace
+        }
+
+        console.log('Y', origTopY, newTopY, currentY, event.row, newRow)
+
+        event.row = newRow
+        setRow(newRow)
+
+        if (
+          deltaX == 0 &&
+          deltaY == 0
+          // newRow == event.row
+          // && deltaY == 0
+          // deltaX < config.widthTimeX
+          //&& deltaY < config.timeLineY
+        ) {
           console.log(
             'that drag seemed like a click!',
-            Math.abs(geometry.x - data.x),
+            deltaX,
             config.widthTimeX
           )
           if (config.onClick) {
             config.onClick(event, props.rowNum)
           }
-        } else {
-          updateEvent(props.eventIndex, event)
         }
+        // else {
+        updateEvent(props.eventIndex, event)
+        // }
       }}
       onResize={(e, dir, ref, delta, pos) => {
         // if (config.resizable) {
@@ -409,7 +434,6 @@ const Main = () => {
 
   const store = useContext(SchedulerContext)
   if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
-  // const bears = useStore(store, (state) => state.bears)
 
   const rows = useStore(store, (state) => state.rows)
   const rowHeights = useStore(store, (state) => state.computed.rowHeights)
@@ -454,7 +478,10 @@ const Main = () => {
           {titles}
         </div>
       </div>
-      <div className="sc_main_box" style={{ overflowY: 'hidden' }}>
+      <div
+        className="sc_main_box"
+        //style={{ overflowY: 'hidden' }}
+      >
         <div className="sc_main_scroll" style={{ width: scrollWidth + 'px' }}>
           <Menu />
           <div className="sc_main">{timelines}</div>
