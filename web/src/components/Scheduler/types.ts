@@ -40,7 +40,7 @@ export interface ScheduleClickFunction {
 }
 
 export interface EventClickFunction {
-  (event: Event, rowNum: number): void
+  (event: Event, rowNum: number, eventIndex: number): void
 }
 
 export interface Config {
@@ -79,11 +79,12 @@ export interface SchedulerProps {
   computed: Computed
   onClickEvent: Event | null
   currentEvent: Event | null
+  currentEventIndex: number | null
 }
 
 export interface SchedulerState extends SchedulerProps {
   // addBear: () => void
   addEvent: (event: Event) => void
   updateEvent: (index: number, event: Event) => void
-  mergeConfig: (config: Config) => void
+  // mergeConfig: (config: Config) => void
 }

@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react'
+import { useContext, useRef, useState } from 'react'
 
 import {
   Button,
@@ -32,18 +32,20 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 interface PageState {
   modalVisible: boolean
   currentEvent: Event
+  currentEventIndex: number
   showModal: () => void
   hideModal: () => void
-  setEvent: (event: Event) => void
-  // increase: (by: number) => void
+  setEvent: (index: number, event: Event) => void
 }
 
 const usePageStore = create<PageState>()((set) => ({
   modalVisible: false,
   currentEvent: null,
+  currentEventIndex: null,
   showModal: () => set(() => ({ modalVisible: true })),
   hideModal: () => set(() => ({ modalVisible: false })),
-  setEvent: (event) => set(() => ({ currentEvent: event })),
+  setEvent: (index, event) =>
+    set(() => ({ currentEventIndex: index, currentEvent: event })),
 }))
 
 // const pageStore = create((set) => ({
@@ -63,6 +65,7 @@ const usePageStore = create<PageState>()((set) => ({
 
 const EventModal = (props) => {
   const event: Event = usePageStore((state) => state.currentEvent)
+  const eventIndex: number = usePageStore((state) => state.currentEventIndex)
 
   const store = useContext(SchedulerContext)
   if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
@@ -78,6 +81,17 @@ const EventModal = (props) => {
   const config = useStore(store, (state) => state.config)
   const computed = useStore(store, (state) => state.computed)
   const _config = useStore(store, (state) => state.config)
+
+  const updateEvent = useStore(store, (state) => state.updateEvent)
+
+  const [start, setStart] = useState(event.start)
+
+  function update() {
+    event.start = start
+    console.log('update', eventIndex, event)
+    updateEvent(eventIndex, event)
+    props.handleClose()
+  }
 
   // TODO: save slots to pagestate
   const timeSlots = getTimeSlots(
@@ -183,6 +197,7 @@ const EventModal = (props) => {
                   size="sm"
                   aria-label="choose start time"
                   defaultValue={event.start}
+                  onChange={(e) => setStart(e.target.value)}
                 >
                   {timeDivs}
                 </Form.Select>
@@ -210,7 +225,7 @@ const EventModal = (props) => {
         <Button variant="secondary" onClick={props.handleClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={props.handleClose}>
+        <Button variant="primary" onClick={update}>
           Save Changes
         </Button>
       </Modal.Footer>
@@ -222,7 +237,7 @@ const Week = (props) => {
   const pageConfig: Config = {
     startTime: '06:00', // schedule start time(HH:ii)
     endTime: '10:00', // schedule end time(HH:ii)
-    widthTime: 60 * 5,
+    widthTime: 60 * 5, // 300 seconds per cell (5 minutes) ?
     timeLineY: 60, // height(px)
     dataWidth: 120,
     verticalScrollbar: 20, // scrollbar (px)
@@ -233,17 +248,12 @@ const Week = (props) => {
     // draggable: isDraggable,
     // resizable: isResizable,
     resizableLeft: true,
-    widthTimeX: 20,
-    onClick: function (event, rowNum) {
-      console.log('onClick external method', event, rowNum)
+    widthTimeX: 20, // 20 pixels per cell?
+    onClick: function (event, rowNum, eventIndex) {
+      console.log('onClick external method', event, rowNum, eventIndex)
 
-      setEvent(event)
+      setEvent(eventIndex, event)
       showModal()
-
-      // const modalVisible = usePageStore((state) => state.modalVisible)
-      // const showModal = usePageStore((state) => state.showModal)
-      // const hideModal = usePageStore((state) => state.hideModal)
-      // document.getElementById('exampleModal')
     },
     onScheduleClick: function (time, colNum, rowNum) {
       console.log('onScheduleClick external method', time, colNum, rowNum)

@@ -1,8 +1,6 @@
-// import { number } from 'prop-types'
-import { createContext, useContext } from 'react'
+import { createContext } from 'react'
 
-import { RowProps } from 'react-bootstrap'
-import create, { createStore, StoreApi } from 'zustand'
+import { createStore } from 'zustand'
 
 import { calcStringTime, formatTime } from './helpers'
 import {
@@ -12,11 +10,6 @@ import {
   SchedulerState,
   Event,
 } from './types'
-
-// interface EventData {
-//   class?: string
-//   likenyhood
-// }
 
 const configDefault: Config = {
   className: 'jq-schedule',
@@ -45,73 +38,6 @@ const configDefault: Config = {
   // onAppendSchedule: null,
   onScheduleClick: null,
 }
-
-// interface ScheduleClickFunction {
-//   (time: number, colNum: number, rowNum: number): void
-// }
-
-// interface EventClickFunction {
-//   (event: Event, rowNum: number): void
-// }
-
-// export interface Config {
-//   className?: string
-//   startTime?: string
-//   endTime?: string
-//   widthTimeX?: number
-//   widthTime?: number // cell timestamp example 10 minutes
-//   timeLineY?: number // timeline height(px)
-//   timeLineBorder?: number // timeline height border
-//   timeBorder?: number // border width
-//   timeLinePaddingTop?: number
-//   timeLinePaddingBottom?: number
-//   headTimeBorder?: number // time border width
-//   dataWidth?: number // data width
-//   verticalScrollbar?: number // vertical scrollbar width
-//   bundleMoveWidth?: number
-//   // width to move all schedules to the right of the clicked time cell
-//   draggable?: boolean
-//   resizable?: boolean
-//   resizableLeft?: boolean
-//   // event
-//   // onInitRow: null
-//   // onChange: null
-//   onClick?: EventClickFunction
-//   // onAppendRow: null
-//   // onAppendSchedule: null
-//   onScheduleClick?: ScheduleClickFunction
-// }
-
-// interface Event {
-//   row: number
-//   start: string
-//   end: string
-//   text: string
-//   data: Dictionary<string | number>
-// }
-
-// interface Geometry {
-//   x: number
-//   y: number
-//   width: number
-//   height: number
-// }
-
-// interface Computed {
-//   rowMap: number[][]
-//   geometries: Geometry[]
-//   rowHeights: number[]
-//   tableHeight: number
-
-//   // setTableHeight: (height: number) => void
-//   // setRowHeight: (height: number, index: number) => void
-//   // setGeometry: (geometry: Geometry, index: number) => void
-
-//   tableStartTime: number
-//   tableEndTime: number
-//   cellsWide: number
-//   scrollWidth: number
-// }
 
 // interface zState {
 //   bears?: number
@@ -397,27 +323,8 @@ function refreshComputed(userConf, rows, events): Computed {
 
 export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
   const config = { ...configDefault, ...initProps.config }
-  // initComputed(config, initProps.rows, initProps.events)
-
-  // const DEFAULT_PROPS = {
-  //   // bears: 0,
-
-  //   config: config,
-  //   events: initProps.events,
-  //   rows: initProps.rows,
-
-  //   computed: initComputed(config, initProps.rows, initProps.events),
-
-  //   onClickEvent: null,
-  // }
-
-  // console.log(DEFAULT_PROPS.computed)
 
   return createStore<SchedulerState>()((set) => ({
-    // DEFAULT_PROPS,
-    // ...DEFAULT_PROPS,
-    // ...initProps,
-    // addBear: () => set((state) => ({ bears: ++state.bears })),
 
     events: initProps.events,
     rows: initProps.rows,
@@ -425,27 +332,7 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
     computed: refreshComputed(config, initProps.rows, initProps.events),
     onClickEvent: null,
     currentEvent: null,
-
-    mergeConfig: (moreConfig: Config) =>
-      // TODO: this is causing an infiniate loop!
-
-      set((state) => {
-        const newConfig = {
-          ...moreConfig,
-          ...config,
-        }
-
-        const computed = refreshComputed(
-          newConfig,
-          initProps.rows,
-          state.events
-        )
-
-        return {
-          config: newConfig,
-          computed: computed,
-        }
-      }),
+    currentEventIndex: null,
 
     addEvent: (event: Event) =>
       set((state) => {
@@ -465,6 +352,8 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
         const computed = refreshComputed(config, initProps.rows, state.events)
 
         console.log('updateEvent', eventIndex, event)
+
+        // TODO: figure out why this is not triggering a refresh
 
         return {
           currentEvent: event,
