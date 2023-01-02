@@ -325,7 +325,6 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
   const config = { ...configDefault, ...initProps.config }
 
   return createStore<SchedulerState>()((set) => ({
-
     events: initProps.events,
     rows: initProps.rows,
     config: config,
@@ -348,10 +347,19 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
 
     updateEvent: (eventIndex: number, event: Event) =>
       set((state) => {
+        console.log('updateEvent', eventIndex, event)
+
         state.events[eventIndex] = event
         const computed = refreshComputed(config, initProps.rows, state.events)
 
-        console.log('updateEvent', eventIndex, event)
+        // NOTE: if this is called all the geometries should be updated and all events should be rerendered
+
+        console.log(
+          'updateEvent finished',
+          eventIndex,
+          event,
+          computed.geometries[eventIndex]
+        )
 
         // TODO: figure out why this is not triggering a refresh
 

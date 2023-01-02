@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 // import { makeAutoObservable } from 'mobx'
 // import { observer } from 'mobx-react-lite'
@@ -39,7 +39,6 @@ import { _generateEvent } from './zstore'
 // const myStore = new SchedulerStore()
 
 const Event = (props) => {
-  console.log('Event', props)
   const store = useContext(SchedulerContext)
   if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
 
@@ -55,7 +54,9 @@ const Event = (props) => {
   const event = events[props.eventIndex]
   const geometry = geometries[props.eventIndex]
 
-  const [startTime, setStartTime] = useState(calcStringTime(event.start))
+  const [startTime, setStartTime] = useState(
+    calcStringTime(events[props.eventIndex].start)
+  )
   const [endTime, setEndTime] = useState(calcStringTime(event.end))
 
   const [timeStr, setTimeStr] = useState(
@@ -63,9 +64,9 @@ const Event = (props) => {
   )
 
   // const [y, setY] = useState(geometry.y)
-  const [y, _] = useState(props.geometry.y)
-  const [x, setX] = useState(props.geometry.x)
-  const [width, setWidth] = useState(props.geometry.width)
+  // const [y, _] = useState(props.geometry.y)
+  // const [x, setX] = useState(geometry.x)
+  const [width, setWidth] = useState(geometry.width)
 
   const tableStartTime = calcStringTime(config.startTime)
 
@@ -73,6 +74,26 @@ const Event = (props) => {
   // const showModal = usePageStore((state) => state.showModal)
   // const hideModal = usePageStore((state) => state.hideModal)
   // document.getElementById('exampleModal')
+
+  // const [geo, setGeo] = useState(geometry)
+
+  // const [geo2, setGeo2] = useState(computed.geometries[props.eventIndex])
+
+  // useEffect(() => {
+  //   setGeo(() => geometries[props.eventIndex])
+  //   // setCalculation(() => count * 2);
+  // }, [geometry]) // <- add the count variable here
+
+  console.log(
+    'Event',
+    props,
+    // x,
+    // y,
+    // computed,
+    // geometries,
+    geometries[props.eventIndex].x
+    // geo2.x
+  )
 
   return (
     <Rnd
@@ -85,14 +106,15 @@ const Event = (props) => {
         zIndex: 80,
       }}
       default={{
-        x: geometry.x,
-        y: geometry.y,
-        width: geometry.width,
+        x: geometries[props.eventIndex].x, //x
+        y: geometries[props.eventIndex].y,
+        width: width,
         height: geometry.height,
       }}
       position={{
-        x: x,
-        y: y,
+        x: geometries[props.eventIndex].x,
+        // x: geo2.x, // x,
+        y: geometries[props.eventIndex].y, //y,
       }}
       size={{ width: width, height: geometry.height }}
       // TODO: use config.draggable and config.resizable flags here
@@ -121,18 +143,20 @@ const Event = (props) => {
         console.log('onDragStart', data)
       }}
       onDragStop={(e, data) => {
-        const deltaX = data.lastX - x
-        const deltaY = data.lastY - y
+        const deltaX = data.lastX - geometries[props.eventIndex].x
+        const deltaY = data.lastY - geometries[props.eventIndex].y
 
         console.log(
           'onDragStop',
           e,
           data,
           deltaX,
-          config.widthTimeX,
-          data.lastX
+          deltaY,
+          data.lastX,
+          data.lastY
         )
 
+        // handle the case where the drag seems like a click
         if (deltaX == 0 && deltaY == 0) {
           console.log(
             'that drag seemed like a click!',
@@ -145,18 +169,28 @@ const Event = (props) => {
         } else {
           // handle time change
 
+          const delta = (deltaX / config.widthTimeX) * config.widthTime
+
           const startT =
             startTime + (deltaX / config.widthTimeX) * config.widthTime
 
           const endT = endTime + (deltaX / config.widthTimeX) * config.widthTime
 
-          setX(data.lastX)
+          // setX(data.lastX)   // geometry updates should handle this
 
           setStartTime(startT)
           setEndTime(endT)
 
           event.start = formatTime(startT)
           event.end = formatTime(endT)
+
+          console.log(
+            event.start,
+            startT,
+            startTime,
+            formatTime(startTime),
+            delta
+          )
 
           // handle row switching
           let origTopY = 0
@@ -179,8 +213,23 @@ const Event = (props) => {
 
           event.row = newRow
 
+          // setY(geometry.y)
+
           updateEvent(props.eventIndex, event)
+
+          // setY(geometries[props.eventIndex].y)
+          // setY(0)
+
+          console.log(
+            newTopY,
+            geometry.y,
+            geometry,
+            geometries[props.eventIndex].y
+            // y
+          )
         }
+
+        console.log('onDragStop completed')
       }}
       onResize={(e, dir, ref, delta, pos) => {
         // if (config.resizable) {
@@ -208,11 +257,14 @@ const Event = (props) => {
         if (dir === 'right') {
           setWidth(width + delta.width)
           setEndTime(endTime + deltaTime)
+          event.end = formatTime(endTime + deltaTime)
         } else {
           setWidth(width + delta.width)
           setStartTime(startTime - deltaTime)
-          setX(pos.x)
+          // setX(pos.x)
+          event.start = formatTime(startTime - deltaTime)
         }
+
         // TODO: update geometries in case there is an overlap?
 
         updateEvent(props.eventIndex, event)
@@ -258,6 +310,8 @@ const Row = (props) => {
   const cellsWide = useStore(store, (state) => state.computed.cellsWide)
   const rowHeights = useStore(store, (state) => state.computed.rowHeights)
 
+  console.log('row', props.rowNum)
+
   for (let i = 0; i < cellsWide; i++) {
     blankCells.push(
       <div
@@ -293,20 +347,20 @@ const Row = (props) => {
     )
   }
 
-  const data = useStore(store, (state) => state.events)
+  const events = useStore(store, (state) => state.events)
   // const getGeometry = useStore(store, (state) => state.getGeometry)
 
-  const events = []
+  const eventBlocks = []
   for (let i = 0; i < items_map.length; i++) {
     const eventIndex = items_map[i]
     // console.log(data[items_map[i]], i)
     // const geometry = getGeometry(i)
-    events.push(
+    eventBlocks.push(
       <Event
-        event={data[eventIndex]}
+        event={events[eventIndex]}
         eventIndex={eventIndex}
         key={eventIndex}
-        geometry={geometries[eventIndex]}
+        // geometry={geometries[eventIndex]}
       />
     )
   }
@@ -316,7 +370,7 @@ const Row = (props) => {
   return (
     <div className="timeline" style={{ height: height + 'px' }}>
       {blankCells}
-      {events}
+      {eventBlocks}
     </div>
   )
 }

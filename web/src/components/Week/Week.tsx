@@ -234,6 +234,8 @@ const EventModal = (props) => {
 }
 
 const Week = (props) => {
+  console.log('rendering Week')
+
   const pageConfig: Config = {
     startTime: '06:00', // schedule start time(HH:ii)
     endTime: '10:00', // schedule end time(HH:ii)
