@@ -345,6 +345,21 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
         }
       }),
 
+    removeEvent: (eventIndex: number) =>
+      set((state) => {
+        state.events.splice(eventIndex, 1)
+        // state.events.push(event)
+        const computed = refreshComputed(config, initProps.rows, state.events)
+
+        console.log('removeEvent', eventIndex, state.events, computed)
+
+        return {
+          // currentEvent: event,
+          events: state.events,
+          computed: computed,
+        }
+      }),
+
     updateEvent: (eventIndex: number, event: Event) =>
       set((state) => {
         console.log('updateEvent', eventIndex, event)
@@ -358,6 +373,7 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
           'updateEvent finished',
           eventIndex,
           event,
+          state.events[eventIndex],
           computed.geometries[eventIndex]
         )
 

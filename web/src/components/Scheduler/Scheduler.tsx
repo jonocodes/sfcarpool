@@ -38,6 +38,22 @@ import { _generateEvent } from './zstore'
 
 // const myStore = new SchedulerStore()
 
+function formatTimeSpan(start: number, end: number) {
+  console.log(
+    'format time span called ',
+    formatTime(start) + '-' + formatTime(end)
+  )
+  return formatTime(start) + '-' + formatTime(end)
+}
+
+function formatEventTimeSpan(event) {
+  return (
+    formatTime(calcStringTime(event.start)) +
+    '-' +
+    formatTime(calcStringTime(event.end))
+  )
+}
+
 const Event = (props) => {
   const store = useContext(SchedulerContext)
   if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
@@ -51,48 +67,51 @@ const Event = (props) => {
   const events = useStore(store, (state) => state.events)
   const computed = useStore(store, (state) => state.computed)
 
-  const event = events[props.eventIndex]
-  const geometry = geometries[props.eventIndex]
+  // const event = events[props.eventIndex]
+  // const geometry = geometries[props.eventIndex]
+  // const height = config.timeLineY
 
   const [startTime, setStartTime] = useState(
-    calcStringTime(events[props.eventIndex].start)
+    0
+    // calcStringTime(events[props.eventIndex].start)
   )
-  const [endTime, setEndTime] = useState(calcStringTime(event.end))
+  const [endTime, setEndTime] = useState(
+    0
+    // calcStringTime(events[props.eventIndex].end)
+  )
 
   const [timeStr, setTimeStr] = useState(
-    formatTime(startTime) + '-' + formatTime(endTime)
+    'X'
+    // formatTimeSpan(
+    //   calcStringTime(events[props.eventIndex].start),
+    //   calcStringTime(props.event.end)
+    // )
   )
 
-  // const [y, setY] = useState(geometry.y)
-  // const [y, _] = useState(props.geometry.y)
-  // const [x, setX] = useState(geometry.x)
-  const [width, setWidth] = useState(geometry.width)
+  // const [width, setWidth] = useState(geometries[props.eventIndex].width)
 
   const tableStartTime = calcStringTime(config.startTime)
 
-  // const modalVisible = usePageStore((state) => state.modalVisible)
-  // const showModal = usePageStore((state) => state.showModal)
-  // const hideModal = usePageStore((state) => state.hideModal)
-  // document.getElementById('exampleModal')
-
-  // const [geo, setGeo] = useState(geometry)
-
-  // const [geo2, setGeo2] = useState(computed.geometries[props.eventIndex])
-
-  // useEffect(() => {
-  //   setGeo(() => geometries[props.eventIndex])
-  //   // setCalculation(() => count * 2);
-  // }, [geometry]) // <- add the count variable here
+  useEffect(() => {
+    console.log('useEffect triggered')
+    setEndTime(calcStringTime(events[props.eventIndex].end))
+    setStartTime(calcStringTime(events[props.eventIndex].start))
+    setTimeStr(
+      formatEventTimeSpan(events[props.eventIndex])
+      // formatTimeSpan(
+      //   calcStringTime(events[props.eventIndex].start),
+      //   calcStringTime(events[props.eventIndex].end)
+      // )
+    )
+  })
 
   console.log(
     'Event',
     props,
-    // x,
-    // y,
-    // computed,
-    // geometries,
-    geometries[props.eventIndex].x
-    // geo2.x
+    events[props.eventIndex],
+    props.event.end,
+    formatTime(endTime),
+    timeStr
   )
 
   return (
@@ -106,17 +125,19 @@ const Event = (props) => {
         zIndex: 80,
       }}
       default={{
-        x: geometries[props.eventIndex].x, //x
+        x: geometries[props.eventIndex].x,
         y: geometries[props.eventIndex].y,
-        width: width,
-        height: geometry.height,
+        width: geometries[props.eventIndex].width,
+        height: config.timeLineY,
       }}
       position={{
         x: geometries[props.eventIndex].x,
-        // x: geo2.x, // x,
-        y: geometries[props.eventIndex].y, //y,
+        y: geometries[props.eventIndex].y,
       }}
-      size={{ width: width, height: geometry.height }}
+      size={{
+        width: geometries[props.eventIndex].width,
+        height: config.timeLineY,
+      }}
       // TODO: use config.draggable and config.resizable flags here
 
       minWidth={config.widthTimeX}
@@ -129,15 +150,16 @@ const Event = (props) => {
 
         const offset = (data.x / config.widthTimeX) * config.widthTime
 
-        console.log('onDrag', data, geometry, offset)
+        console.log('onDrag', data, offset)
 
         const startT = tableStartTime + offset
         const endT =
           tableStartTime +
           offset +
-          (width / config.widthTimeX) * config.widthTime
+          (geometries[props.eventIndex].width / config.widthTimeX) *
+            config.widthTime
 
-        setTimeStr(formatTime(startT) + '-' + formatTime(endT))
+        setTimeStr(formatTimeSpan(startT, endT))
       }}
       onDragStart={(e, data) => {
         console.log('onDragStart', data)
@@ -164,38 +186,32 @@ const Event = (props) => {
             config.widthTimeX
           )
           if (config.onClick) {
-            config.onClick(event, props.rowNum, props.eventIndex)
+            config.onClick(
+              events[props.eventIndex],
+              props.rowNum,
+              props.eventIndex
+            )
           }
         } else {
           // handle time change
 
-          const delta = (deltaX / config.widthTimeX) * config.widthTime
+          const deltaTime = (deltaX / config.widthTimeX) * config.widthTime
 
-          const startT =
-            startTime + (deltaX / config.widthTimeX) * config.widthTime
-
-          const endT = endTime + (deltaX / config.widthTimeX) * config.widthTime
+          const startT = startTime + deltaTime
+          const endT = endTime + deltaTime
 
           // setX(data.lastX)   // geometry updates should handle this
 
           setStartTime(startT)
           setEndTime(endT)
 
-          event.start = formatTime(startT)
-          event.end = formatTime(endT)
-
-          console.log(
-            event.start,
-            startT,
-            startTime,
-            formatTime(startTime),
-            delta
-          )
+          events[props.eventIndex].start = formatTime(startT)
+          events[props.eventIndex].end = formatTime(endT)
 
           // handle row switching
           let origTopY = 0
 
-          for (let i = 0; i < event.row; i++) {
+          for (let i = 0; i < events[props.eventIndex].row; i++) {
             origTopY += computed.rowHeights[i]
             console.log(origTopY)
           }
@@ -206,27 +222,21 @@ const Event = (props) => {
 
           let currentY = computed.rowHeights[newRow]
 
-          while (currentY <= newTopY) {
+          while (currentY <= newTopY + config.timeLineY / 2) {
             newRow += 1
             currentY += computed.rowHeights[newRow]
           }
 
-          event.row = newRow
+          events[props.eventIndex].row = newRow
 
           // setY(geometry.y)
 
-          updateEvent(props.eventIndex, event)
+          updateEvent(props.eventIndex, events[props.eventIndex])
 
           // setY(geometries[props.eventIndex].y)
           // setY(0)
 
-          console.log(
-            newTopY,
-            geometry.y,
-            geometry,
-            geometries[props.eventIndex].y
-            // y
-          )
+          console.log(newTopY, geometries[props.eventIndex].y)
         }
 
         console.log('onDragStop completed')
@@ -246,7 +256,7 @@ const Event = (props) => {
           startT -= deltaTime
         }
 
-        setTimeStr(formatTime(startT) + '-' + formatTime(endT))
+        setTimeStr(formatTimeSpan(startT, endT))
         // }
       }}
       onResizeStop={(e, dir, ref, delta, pos) => {
@@ -255,23 +265,23 @@ const Event = (props) => {
         console.log('onResizeStop', dir, delta, pos, deltaTime)
 
         if (dir === 'right') {
-          setWidth(width + delta.width)
+          // setWidth(width + delta.width)
           setEndTime(endTime + deltaTime)
-          event.end = formatTime(endTime + deltaTime)
+          events[props.eventIndex].end = formatTime(endTime + deltaTime)
         } else {
-          setWidth(width + delta.width)
+          // setWidth(width + delta.width)
           setStartTime(startTime - deltaTime)
-          // setX(pos.x)
-          event.start = formatTime(startTime - deltaTime)
+
+          events[props.eventIndex].start = formatTime(startTime - deltaTime)
         }
 
         // TODO: update geometries in case there is an overlap?
 
-        updateEvent(props.eventIndex, event)
+        updateEvent(props.eventIndex, events[props.eventIndex])
       }}
     >
       <div
-        className={`sc_bar ${event.data.class}`}
+        className={`sc_bar ${events[props.eventIndex].data.class}`}
         style={{
           width: '100%',
           height: config.timeLineY + 'px',
@@ -280,7 +290,7 @@ const Event = (props) => {
         <span className="head">
           <span className="time">{timeStr}</span>
         </span>
-        <span className="text">{event.text}</span>
+        <span className="text">{events[props.eventIndex].text}</span>
         <div
           className="ui-resizable-handle ui-resizable-e"
           style={{ zIndex: '90' }}
@@ -301,7 +311,7 @@ const Row = (props) => {
   const rowMap = useStore(store, (state) => state.computed.rowMap)
   const items_map = rowMap[props.rowNum]
 
-  const geometries = useStore(store, (state) => state.computed.geometries)
+  // const geometries = useStore(store, (state) => state.computed.geometries)
 
   const blankCells = []
 
@@ -310,7 +320,7 @@ const Row = (props) => {
   const cellsWide = useStore(store, (state) => state.computed.cellsWide)
   const rowHeights = useStore(store, (state) => state.computed.rowHeights)
 
-  console.log('row', props.rowNum)
+  // console.log('row', props.rowNum)
 
   for (let i = 0; i < cellsWide; i++) {
     blankCells.push(
@@ -502,7 +512,7 @@ const Scheduler = () => {
   return (
     <>
       <div className="container">
-        <div style={{ padding: '0 0 40px' }}>
+        <div style={{ padding: '10px 0 40px' }}>
           <div id="schedule" className="jq-schedule">
             <Main />
           </div>

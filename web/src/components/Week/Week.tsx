@@ -83,13 +83,25 @@ const EventModal = (props) => {
   const _config = useStore(store, (state) => state.config)
 
   const updateEvent = useStore(store, (state) => state.updateEvent)
+  const removeEvent = useStore(store, (state) => state.removeEvent)
 
   const [start, setStart] = useState(event.start)
+  const [end, setEnd] = useState(event.end)
+  const [likelihood, setLikelihood] = useState(event.data.likelihood)
+  // const [class, setClass] = useState(event.data.class)
 
   function update() {
     event.start = start
+    event.end = end
+    event.data.likelihood = likelihood
+    // event.data.class = class
     console.log('update', eventIndex, event)
     updateEvent(eventIndex, event)
+    props.handleClose()
+  }
+
+  function remove() {
+    removeEvent(eventIndex)
     props.handleClose()
   }
 
@@ -196,7 +208,7 @@ const EventModal = (props) => {
                 <Form.Select
                   size="sm"
                   aria-label="choose start time"
-                  defaultValue={event.start}
+                  defaultValue={start}
                   onChange={(e) => setStart(e.target.value)}
                 >
                   {timeDivs}
@@ -207,7 +219,8 @@ const EventModal = (props) => {
                 <Form.Select
                   size="sm"
                   aria-label="choose end time"
-                  defaultValue={event.end}
+                  defaultValue={end}
+                  onChange={(e) => setEnd(e.target.value)}
                 >
                   {timeDivs}
                 </Form.Select>
@@ -215,13 +228,19 @@ const EventModal = (props) => {
 
               <div className="col-md-6">
                 <Form.Label>Likelihood</Form.Label>
-                <Form.Range defaultValue={event.data.likelihood} />
+                <Form.Range
+                  defaultValue={likelihood}
+                  onChange={(e) => setLikelihood(e.target.value)}
+                />
               </div>
             </div>
           </div>
         </div>
       </Modal.Body>
       <Modal.Footer>
+        <Button variant="secondary" onClick={remove}>
+          Delete
+        </Button>
         <Button variant="secondary" onClick={props.handleClose}>
           Close
         </Button>
@@ -334,11 +353,11 @@ const Week = (props) => {
       <SchedulerContext.Provider value={store}>
         {modal}
 
-        <h1>Week!</h1>
-
-        <Scheduler />
+        {/* <h1>Week!</h1> */}
 
         {rand}
+
+        <Scheduler />
 
         {props.children}
       </SchedulerContext.Provider>

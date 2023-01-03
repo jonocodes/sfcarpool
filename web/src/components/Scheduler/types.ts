@@ -86,5 +86,6 @@ export interface SchedulerState extends SchedulerProps {
   // addBear: () => void
   addEvent: (event: Event) => void
   updateEvent: (index: number, event: Event) => void
+  removeEvent: (index: number) => void
   // mergeConfig: (config: Config) => void
 }
