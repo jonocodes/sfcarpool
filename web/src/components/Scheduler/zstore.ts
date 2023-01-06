@@ -106,6 +106,17 @@ function randInt(x, y) {
   return x + Math.floor(Math.random() * y)
 }
 
+// function event_from_base(base: EventBase): Event {
+
+//   base.timespan = "arstasr"
+
+//   return {...base,
+
+//     {
+//     timespan33: "span here"
+//   }}
+// }
+
 export function getTimeSlots(tableStartTime, tableEndTime, widthTime) {
   let time = tableStartTime
   // const times = [formatTime(time)]
@@ -130,7 +141,7 @@ export function _generateEvent(times, rowCount) {
     text: 'random',
     data: {
       entry: randInt(0, 1000),
-      class: 'passenger',
+      mode: 'passenger',
       likelihood: randInt(50, 100),
     },
   }
@@ -309,7 +320,6 @@ function refreshComputed(userConf, rows, events): Computed {
   const geos = calculateGeometries(config, events, rows, rowMap, tableStartTime)
 
   return {
-    // config: config,
     tableEndTime: tableEndTime,
     tableStartTime: tableStartTime,
     cellsWide,
@@ -332,6 +342,19 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
     onClickEvent: null,
     currentEvent: null,
     currentEventIndex: null,
+
+    clearEvents: () =>
+      // this is a helper function for dev and testing only
+      set((state) => {
+        state.events = []
+
+        const computed = refreshComputed(config, initProps.rows, state.events)
+
+        return {
+          events: state.events,
+          computed: computed,
+        }
+      }),
 
     addEvent: (event: Event) =>
       set((state) => {

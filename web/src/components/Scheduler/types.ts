@@ -10,6 +10,10 @@ export interface Event {
   data: Dictionary<string | number>
 }
 
+// export interface Event extends EventBase {
+//   timespan: string
+// }
+
 export interface Geometry {
   x: number
   y: number
@@ -22,10 +26,6 @@ export interface Computed {
   geometries: Geometry[]
   rowHeights: number[]
   tableHeight: number
-
-  // setTableHeight: (height: number) => void
-  // setRowHeight: (height: number, index: number) => void
-  // setGeometry: (geometry: Geometry, index: number) => void
 
   tableStartTime: number
   tableEndTime: number
@@ -87,5 +87,6 @@ export interface SchedulerState extends SchedulerProps {
   addEvent: (event: Event) => void
   updateEvent: (index: number, event: Event) => void
   removeEvent: (index: number) => void
+  clearEvents: () => void
   // mergeConfig: (config: Config) => void
 }

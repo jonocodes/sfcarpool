@@ -20,7 +20,7 @@ export const carpool = () => {
     //   text: 'JK',
     //   data: {
     //     entry: 8,
-    //     class: 'passenger',
+    //     mode: 'passenger',
     //     likelihood: 20,
     //   },
     // },
@@ -31,7 +31,7 @@ export const carpool = () => {
       text: 'Jono',
       data: {
         entry: 4,
-        class: 'passenger',
+        mode: 'passenger',
         likelihood: 95,
       },
     },
@@ -42,7 +42,7 @@ export const carpool = () => {
     //   text: 'Jodi',
     //   data: {
     //     entry: 5,
-    //     class: 'driver',
+    //     mode: 'driver',
     //     likelihood: 70,
     //   },
     // },
@@ -53,7 +53,7 @@ export const carpool = () => {
     //   text: 'Jono',
     //   data: {
     //     entry: 9,
-    //     class: 'passenger',
+    //     mode: 'passenger',
     //     likelihood: 70,
     //   },
     // },
@@ -64,7 +64,7 @@ export const carpool = () => {
     //   text: 'Jono',
     //   data: {
     //     entry: 10,
-    //     class: 'passenger',
+    //     mode: 'passenger',
     //     likelihood: 70,
     //   },
     // },

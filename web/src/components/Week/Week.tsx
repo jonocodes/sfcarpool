@@ -48,35 +48,15 @@ const usePageStore = create<PageState>()((set) => ({
     set(() => ({ currentEventIndex: index, currentEvent: event })),
 }))
 
-// const pageStore = create((set) => ({
-//   // votes: 0,
-//   modalVisible: false,
-//   showModal: () => set(() => ({ modalVisible: true })),
-//   hideModal: () => set(() => ({ modalVisible: false })),
-// }))
-
-// function _showModal(state, props) {
-//   return { modalVisible: true }
-// }
-
-// function _hideModal(state, props) {
-//   return { modalVisible: false }
-// }
-
 const EventModal = (props) => {
-  const event: Event = usePageStore((state) => state.currentEvent)
+  const _event: Event = usePageStore((state) => state.currentEvent)
   const eventIndex: number = usePageStore((state) => state.currentEventIndex)
 
+  // const store = props.store
   const store = useContext(SchedulerContext)
   if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
 
   // const store = getStore(SchedulerContext)
-
-  let mode = 'passenger'
-
-  if (event.data.class == 'driver') {
-    mode = 'driver'
-  }
 
   const config = useStore(store, (state) => state.config)
   const computed = useStore(store, (state) => state.computed)
@@ -85,16 +65,9 @@ const EventModal = (props) => {
   const updateEvent = useStore(store, (state) => state.updateEvent)
   const removeEvent = useStore(store, (state) => state.removeEvent)
 
-  const [start, setStart] = useState(event.start)
-  const [end, setEnd] = useState(event.end)
-  const [likelihood, setLikelihood] = useState(event.data.likelihood)
-  // const [class, setClass] = useState(event.data.class)
+  const [event, _] = useState(_event)
 
   function update() {
-    event.start = start
-    event.end = end
-    event.data.likelihood = likelihood
-    // event.data.class = class
     console.log('update', eventIndex, event)
     updateEvent(eventIndex, event)
     props.handleClose()
@@ -158,6 +131,7 @@ const EventModal = (props) => {
                 className="form-control"
                 id="inputName"
                 defaultValue={event.text}
+                onChange={(e) => (event.text = e.target.value)}
               />
             </div>
 
@@ -170,9 +144,13 @@ const EventModal = (props) => {
                 <ToggleButtonGroup
                   type="radio"
                   name="options"
-                  defaultValue={mode}
+                  defaultValue={event.data.mode}
                 >
-                  <ToggleButton id="tbg-radio-1" value={'passenger'}>
+                  <ToggleButton
+                    id="tbg-radio-1"
+                    value={'passenger'}
+                    onChange={(e) => (event.data.mode = e.target.value)}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
@@ -185,7 +163,11 @@ const EventModal = (props) => {
                     </svg>{' '}
                     Passenger
                   </ToggleButton>
-                  <ToggleButton id="tbg-radio-2" value={'driver'}>
+                  <ToggleButton
+                    id="tbg-radio-2"
+                    value={'driver'}
+                    onChange={(e) => (event.data.mode = e.target.value)}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
@@ -208,8 +190,8 @@ const EventModal = (props) => {
                 <Form.Select
                   size="sm"
                   aria-label="choose start time"
-                  defaultValue={start}
-                  onChange={(e) => setStart(e.target.value)}
+                  defaultValue={event.start}
+                  onChange={(e) => (event.start = e.target.value)}
                 >
                   {timeDivs}
                 </Form.Select>
@@ -219,8 +201,9 @@ const EventModal = (props) => {
                 <Form.Select
                   size="sm"
                   aria-label="choose end time"
-                  defaultValue={end}
-                  onChange={(e) => setEnd(e.target.value)}
+                  defaultValue={event.end}
+                  // onChange={(e) => setEnd(e.target.value)}
+                  onChange={(e) => (event.end = e.target.value)}
                 >
                   {timeDivs}
                 </Form.Select>
@@ -229,8 +212,10 @@ const EventModal = (props) => {
               <div className="col-md-6">
                 <Form.Label>Likelihood</Form.Label>
                 <Form.Range
-                  defaultValue={likelihood}
-                  onChange={(e) => setLikelihood(e.target.value)}
+                  defaultValue={event.data.likelihood}
+                  // onChange={(e) => setLikelihood(e.target.value)}
+                  // onChange={(e) => updateField('likelihood', e.target.value)}
+                  onChange={(e) => (event.data.likelihood = e.target.value)}
                 />
               </div>
             </div>
@@ -291,13 +276,16 @@ const Week = (props) => {
         text: 'new',
         data: {
           entry: randId,
-          class: 'passenger',
+          mode: 'passenger',
           likelihood: 95,
         },
       }
 
       addEvent(event)
     },
+    // onEventSave: function(event, eventIndex) {
+
+    // }
   }
 
   const myConfig = { ...pageConfig, ...props.config }
@@ -310,7 +298,6 @@ const Week = (props) => {
     )
 
     const newEvent = _generateEvent(times, props.rows.length)
-    // console.log('generated', newEvent)
     addEvent(newEvent)
   }
 
@@ -325,8 +312,7 @@ const Week = (props) => {
   const computed = useStore(store, (state) => state.computed)
   const config = useStore(store, (state) => state.config)
   const addEvent = useStore(store, (state) => state.addEvent)
-
-  // mergeConfig(myConfig)
+  const clearEvents = useStore(store, (state) => state.clearEvents)
 
   const modalVisible = usePageStore((state) => state.modalVisible)
   const showModal = usePageStore((state) => state.showModal)
@@ -335,16 +321,24 @@ const Week = (props) => {
 
   let modal = <></>
   if (modalVisible === true) {
-    modal = <EventModal show={modalVisible} handleClose={hideModal} />
+    modal = (
+      <EventModal show={modalVisible} handleClose={hideModal} store={store} />
+    )
   }
 
   // I could not figure out how to inject this from stories, so for now rand is initiated in this component
   let rand = <></>
   if (props.provideCreateRandom) {
     rand = (
-      <Button variant="primary" onClick={addRandomEvent}>
-        Create random event
-      </Button>
+      <>
+        <Button variant="primary" onClick={addRandomEvent}>
+          Create random event
+        </Button>
+
+        <Button variant="primary" onClick={clearEvents}>
+          Clear events
+        </Button>
+      </>
     )
   }
 
