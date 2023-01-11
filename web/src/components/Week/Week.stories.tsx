@@ -13,17 +13,17 @@ export const carpool = () => {
   const rows = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 
   const data = [
-    // {
-    //   row: 0, // monday
-    //   start: '8:00',
-    //   end: '8:10',
-    //   text: 'JK',
-    //   data: {
-    //     entry: 8,
-    //     mode: 'passenger',
-    //     likelihood: 20,
-    //   },
-    // },
+    {
+      row: 0, // monday
+      start: '8:00',
+      end: '8:10',
+      text: 'JK',
+      data: {
+        entry: 8,
+        mode: 'passenger',
+        likelihood: 20,
+      },
+    },
     {
       row: 1, //tuesday
       start: '6:30',
@@ -35,39 +35,39 @@ export const carpool = () => {
         likelihood: 95,
       },
     },
-    // {
-    //   row: 1, // tuesday
-    //   start: '7:05',
-    //   end: '7:30',
-    //   text: 'Jodi',
-    //   data: {
-    //     entry: 5,
-    //     mode: 'driver',
-    //     likelihood: 70,
-    //   },
-    // },
-    // {
-    //   row: 1, // tuesday
-    //   start: '7:40',
-    //   end: '8:50',
-    //   text: 'Jono',
-    //   data: {
-    //     entry: 9,
-    //     mode: 'passenger',
-    //     likelihood: 70,
-    //   },
-    // },
-    // {
-    //   row: 4, // friday
-    //   start: '8:40',
-    //   end: '8:50',
-    //   text: 'Jono',
-    //   data: {
-    //     entry: 10,
-    //     mode: 'passenger',
-    //     likelihood: 70,
-    //   },
-    // },
+    {
+      row: 1, // tuesday
+      start: '7:05',
+      end: '7:30',
+      text: 'Jodi',
+      data: {
+        entry: 5,
+        mode: 'driver',
+        likelihood: 70,
+      },
+    },
+    {
+      row: 1, // tuesday
+      start: '7:40',
+      end: '8:50',
+      text: 'Jono',
+      data: {
+        entry: 9,
+        mode: 'passenger',
+        likelihood: 70,
+      },
+    },
+    {
+      row: 4, // friday
+      start: '8:40',
+      end: '8:50',
+      text: 'Jono',
+      data: {
+        entry: 10,
+        mode: 'passenger',
+        likelihood: 70,
+      },
+    },
   ]
 
   return (

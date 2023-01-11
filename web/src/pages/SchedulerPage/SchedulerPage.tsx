@@ -1,86 +1,10 @@
-import { Config } from 'src/components/Scheduler/types'
-import Week from 'src/components/Week/Week'
+import EventsCell from 'src/components/EventsCell'
 
 const SchedulerPage = () => {
-  const myConfig: Config = {
-    startTime: '06:00',
-    endTime: '11:00',
-  }
+  const after = '2023-01-09'
+  const before = '2023-01-13'
 
-  const rows = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-
-  const data = [
-    {
-      row: 0, // monday
-      start: '8:00',
-      end: '8:10',
-      text: 'JK',
-      data: {
-        entry: 8,
-        class: 'passenger',
-        likelihood: 20,
-      },
-    },
-    {
-      row: 1, //tuesday
-      start: '6:30',
-      end: '7:10',
-      text: 'Jono',
-      data: {
-        entry: 4,
-        class: 'passenger',
-        likelihood: 95,
-      },
-    },
-    {
-      row: 1, // tuesday
-      start: '7:05',
-      end: '7:30',
-      text: 'Jodi',
-      data: {
-        entry: 5,
-        class: 'driver',
-        likelihood: 70,
-      },
-    },
-    {
-      row: 1, // tuesday
-      start: '7:40',
-      end: '8:50',
-      text: 'Jono',
-      data: {
-        entry: 9,
-        class: 'passenger',
-        likelihood: 70,
-      },
-    },
-    {
-      row: 4, // friday
-      start: '8:40',
-      end: '8:50',
-      text: 'Jono',
-      data: {
-        entry: 10,
-        class: 'passenger',
-        likelihood: 70,
-      },
-    },
-  ]
-
-  return (
-    <>
-      {/* <SchedulerContext.Provider value={store}> */}
-      <Week rows={rows} data={data} config={myConfig} />
-
-      {/* <Week rows={rows} data={data} config={myConfig} /> */}
-
-      {/* <Button variant="primary" onClick={addRandomEvent}>
-            Create random event
-          </Button> */}
-      {/* </SchedulerContext.Provider> */}
-    </>
-  )
+  return <EventsCell before={before} after={after} locationId={1} />
 }
 
-// export default SchedulerPage
 export default SchedulerPage

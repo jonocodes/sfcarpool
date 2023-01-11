@@ -36,11 +36,15 @@ export interface Computed {
 }
 
 export interface ScheduleClickFunction {
-  (time: number, colNum: number, rowNum: number): void
+  (colNum: number, rowNum: number): void
 }
 
 export interface EventClickFunction {
   (event: Event, rowNum: number, eventIndex: number): void
+}
+
+export interface EventChangeFunction {
+  (event: Event, eventIndex: number): void
 }
 
 export interface Config {
@@ -64,7 +68,7 @@ export interface Config {
   resizableLeft?: boolean
   // event
   // onInitRow: null
-  // onChange: null
+  onChange?: EventChangeFunction
   onClick?: EventClickFunction
   // onAppendRow: null
   // onAppendSchedule: null

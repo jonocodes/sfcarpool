@@ -17248,6 +17248,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"luxon@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "luxon@npm:3.2.1"
+  checksum: 2edd1400c7a785b01fa24ab491675c490a763054e0e147507b7b64caa6caad50329b48d482300c7ab5dc1a2630aaf84997496ffe7d2e166f9ea223f6caa719d9
+  languageName: node
+  linkType: hard
+
 "lz-string@npm:^1.4.4":
   version: 1.4.4
   resolution: "lz-string@npm:1.4.4"
@@ -21688,6 +21695,7 @@ __metadata:
   dependencies:
     "@redwoodjs/core": 3.5.0
     bootstrap: ^5.2.3
+    luxon: ^3.2.1
     mobx: ^6.7.0
     mobx-react-lite: ^3.4.0
     npm: ^9.2.0
@@ -24757,6 +24765,7 @@ __metadata:
     "@redwoodjs/forms": 3.5.0
     "@redwoodjs/router": 3.5.0
     "@redwoodjs/web": 3.5.0
+    humanize-string: 2.1.0
     prop-types: 15.8.1
     react: 17.0.2
     react-dom: 17.0.2

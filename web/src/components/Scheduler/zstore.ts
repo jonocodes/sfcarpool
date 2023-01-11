@@ -1,6 +1,13 @@
 import { createContext } from 'react'
 
+import {
+  DeleteEventMutation,
+  DeleteEventMutationVariables,
+} from 'types/graphql'
 import { createStore } from 'zustand'
+
+import { useMutation } from '@redwoodjs/web'
+import { toast } from '@redwoodjs/web/dist/toast'
 
 import { calcStringTime, formatTime } from './helpers'
 import {
@@ -10,6 +17,8 @@ import {
   SchedulerState,
   Event,
 } from './types'
+
+const modes = ['passenger', 'driver']
 
 const configDefault: Config = {
   className: 'jq-schedule',
@@ -134,14 +143,18 @@ export function _generateEvent(times, rowCount) {
   const randStartIndex = Math.floor(Math.random() * (times.length - 8))
   const randEndIndex = randStartIndex + 2 + Math.floor(Math.random() * 8)
 
+  // const modes = ['passenger', 'driver']
+
+  const randModeIndex = Math.floor(Math.random() * modes.length)
+
   const event = {
     row: randInt(0, rowCount),
     start: formatTime(times[randStartIndex]),
     end: formatTime(times[randEndIndex]),
-    text: 'random',
+    text: 'random ' + modes[randModeIndex],
     data: {
       entry: randInt(0, 1000),
-      mode: 'passenger',
+      mode: modes[randModeIndex],
       likelihood: randInt(50, 100),
     },
   }
@@ -331,8 +344,74 @@ function refreshComputed(userConf, rows, events): Computed {
   }
 }
 
+const DELETE_EVENT = gql`
+  mutation DeleteEventMutation($id: Int!) {
+    deleteEvent(id: $id) {
+      id
+    }
+  }
+`
+
+// const [_delete2] = useMutation<
+//   DeleteEventMutation,
+//   DeleteEventMutationVariables
+// >(DELETE_EVENT, {
+//   // onCompleted: (a) => {
+//   //   console.log(a)
+//   //   toast.success('Thank you for your submission!')
+//   // },
+// })
+
+// async function _removeEvent(state, eventIndex, config, initProps) {
+//   const resp = _delete2({
+//     variables: { id: Number(state.events[eventIndex].data.entry) },
+//   }).then(function () {
+//     // debugger
+//     return 8
+//   })
+
+//   ;(async function () {
+//     const result = await resp
+//     console.log('Woo done!', result)
+
+//     // But the best part is, we can just keep awaiting different stuff, without ugly .then()s
+//     // const somethingElse = await getSomethingElse()
+//     // const moreThings = await getMoreThings()
+//   })()
+
+//   debugger
+
+//   // toast.success('removing event')
+
+//   // _delete({
+//   //   variables: { id: Number(state.events[eventIndex].data.entry) },
+//   // })
+
+//   state.events.splice(eventIndex, 1)
+//   // state.events.push(event)
+//   const computed = refreshComputed(config, initProps.rows, state.events)
+
+//   console.log('removeEvent', eventIndex, state.events, computed)
+
+//   return {
+//     // currentEvent: event,
+//     events: state.events,
+//     computed: computed,
+//   }
+// }
+
 export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
   const config = { ...configDefault, ...initProps.config }
+
+  const [_delete] = useMutation<
+    DeleteEventMutation,
+    DeleteEventMutationVariables
+  >(DELETE_EVENT, {
+    // onCompleted: (a) => {
+    //   console.log(a)
+    //   toast.success('Thank you for your submission!')
+    // },
+  })
 
   return createStore<SchedulerState>()((set) => ({
     events: initProps.events,
@@ -370,8 +449,34 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
 
     removeEvent: (eventIndex: number) =>
       set((state) => {
+        // return _removeEvent(state, eventIndex, config, initProps)
+
+        // const resp = _delete({
+        //   variables: { id: Number(state.events[eventIndex].data.entry) },
+        // }).then(function () {
+        //   // debugger
+        //   return 8
+        // })
+
+        // ;(async function () {
+        //   const result = await resp
+        //   console.log('Woo done!', result)
+
+        //   // But the best part is, we can just keep awaiting different stuff, without ugly .then()s
+        //   // const somethingElse = await getSomethingElse()
+        //   // const moreThings = await getMoreThings()
+        // })()
+
+        // debugger
+
+        // toast.success('removing event')
+
+        // _delete({
+        //   variables: { id: Number(state.events[eventIndex].data.entry) },
+        // })
+
         state.events.splice(eventIndex, 1)
-        // state.events.push(event)
+
         const computed = refreshComputed(config, initProps.rows, state.events)
 
         console.log('removeEvent', eventIndex, state.events, computed)
@@ -390,8 +495,6 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
         state.events[eventIndex] = event
         const computed = refreshComputed(config, initProps.rows, state.events)
 
-        // NOTE: if this is called all the geometries should be updated and all events should be rerendered
-
         console.log(
           'updateEvent finished',
           eventIndex,
@@ -399,8 +502,6 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
           state.events[eventIndex],
           computed.geometries[eventIndex]
         )
-
-        // TODO: figure out why this is not triggering a refresh
 
         return {
           currentEvent: event,
@@ -410,106 +511,3 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
       }),
   }))
 }
-
-// export const zStore = create<zState>((set) => ({
-//   bears: 0,
-
-//   config: {},
-//   events: <Event[]>[],
-//   rows: [],
-
-//   computed: <Computed>{},
-
-//   rowMap: [],
-//   geometries: [],
-
-//   rowHeights: [],
-//   tableHeight: 0,
-//   tableStartTime: 0,
-//   tableEndTime: 0,
-//   cellsWide: 0,
-//   scrollWidth: 0,
-
-//   increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
-//   removeAllBears: () => set({ bears: 0 }),
-
-//   // setGeometry: (index: number) =>
-//   // set((state) => {
-//   //   state.geometries[index] = geometry
-//   //   return { geometries: state.geometries }
-//   // }),
-
-//   // setEvents: (events: Event[])=>
-//   //   set((state: )=>({state.events})
-//   // ),
-
-//   setGeometry: (geometry: Geometry, index: number) =>
-//     set((state) => {
-//       state.geometries[index] = geometry
-//       return { geometries: state.geometries }
-//     }),
-
-//   setRowHeight: (height: number, index: number) =>
-//     set((state) => {
-//       state.rowHeights[index] = height
-//       return { rowHeights: state.rowHeights }
-//     }),
-
-//   setTableHeight: (height: number) => set(() => ({ tableHeight: height })),
-
-//   init: (events: Event[], rows: string[], userConf: Config) =>
-//     set(() => {
-//       const config = { ...configDefault, ...userConf }
-//       let tableStartTime = calcStringTime(config.startTime)
-//       tableStartTime -= tableStartTime % config.widthTime
-//       tableStartTime = 0
-
-//       let tableEndTime = calcStringTime(config.endTime)
-//       tableEndTime -= tableEndTime % config.widthTime
-//       tableEndTime = 0
-
-//       const cellsWide = Math.floor(
-//         (tableEndTime - tableStartTime) / config.widthTime
-//       )
-
-//       console.log('init cellswide ', cellsWide)
-
-//       // debugger
-
-//       return {
-//         events: events,
-//         rows: rows,
-//         rowMap: generateRowMap(rows, events), // TODO: update this better?
-//         tableStartTime: tableStartTime,
-//         tableEndTime: tableEndTime,
-//         cellsWide: cellsWide,
-//         scrollWidth: config.widthTimeX * cellsWide,
-//         config: config,
-//       }
-//     }),
-
-//   init2: () =>
-//     set((state) => {
-//       return {
-//         rowMap: generateRowMap(state.rows, state.events),
-//       }
-//     }),
-
-//   init3: () =>
-//     set((state) => {
-//       updateGeometries()
-//       return { geometries: state.geometries }
-//     }),
-
-//   addEvent: (event: Event) =>
-//     // TODO: update geometries and row map
-//     set((state) => {
-//       console.log(state.events.length)
-//       return {
-//         events: state.events.concat([event]),
-//       }
-//     }),
-
-//   // updateGeometry: (index: number, event: Event) => set((stats) => {}),
-//   // updateGeometries: (config: Config) => set((stats) => {}),
-// }))

@@ -9,10 +9,26 @@ generator client {
 }
 
 // Define your own datamodels here and run `yarn redwood prisma migrate dev`
-// to create migrations for them and apply to your dev DB.
-// TODO: Please remove the following example:
-model UserExample {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+
+model Location {
+  id     Int     @id @default(autoincrement())
+  name   String
+  // Event Event[]
+  events Event[]
+}
+
+model Event {
+  id         Int      @id @default(autoincrement())
+  // uuid       String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  label      String?
+  date       DateTime //@db.Text
+  start      DateTime
+  end        DateTime
+  passenger  Boolean  @default(true)
+  likelihood Int      @default(95)
+  active     Boolean  @default(true)
+  location   Location @relation(fields: [locationId], references: [id])
+  locationId Int
 }

@@ -1,57 +1,52 @@
 import React, { useContext, useState } from 'react'
 
-// import { makeAutoObservable } from 'mobx'
-// import { observer } from 'mobx-react-lite'
 import { Rnd } from 'react-rnd'
+import {
+  UpdateEventMutation,
+  UpdateEventMutationVariables,
+} from 'types/graphql'
 import { useStore } from 'zustand'
 
-// import { SchedulerContext } from 'src/pages/SchedulerPage/SchedulerPage'
+import { useMutation } from '@redwoodjs/web'
 
-import { formatTime, calcStringTime } from './helpers'
-// import { Event } from './types'
+import { formatTime, calcStringTime, eventToGql } from './helpers'
 import { SchedulerContext } from './zstore'
 import { _generateEvent } from './zstore'
 
-// function Store(initialState = {}) {
-//   this.state = initialState
-// }
-
-// const store = new Store()
-
-// class SchedulerStore {
-//   // secondsPassed = 0
-
-//   events = []
-//   eventRowMap = []
-
-//   constructor() {
-//     makeAutoObservable(this)
-//   }
-
-//   addEvent(event) {
-//     this.events.push(event)
-//   }
-
-//   // increaseTimer() {
-//   // this.secondsPassed += 1
-//   // }
-// }
-
-// const myStore = new SchedulerStore()
-
 function formatTimeSpan(start: number, end: number) {
-  console.log(
-    'format time span called ',
-    formatTime(start) + '-' + formatTime(end)
-  )
   return formatTime(start) + '-' + formatTime(end)
+}
+
+const icons = {
+  passenger: (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      className="bi bi-person-fill"
+      viewBox="0 0 16 16"
+    >
+      <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+    </svg>
+  ),
+  driver: (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      className="bi bi-car-front-fill"
+      viewBox="0 0 16 16"
+    >
+      <path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679c.033.161.049.325.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.807.807 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2H6ZM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17 1.247 0 3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z" />
+    </svg>
+  ),
 }
 
 const Event = (props) => {
   const store = useContext(SchedulerContext)
   if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
-
-  // const store = getStore(SchedulerContext)
 
   const config = useStore(store, (state) => state.config)
   const updateEvent = useStore(store, (state) => state.updateEvent)
@@ -59,10 +54,6 @@ const Event = (props) => {
   const geometries = useStore(store, (state) => state.computed.geometries)
   const events = useStore(store, (state) => state.events)
   const computed = useStore(store, (state) => state.computed)
-
-  // const event = events[props.eventIndex]
-  // const geometry = geometries[props.eventIndex]
-  // const height = config.timeLineY
 
   // const [startTime, setStartTime] = useState(
   //   // 0
@@ -80,42 +71,41 @@ const Event = (props) => {
   // )
 
   const [timeStr, setTimeStr] = useState(
-    // 'X'
-    // newTime
     formatTimeSpan(
       calcStringTime(events[props.eventIndex].start),
       calcStringTime(events[props.eventIndex].end)
     )
   )
 
-  // const [width, setWidth] = useState(geometries[props.eventIndex].width)
-
   const tableStartTime = calcStringTime(config.startTime)
 
-  // function onEventSave(event: Event, eventIndex): void {
-  //   formatTimeSpan(calcStringTime(event.start), calcStringTime(event.end))
-  // }
-
-  // useEffect(() => {
-  //   console.log(
-  //     '  useEffect triggered ',
-  //     dirty,
-  //     formatEventTimeSpan(events[props.eventIndex])
-  //   )
-
-  //   if (!dirty) {
-  //     setEndTime(calcStringTime(events[props.eventIndex].end))
-  //     setStartTime(calcStringTime(events[props.eventIndex].start))
-  //     setTimeStr(formatEventTimeSpan(events[props.eventIndex]))
+  // const UPDATE_EVENT = gql`
+  //   mutation UpdateEventMutation($id: Int!, $input: UpdateEventInput!) {
+  //     updateEvent(id: $id, input: $input) {
+  //       id
+  //     }
   //   }
-  // }) //, [props.eventIndex, events])
+  // `
+
+  // const [update, { loading, error }] = useMutation<
+  //   UpdateEventMutation,
+  //   UpdateEventMutationVariables
+  // >(UPDATE_EVENT, {
+  //   // onCompleted: (a) => {
+  //   //   console.log(a)
+  //   //   toast.success('Thank you for your submission!')
+  //   // },
+  // })
+
+  // TODO: set this dynamically, and in a single place
+  // const startDateStr = '2023-01-09'
+  // const startDate = new Date(startDateStr)
 
   console.log(
     'Event',
     props,
     events[props.eventIndex],
     props.event.end,
-    // formatTime(endTime),
     timeStr
   )
 
@@ -149,7 +139,6 @@ const Event = (props) => {
       minHeight={config.timeLineY}
       maxHeight={config.timeLineY}
       dragGrid={[config.widthTimeX, 1]}
-      // resizeGrid={[config.widthTimeX, 1]}
       resizeGrid={[config.widthTimeX, 1]}
       enableResizing={{
         top: false,
@@ -170,8 +159,6 @@ const Event = (props) => {
 
         const startT = tableStartTime + offset
         const endT = tableStartTime + offset + lengthTime
-        // (geometries[props.eventIndex].width / config.widthTimeX) *
-        // config.widthTime
 
         console.log('onDrag', data, offset, formatTime(startT))
         // setStartTime(startT)
@@ -190,15 +177,7 @@ const Event = (props) => {
         const deltaX = data.lastX - geometries[props.eventIndex].x
         const deltaY = data.lastY - geometries[props.eventIndex].y
 
-        console.log(
-          'onDragStop',
-          e,
-          data,
-          deltaX,
-          deltaY,
-          data.lastX,
-          data.lastY
-        )
+        console.log('onDragStop', e, data, data.lastX, data.lastY)
 
         // handle the case where the drag seems like a click
         if (deltaX == 0 && deltaY == 0) {
@@ -215,24 +194,6 @@ const Event = (props) => {
             )
           }
         } else {
-          // handle time change
-
-          // const deltaTime = (deltaX / config.widthTimeX) * config.widthTime
-
-          // const startTime = calcStringTime(events[props.eventIndex].start)
-          // const endTime = calcStringTime(events[props.eventIndex].end)
-
-          // const startT = startTime + deltaTime
-          // const endT = endTime + deltaTime
-
-          // // setX(data.lastX)   // geometry updates should handle this
-
-          // // setStartTime(startT)
-          // // setEndTime(endT)
-
-          // events[props.eventIndex].start = formatTime(startT)
-          // events[props.eventIndex].end = formatTime(endT)
-
           // handle row switching
           let origTopY = 0
 
@@ -254,16 +215,28 @@ const Event = (props) => {
 
           events[props.eventIndex].row = newRow
 
+          // TODO: move gql to zstore ?
+          // const gql_data = eventToGql(events[props.eventIndex], startDate)
+
+          // const resp = update({
+          //   variables: {
+          //     id: Number(events[props.eventIndex].data.entry),
+          //     input: gql_data,
+          //   },
+          // }) //then.error Error saving event
+
+          if (config.onChange) {
+            config.onChange(events[props.eventIndex], props.eventIndex)
+          }
+
           updateEvent(props.eventIndex, events[props.eventIndex])
         }
 
         console.log('onDragStop completed')
       }}
-      // onResizeStart={(e, dir, ref) => {
-      //   console.log('onResizeStart', dir)
-      //   dirty = true
-      // }}
-
+      onResizeStart={(e, dir, ref) => {
+        console.log('onResizeStart', dir, ref)
+      }}
       onResize={(e, dir, ref, delta, pos) => {
         console.log('onResize', dir, delta, pos, ref)
 
@@ -273,18 +246,10 @@ const Event = (props) => {
           (ref.offsetWidth / config.widthTimeX) * config.widthTime
 
         if (dir === 'right') {
-          // if (resizeRight !== delta.width) {
-
           events[props.eventIndex].end = formatTime(
             calcStringTime(events[props.eventIndex].start) + widthTime
           )
-
-          // setResizeRight(delta.width)
-          // }
         } else {
-          // const widthTime =
-          //   (ref.offsetWidth / config.widthTimeX) * config.widthTime
-
           events[props.eventIndex].start = formatTime(
             calcStringTime(events[props.eventIndex].end) - widthTime
           )
@@ -298,9 +263,23 @@ const Event = (props) => {
         setTimeStr(newTime)
       }}
       onResizeStop={(e, dir, ref, delta, pos) => {
-        const deltaTime = (delta.width / config.widthTimeX) * config.widthTime
+        // const deltaTime = (delta.width / config.widthTimeX) * config.widthTime
 
-        console.log('onResizeStop', dir, delta, pos, deltaTime)
+        console.log('onResizeStop', dir, delta, pos)
+
+        // TODO: move gql to zstore ? or perhaps Week.tsx
+        // const gql_data = eventToGql(events[props.eventIndex], startDate)
+
+        // const resp = update({
+        //   variables: {
+        //     id: Number(events[props.eventIndex].data.entry),
+        //     input: gql_data,
+        //   },
+        // }) //then.error Error saving event
+
+        if (config.onChange) {
+          config.onChange(events[props.eventIndex], props.eventIndex)
+        }
 
         updateEvent(props.eventIndex, events[props.eventIndex])
       }}
@@ -319,7 +298,11 @@ const Event = (props) => {
             {events[props.eventIndex].start} - {events[props.eventIndex].end}
           </span>
         </span>
-        <span className="text">{events[props.eventIndex].text}</span>
+
+        <span className="text">
+          {icons[events[props.eventIndex].data.mode]}
+          {events[props.eventIndex].text}
+        </span>
         <div
           className="ui-resizable-handle ui-resizable-e"
           style={{ zIndex: '90' }}
@@ -340,16 +323,12 @@ const Row = (props) => {
   const rowMap = useStore(store, (state) => state.computed.rowMap)
   const items_map = rowMap[props.rowNum]
 
-  // const geometries = useStore(store, (state) => state.computed.geometries)
-
   const blankCells = []
 
   const config = useStore(store, (state) => state.config)
 
   const cellsWide = useStore(store, (state) => state.computed.cellsWide)
   const rowHeights = useStore(store, (state) => state.computed.rowHeights)
-
-  // console.log('row', props.rowNum)
 
   for (let i = 0; i < cellsWide; i++) {
     blankCells.push(
@@ -358,48 +337,25 @@ const Row = (props) => {
         style={{ width: config.widthTimeX + 'px' }}
         key={i}
         onClick={() => {
-          // // const rows = zStore.getState().rows
-          // // const rows = useStore(store, (state) => state.rows)
-          // // const tableStartTime = useStore(store, (state) => state.tableStartTime)
-          // // const tableEndTime = useStore(store, (state) => state.tableEndTime)
-          // // const config = useStore(store, (state) => state.config)
-          // const times = getTimeSlots(
-          //   tableStartTime,
-          //   tableEndTime,
-          //   config.widthTime
-          // )
-          // const randEvent = _generateEvent(times, rows.length)
-          // const randEvent = generateEvent()
-          // myStore.addEvent(randEvent)
-          // addEvent(randEvent)
-          // if (config.onScheduleClick) {
-          //   config.onScheduleClick(time, i, props.rowNum)
-          // }
-
           if (config.onScheduleClick) {
-            config.onScheduleClick(1234, i, props.rowNum)
+            config.onScheduleClick(i, props.rowNum)
           }
         }}
-        //onKeyPress={this.handleKeyPress}
         role="presentation"
       ></div>
     )
   }
 
   const events = useStore(store, (state) => state.events)
-  // const getGeometry = useStore(store, (state) => state.getGeometry)
 
   const eventBlocks = []
   for (let i = 0; i < items_map.length; i++) {
     const eventIndex = items_map[i]
-    // console.log(data[items_map[i]], i)
-    // const geometry = getGeometry(i)
     eventBlocks.push(
       <Event
         event={events[eventIndex]}
         eventIndex={eventIndex}
         key={eventIndex}
-        // geometry={geometries[eventIndex]}
       />
     )
   }
@@ -484,7 +440,7 @@ const Main = () => {
   const rows = useStore(store, (state) => state.rows)
   const rowHeights = useStore(store, (state) => state.computed.rowHeights)
   const config = useStore(store, (state) => state.config)
-  // const tableHeight = useStore(store, (state) => state.computed.tableHeight)
+
   const scrollWidth = useStore(store, (state) => state.computed.scrollWidth)
 
   for (let i = 0; i < rows.length; i++) {
@@ -524,10 +480,7 @@ const Main = () => {
           {titles}
         </div>
       </div>
-      <div
-        className="sc_main_box"
-        //style={{ overflowY: 'hidden' }}
-      >
+      <div className="sc_main_box">
         <div className="sc_main_scroll" style={{ width: scrollWidth + 'px' }}>
           <Menu />
           <div className="sc_main">{timelines}</div>

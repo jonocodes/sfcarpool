@@ -1,33 +1,47 @@
 import { useContext, useRef, useState } from 'react'
 
+import { DateTime } from 'luxon'
 import {
   Button,
+  Col,
+  Container,
   Form,
   Modal,
+  OverlayTrigger,
+  Row,
   ToggleButton,
   ToggleButtonGroup,
+  Tooltip,
 } from 'react-bootstrap'
+import {
+  CreateEventMutation,
+  CreateEventMutationVariables,
+  DeleteEventMutation,
+  DeleteEventMutationVariables,
+  UpdateEventMutation,
+  UpdateEventMutationVariables,
+} from 'types/graphql'
 import { useStore } from 'zustand'
 import create from 'zustand'
 
-import { formatTime } from 'src/components/Scheduler/helpers'
+import { useMutation } from '@redwoodjs/web'
+import { toast, Toaster } from '@redwoodjs/web/dist/toast'
+
+import {
+  // eventToGql,
+  eventToGql2,
+  formatTime,
+} from 'src/components/Scheduler/helpers'
 import Scheduler from 'src/components/Scheduler/Scheduler'
-// import SchedulerStore from 'src/components/Scheduler/scheduleStore'
 import { Config, Event } from 'src/components/Scheduler/types'
 import {
   createSchedulerStore,
   getTimeSlots,
   _generateEvent,
   SchedulerContext,
-  // updateGeometries,
-  // zStore,
 } from 'src/components/Scheduler/zstore'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
-
-// type SchedulerStore = ReturnType<typeof createSchedulerStore>
-
-// export const SchedulerContext = createContext<SchedulerStore | null>(null)
 
 interface PageState {
   modalVisible: boolean
@@ -48,6 +62,81 @@ const usePageStore = create<PageState>()((set) => ({
     set(() => ({ currentEventIndex: index, currentEvent: event })),
 }))
 
+// function eventToGql(evnt: Event, startDate: Date) {
+//   const passenger = evnt.data.mode == 'passenger'
+
+//   const _date = new Date(startDate.getTime() + evnt.row * 24 * 60 * 60 * 1000)
+//   const dateStr = _date.toISOString()
+
+//   let start = evnt.start
+//   if (start.length == 4) start = '0' + start
+
+//   let end = evnt.end
+//   if (end.length == 4) end = '0' + end
+
+//   return {
+//     // id: evnt.data.entry,
+//     label: evnt.text,
+//     passenger,
+//     locationId: 1,
+//     start: '1970-01-10T' + start + ':00Z',
+//     end: '1970-01-10T' + end + ':00Z',
+//     date: dateStr,
+//     likelihood: Number(evnt.data.likelihood),
+//     active: true,
+//   }
+// }
+
+const icon_passenger = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    fill="currentColor"
+    className="bi bi-person-fill"
+    viewBox="0 0 16 16"
+  >
+    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+  </svg>
+)
+
+const icon_driver = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    fill="currentColor"
+    className="bi bi-car-front-fill"
+    viewBox="0 0 16 16"
+  >
+    <path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679c.033.161.049.325.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.807.807 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2H6ZM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17 1.247 0 3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z" />
+  </svg>
+)
+
+const CREATE_EVENT = gql`
+  mutation CreateEventMutation($input: CreateEventInput!) {
+    createEvent(input: $input) {
+      id
+    }
+  }
+`
+
+const UPDATE_EVENT = gql`
+  mutation UpdateEventMutation($id: Int!, $input: UpdateEventInput!) {
+    updateEvent(id: $id, input: $input) {
+      id
+    }
+  }
+`
+
+const DELETE_EVENT = gql`
+  mutation DeleteEventMutation($id: Int!) {
+    deleteEvent(id: $id) {
+      id
+    }
+  }
+`
+
 const EventModal = (props) => {
   const _event: Event = usePageStore((state) => state.currentEvent)
   const eventIndex: number = usePageStore((state) => state.currentEventIndex)
@@ -60,21 +149,73 @@ const EventModal = (props) => {
 
   const config = useStore(store, (state) => state.config)
   const computed = useStore(store, (state) => state.computed)
-  const _config = useStore(store, (state) => state.config)
+  // const _config = useStore(store, (state) => state.config)
 
-  const updateEvent = useStore(store, (state) => state.updateEvent)
-  const removeEvent = useStore(store, (state) => state.removeEvent)
+  const _updateEvent = useStore(store, (state) => state.updateEvent)
+  const _removeEvent = useStore(store, (state) => state.removeEvent)
 
   const [event, _] = useState(_event)
 
-  function update() {
+  const [likelihood, setLikelihood] = useState(event.data.likelihood)
+
+  const [update, { loading, error }] = useMutation<
+    UpdateEventMutation,
+    UpdateEventMutationVariables
+  >(UPDATE_EVENT, {
+    // onCompleted: (a) => {
+    //   console.log(a)
+    //   toast.success('Thank you for your submission!')
+    // },
+  })
+
+  const [_delete] = useMutation<
+    DeleteEventMutation,
+    DeleteEventMutationVariables
+  >(DELETE_EVENT, {
+    // onCompleted: (a) => {
+    //   console.log(a)
+    //   toast.success('Thank you for your submission!')
+    // },
+  })
+
+  async function updateEvent() {
     console.log('update', eventIndex, event)
-    updateEvent(eventIndex, event)
+
+    const gql_data = eventToGql2(event, props.startDate)
+    console.log('gql data', gql_data)
+
+    // const resp = await
+    update({
+      variables: { id: Number(event.data.entry), input: gql_data },
+    })
+      .then(function () {
+        _updateEvent(eventIndex, event)
+      })
+      .catch(function (error) {
+        toast.error('there was a problem saving the event')
+        console.log(error)
+      })
+
+    // console.log(resp)
+    // TODO: what if db update fails?
+
     props.handleClose()
   }
 
-  function remove() {
-    removeEvent(eventIndex)
+  async function removeEvent() {
+    _delete({ variables: { id: Number(event.data.entry) } })
+      .then(function () {
+        // TODO: put this here so data does not get out of sync.
+        //    or figuer out how to update the db from the store.
+        // _removeEvent(eventIndex)
+      })
+      .catch(function (error) {
+        toast.error('there was a problem deleting the event')
+        console.log(error)
+      })
+
+    _removeEvent(eventIndex)
+
     props.handleClose()
   }
 
@@ -102,90 +243,74 @@ const EventModal = (props) => {
         <Modal.Title>Update Event</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div className="container-fluid">
-          <input type="hidden" id="entryId" />
-          <div className="row align-items-end pb-4">
-            <div className="col-md-6">
-              <label htmlFor="inputName" className="form-label">
-                Name/label
-              </label>
-              <span
-                className="ps-1"
-                data-bs-toggle="tooltip"
-                data-bs-title="Enter anything here (like nickname, or initials) so that you can identify your entry if you want to modify it later."
-                data-bs-placement="top"
+        <Container fluid>
+          {/* <input type="hidden" id="entryId" /> */}
+          <Row className="align-items-end pb-4">
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label
+                  style={{
+                    paddingRight: '5px',
+                  }}
+                >
+                  Label
+                </Form.Label>
+                <OverlayTrigger
+                  delay={{ hide: 350, show: 100 }}
+                  overlay={(props) => (
+                    <Tooltip {...props}>
+                      Enter anything here (like nickname, or initials) such that
+                      you can identify your entry in case you want to modify it
+                      later.
+                    </Tooltip>
+                  )}
+                  placement="bottom"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    fill="currentColor"
+                    className="bi bi-info-circle-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                  </svg>
+                </OverlayTrigger>
+                <Form.Control
+                  size="sm"
+                  type="text"
+                  defaultValue={event.text}
+                  onChange={(e) => (event.text = e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+
+            <Col md={6} className="h-25">
+              <ToggleButtonGroup
+                type="radio"
+                name="options"
+                defaultValue={event.data.mode}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  fill="currentColor"
-                  className="bi bi-info-circle-fill"
-                  viewBox="0 0 16 16"
+                <ToggleButton
+                  id="tbg-radio-1"
+                  value={'passenger'}
+                  onChange={(e) => (event.data.mode = e.target.value)}
                 >
-                  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-                </svg>
-              </span>
-              <input
-                type="text"
-                className="form-control"
-                id="inputName"
-                defaultValue={event.text}
-                onChange={(e) => (event.text = e.target.value)}
-              />
-            </div>
-
-            <div
-              className="col-md-6 btn-group h-25"
-              role="group"
-              aria-label="Basic radio toggle button group"
-            >
-              <div>
-                <ToggleButtonGroup
-                  type="radio"
-                  name="options"
-                  defaultValue={event.data.mode}
+                  {icon_passenger} Passenger
+                </ToggleButton>
+                <ToggleButton
+                  id="tbg-radio-2"
+                  value={'driver'}
+                  onChange={(e) => (event.data.mode = e.target.value)}
                 >
-                  <ToggleButton
-                    id="tbg-radio-1"
-                    value={'passenger'}
-                    onChange={(e) => (event.data.mode = e.target.value)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-person-fill"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-                    </svg>{' '}
-                    Passenger
-                  </ToggleButton>
-                  <ToggleButton
-                    id="tbg-radio-2"
-                    value={'driver'}
-                    onChange={(e) => (event.data.mode = e.target.value)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-car-front-fill"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679c.033.161.049.325.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.807.807 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2H6ZM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17 1.247 0 3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z" />
-                    </svg>{' '}
-                    Driver
-                  </ToggleButton>
-                </ToggleButtonGroup>
-              </div>
-            </div>
+                  {icon_driver} Driver
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Col>
 
-            <div className="row">
-              <div className="col-md-3">
+            <Row>
+              <Col md={3}>
                 From
                 <Form.Select
                   size="sm"
@@ -195,41 +320,40 @@ const EventModal = (props) => {
                 >
                   {timeDivs}
                 </Form.Select>
-              </div>
-              <div className="col-md-3">
+              </Col>
+              <Col md={3}>
                 To
                 <Form.Select
                   size="sm"
                   aria-label="choose end time"
                   defaultValue={event.end}
-                  // onChange={(e) => setEnd(e.target.value)}
                   onChange={(e) => (event.end = e.target.value)}
                 >
                   {timeDivs}
                 </Form.Select>
-              </div>
-
-              <div className="col-md-6">
-                <Form.Label>Likelihood</Form.Label>
+              </Col>
+              <Col md={6}>
+                <Form.Label>Likelihood %{likelihood}</Form.Label>
                 <Form.Range
-                  defaultValue={event.data.likelihood}
-                  // onChange={(e) => setLikelihood(e.target.value)}
-                  // onChange={(e) => updateField('likelihood', e.target.value)}
-                  onChange={(e) => (event.data.likelihood = e.target.value)}
+                  defaultValue={likelihood}
+                  onChange={(e) => {
+                    event.data.likelihood = e.target.value
+                    setLikelihood(e.target.value)
+                  }}
                 />
-              </div>
-            </div>
-          </div>
-        </div>
+              </Col>
+            </Row>
+          </Row>
+        </Container>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={remove}>
+        <Button variant="secondary" onClick={removeEvent}>
           Delete
         </Button>
         <Button variant="secondary" onClick={props.handleClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={update}>
+        <Button variant="primary" onClick={updateEvent}>
           Save Changes
         </Button>
       </Modal.Footer>
@@ -238,6 +362,28 @@ const EventModal = (props) => {
 }
 
 const Week = (props) => {
+  const [create, { loading, error }] = useMutation<
+    CreateEventMutation,
+    CreateEventMutationVariables
+  >(CREATE_EVENT, {
+    // onCompleted: (a) => {
+    //   console.log(a)
+    //   toast.success('Thank you for your submission!')
+    // },
+  })
+
+  const [update, { loading2, error2 }] = useMutation<
+    UpdateEventMutation,
+    UpdateEventMutationVariables
+  >(UPDATE_EVENT, {
+    // onCompleted: (a) => {
+    //   console.log(a)
+    //   toast.success('Thank you for your submission!')
+    // },
+  })
+
+  const startDate = props.dates[0]
+
   console.log('rendering Week')
 
   const pageConfig: Config = {
@@ -261,31 +407,52 @@ const Week = (props) => {
       setEvent(eventIndex, event)
       showModal()
     },
-    onScheduleClick: function (time, colNum, rowNum) {
-      console.log('onScheduleClick external method', time, colNum, rowNum)
+
+    onChange: async function (event, eventIndex) {
+      const gql_data = eventToGql2(event, startDate)
+
+      const resp = update({
+        variables: {
+          id: Number(event.data.entry),
+          input: gql_data,
+        },
+      }) //then.error, toast error
+    },
+    onScheduleClick: async function (colNum, rowNum) {
+      console.log('onScheduleClick external method', colNum, rowNum)
 
       const startTime = computed.tableStartTime + colNum * config.widthTime
       const endTime = startTime + 4 * config.widthTime
 
-      const randId = 0 + Math.floor(Math.random() * 1000)
+      // const randId = 0 + Math.floor(Math.random() * 1000)
 
       const event = {
         row: rowNum,
         start: formatTime(startTime),
         end: formatTime(endTime),
-        text: 'new',
+        text: '',
         data: {
-          entry: randId,
+          entry: 0, // this will get reset once it makes it to db
           mode: 'passenger',
           likelihood: 95,
         },
       }
 
-      addEvent(event)
-    },
-    // onEventSave: function(event, eventIndex) {
+      const gql_data = eventToGql2(event, startDate)
+      console.log('gql data', gql_data)
 
-    // }
+      const resp = await create({ variables: { input: gql_data } })
+
+      event.data.entry = resp.data.createEvent.id
+
+      // TODO: handle db failure promise, toast. show loading?
+
+      console.log(resp)
+
+      addEvent(event)
+
+      // TODO: open modal here
+    },
   }
 
   const myConfig = { ...pageConfig, ...props.config }
@@ -322,7 +489,12 @@ const Week = (props) => {
   let modal = <></>
   if (modalVisible === true) {
     modal = (
-      <EventModal show={modalVisible} handleClose={hideModal} store={store} />
+      <EventModal
+        show={modalVisible}
+        handleClose={hideModal}
+        store={store}
+        startDate={startDate}
+      />
     )
   }
 
@@ -343,19 +515,13 @@ const Week = (props) => {
   }
 
   return (
-    <>
-      <SchedulerContext.Provider value={store}>
-        {modal}
-
-        {/* <h1>Week!</h1> */}
-
-        {rand}
-
-        <Scheduler />
-
-        {props.children}
-      </SchedulerContext.Provider>
-    </>
+    <SchedulerContext.Provider value={store}>
+      <Toaster />
+      {modal}
+      {rand}
+      <Scheduler />
+      {props.children}
+    </SchedulerContext.Provider>
   )
 }
 

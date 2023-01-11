@@ -24,6 +24,7 @@
   "packageManager": "yarn@3.2.4",
   "dependencies": {
     "bootstrap": "^5.2.3",
+    "luxon": "^3.2.1",
     "mobx": "^6.7.0",
     "mobx-react-lite": "^3.4.0",
     "npm": "^9.2.0",

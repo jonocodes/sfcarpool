@@ -1,13 +1,10 @@
+import { useRef } from 'react'
+
 import type { ComponentMeta } from '@storybook/react'
-// import { observer } from 'mobx'
-// import { observer } from 'mobx-react-lite'
-// import create from 'zustand'
 
 import Scheduler from './Scheduler'
-// import SchedulerStore from './scheduleStore'
-// import { generateEvent } from './zstore'
-// import { zStore } from './zstore'
-// import { Config } from './zstore'
+import { Config } from './types'
+import { createSchedulerStore, SchedulerContext } from './zstore'
 
 export const basicWeek = () => {
   const config = {
@@ -35,7 +32,7 @@ export const basicWeek = () => {
       text: 'JK',
       data: {
         entry: 8,
-        class: 'passenger',
+        mode: 'passenger',
         likelihood: 20,
       },
     },
@@ -46,7 +43,7 @@ export const basicWeek = () => {
       text: 'Jono',
       data: {
         entry: 4,
-        class: 'passenger',
+        mode: 'passenger',
         likelihood: 95,
       },
     },
@@ -57,7 +54,7 @@ export const basicWeek = () => {
       text: 'Jodi',
       data: {
         entry: 5,
-        class: 'driver',
+        mode: 'driver',
         likelihood: 70,
       },
     },
@@ -68,7 +65,7 @@ export const basicWeek = () => {
       text: 'Jono',
       data: {
         entry: 9,
-        class: 'passenger',
+        mode: 'passenger',
         likelihood: 70,
       },
     },
@@ -79,15 +76,25 @@ export const basicWeek = () => {
       text: 'Jono',
       data: {
         entry: 10,
-        class: 'passenger',
+        mode: 'passenger',
         likelihood: 70,
       },
     },
   ]
 
-  // setupStore(data, rows, config)
+  const store = useRef(
+    createSchedulerStore({
+      rows: rows,
+      events: data,
+      config: config,
+    })
+  ).current
 
-  return <Scheduler />
+  return (
+    <SchedulerContext.Provider value={store}>
+      <Scheduler />
+    </SchedulerContext.Provider>
+  )
 }
 
 export const demo = () => {
@@ -115,38 +122,9 @@ export const demo = () => {
     },
   ]
 
-  // const myStore = new SchedulerStore()
-  // myStore.events = observer(data)
+  const rows = ['Title Area1', 'Title Area2']
 
-  // const rows = ['Title Area1', 'Title Area2']
-
-  // const useStore = create((set) => ({
-  //   bears: 0,
-  //   events: data,
-  //   rows: rows,
-  //   rowMap: [],
-
-  //   addEvent: (event) =>
-  //     set((state) => ({
-  //       events: state.events.push(event),
-  //     })),
-  //   // bears: 0,
-  //   // increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
-  //   // removeAllBears: () => set({ bears: 0 }),
-  // }))
-
-  // const bears = zStore((state) => state.bears)
-  // const increasePopulation = zStore((state) => state.increasePopulation)
-
-  // const addEvent = zStore((state) => state.addEvent)
-
-  // const events = zStore((state) => state.events)
-
-  // const something = zStore((state) => state.something)
-
-  // const ScheduleContext = React.createContext({ rows: rows, events: data })
-
-  const config = {
+  const config: Config = {
     startTime: '07:00', // schedule start time(HH:ii)
     endTime: '21:00', // schedule end time(HH:ii)
     widthTime: 60 * 10, // cell timestamp example 10 minutes
@@ -158,37 +136,28 @@ export const demo = () => {
     // resizable: isResizable,
     resizableLeft: true,
 
-    onScheduleClick: function (time, colNum, rowNum) {
-      console.log('onScheduleClick external method', time, colNum, rowNum)
-
-      // const randEvent = generateEvent()
-      // myStore.addEvent(randEvent)
-      // addEvent(randEvent) // infinate rerenders?
-
-      // console.log(events.length)
-
-      // store.state.data.push(randEvent)
+    onScheduleClick: function (colNum, rowNum) {
+      console.log('onScheduleClick external method', colNum, rowNum)
     },
     onClick: function (event, rowNum) {
       console.log('onScheduleClick external method', event, rowNum)
     },
   }
 
-  // setupStore(data, rows, config)
+  const store = useRef(
+    createSchedulerStore({
+      rows: rows,
+      events: data,
+      config: config,
+    })
+  ).current
 
-  return <Scheduler />
+  return (
+    <SchedulerContext.Provider value={store}>
+      <Scheduler />
+    </SchedulerContext.Provider>
+  )
 }
-
-// function setupStore(data, rows, config) {
-//   const initStore = zStore((state) => state.init)
-//   initStore(data, rows, config)
-
-//   // const init2 = zStore((state) => state.init2)
-//   const init3 = zStore((state) => state.init3)
-
-//   // init2()
-//   init3()
-// }
 
 export default {
   title: 'Components/Scheduler',
