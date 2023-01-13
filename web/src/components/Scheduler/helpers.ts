@@ -17,34 +17,7 @@ export function calcStringTime(str) {
   return h + i
 }
 
-// export function eventToGql(evnt: Event, startDate: Date) {
-//   const passenger = evnt.data.mode == 'passenger'
-
-//   // TODO: use DateTime instead of Date
-
-//   const _date = new Date(startDate.getTime() + evnt.row * 24 * 60 * 60 * 1000)
-//   const dateStr = _date.toISOString()
-
-//   let start = evnt.start
-//   if (start.length == 4) start = '0' + start
-
-//   let end = evnt.end
-//   if (end.length == 4) end = '0' + end
-
-//   return {
-//     // id: evnt.data.entry,
-//     label: evnt.text,
-//     passenger,
-//     locationId: 1,
-//     start: '1970-01-10T' + start + ':00Z',
-//     end: '1970-01-10T' + end + ':00Z',
-//     date: dateStr,
-//     likelihood: Number(evnt.data.likelihood),
-//     active: true,
-//   }
-// }
-
-export function eventToGql2(evnt: Event, startDate: DateTime) {
+export function eventToGql(evnt: Event, startDate: DateTime) {
   const passenger = evnt.data.mode == 'passenger'
 
   const date = startDate.plus({ days: evnt.row })
@@ -69,9 +42,17 @@ export function eventToGql2(evnt: Event, startDate: DateTime) {
   }
 }
 
+export function parseDateTime(dateStr) {
+  return DateTime.fromISO(dateStr, {
+    zone: 'utc',
+  })
+}
+
 export function rowsToDays(rows, startDateStr, endDateStr) {
-  let currentDate = DateTime.fromISO(startDateStr, { zone: 'utc' })
-  const endDate = DateTime.fromISO(endDateStr, { zone: 'utc' })
+  // let currentDate = DateTime.fromISO(startDateStr, { zone: 'utc' })
+  let currentDate = parseDateTime(startDateStr)
+  // const endDate = DateTime.fromISO(endDateStr, { zone: 'utc' })
+  const endDate = parseDateTime(endDateStr)
 
   const dates = []
 

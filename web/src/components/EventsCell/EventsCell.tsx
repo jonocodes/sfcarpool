@@ -4,7 +4,11 @@ import type { EventsQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
-import { formatTime, rowsToDays as rowsToDates } from '../Scheduler/helpers'
+import {
+  formatTime,
+  parseDateTime,
+  rowsToDays as rowsToDates,
+} from '../Scheduler/helpers'
 import { Config, Event } from '../Scheduler/types'
 import Week from '../Week/Week'
 
@@ -34,22 +38,17 @@ const myConfig: Config = {
 const rows = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 
 function gqlToEvent(item): Event {
-  const start = new Date(item.start)
-  const end = new Date(item.end)
-
-  const startStr = formatTime(
-    (start.getUTCHours() * 60 + start.getUTCMinutes()) * 60
-  )
-  const endStr = formatTime((end.getUTCHours() * 60 + end.getUTCMinutes()) * 60)
-
-  const mode = item.passenger ? 'passenger' : 'driver'
 
   return {
-    row: new Date(item.date).getUTCDay() - 1,
+    row: parseDateTime(item.date).weekday - 1,
     text: item.label,
-    start: startStr,
-    end: endStr,
-    data: { entry: item.id, likelihood: item.likelihood, mode },
+    start: parseDateTime(item.start).toFormat('H:mm'),
+    end: parseDateTime(item.end).toFormat('H:mm'),
+    data: {
+      entry: item.id,
+      likelihood: item.likelihood,
+      mode: item.passenger ? 'passenger' : 'driver',
+    },
   }
 }
 
@@ -85,19 +84,6 @@ export const Success = ({
 
   const weekEnd = formatDate(before)
   const weekStart = formatDate(after)
-
-  // let currentDate = DateTime.fromISO(after, { zone: 'utc' })
-  // const endDate = DateTime.fromISO(before, { zone: 'utc' })
-
-  // const dates = []
-
-  // while (currentDate <= endDate) {
-  //   dates.push(currentDate)
-  //   currentDate = currentDate.plus({ days: 1 })
-  // }
-
-  // console.log('dates', dates)
-
   const dates = rowsToDates(rows, after, before)
 
   return (

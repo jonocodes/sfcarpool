@@ -1,15 +1,9 @@
 import React, { useContext, useState } from 'react'
 
 import { Rnd } from 'react-rnd'
-import {
-  UpdateEventMutation,
-  UpdateEventMutationVariables,
-} from 'types/graphql'
 import { useStore } from 'zustand'
 
-import { useMutation } from '@redwoodjs/web'
-
-import { formatTime, calcStringTime, eventToGql } from './helpers'
+import { formatTime, calcStringTime } from './helpers'
 import { SchedulerContext } from './zstore'
 import { _generateEvent } from './zstore'
 
@@ -79,35 +73,13 @@ const Event = (props) => {
 
   const tableStartTime = calcStringTime(config.startTime)
 
-  // const UPDATE_EVENT = gql`
-  //   mutation UpdateEventMutation($id: Int!, $input: UpdateEventInput!) {
-  //     updateEvent(id: $id, input: $input) {
-  //       id
-  //     }
-  //   }
-  // `
-
-  // const [update, { loading, error }] = useMutation<
-  //   UpdateEventMutation,
-  //   UpdateEventMutationVariables
-  // >(UPDATE_EVENT, {
-  //   // onCompleted: (a) => {
-  //   //   console.log(a)
-  //   //   toast.success('Thank you for your submission!')
-  //   // },
-  // })
-
-  // TODO: set this dynamically, and in a single place
-  // const startDateStr = '2023-01-09'
-  // const startDate = new Date(startDateStr)
-
-  console.log(
-    'Event',
-    props,
-    events[props.eventIndex],
-    props.event.end,
-    timeStr
-  )
+  // console.log(
+  //   'Event',
+  //   props,
+  //   events[props.eventIndex],
+  //   props.event.end,
+  //   timeStr
+  // )
 
   return (
     <Rnd

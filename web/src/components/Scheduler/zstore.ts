@@ -48,39 +48,6 @@ const configDefault: Config = {
   onScheduleClick: null,
 }
 
-// interface zState {
-//   bears?: number
-//   increasePopulation: (by: number) => void
-
-//   events: Event[]
-//   rows: string[]
-//   rowMap: number[][]
-//   geometries: Geometry[]
-
-//   rowHeights: number[]
-
-//   tableHeight: number
-
-//   config: Config
-
-//   setTableHeight: (height: number) => void
-//   setRowHeight: (height: number, index: number) => void
-//   setGeometry: (geometry: Geometry, index: number) => void
-
-//   // TODO: add subtitles to rows
-
-//   tableStartTime: number
-//   tableEndTime: number
-//   cellsWide: number
-//   scrollWidth: number
-
-//   //rowHeights
-//   init: (events: Event[], rows: string[], config: Config) => void
-//   init2: () => void
-//   init3: () => void
-//   addEvent: (event: Event) => void
-// }
-
 function generateRowMap(rows, events) {
   const dataRowMap = []
   for (let j = 0; j < rows.length; j++) {
@@ -114,17 +81,6 @@ function calculateGeometry(event, config, tableStartTime) {
 function randInt(x, y) {
   return x + Math.floor(Math.random() * y)
 }
-
-// function event_from_base(base: EventBase): Event {
-
-//   base.timespan = "arstasr"
-
-//   return {...base,
-
-//     {
-//     timespan33: "span here"
-//   }}
-// }
 
 export function getTimeSlots(tableStartTime, tableEndTime, widthTime) {
   let time = tableStartTime

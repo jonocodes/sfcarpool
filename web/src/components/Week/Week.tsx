@@ -1,6 +1,5 @@
 import { useContext, useRef, useState } from 'react'
 
-import { DateTime } from 'luxon'
 import {
   Button,
   Col,
@@ -29,7 +28,7 @@ import { toast, Toaster } from '@redwoodjs/web/dist/toast'
 
 import {
   // eventToGql,
-  eventToGql2,
+  eventToGql,
   formatTime,
 } from 'src/components/Scheduler/helpers'
 import Scheduler from 'src/components/Scheduler/Scheduler'
@@ -61,31 +60,6 @@ const usePageStore = create<PageState>()((set) => ({
   setEvent: (index, event) =>
     set(() => ({ currentEventIndex: index, currentEvent: event })),
 }))
-
-// function eventToGql(evnt: Event, startDate: Date) {
-//   const passenger = evnt.data.mode == 'passenger'
-
-//   const _date = new Date(startDate.getTime() + evnt.row * 24 * 60 * 60 * 1000)
-//   const dateStr = _date.toISOString()
-
-//   let start = evnt.start
-//   if (start.length == 4) start = '0' + start
-
-//   let end = evnt.end
-//   if (end.length == 4) end = '0' + end
-
-//   return {
-//     // id: evnt.data.entry,
-//     label: evnt.text,
-//     passenger,
-//     locationId: 1,
-//     start: '1970-01-10T' + start + ':00Z',
-//     end: '1970-01-10T' + end + ':00Z',
-//     date: dateStr,
-//     likelihood: Number(evnt.data.likelihood),
-//     active: true,
-//   }
-// }
 
 const icon_passenger = (
   <svg
@@ -181,7 +155,7 @@ const EventModal = (props) => {
   async function updateEvent() {
     console.log('update', eventIndex, event)
 
-    const gql_data = eventToGql2(event, props.startDate)
+    const gql_data = eventToGql(event, props.startDate)
     console.log('gql data', gql_data)
 
     // const resp = await
@@ -206,7 +180,7 @@ const EventModal = (props) => {
     _delete({ variables: { id: Number(event.data.entry) } })
       .then(function () {
         // TODO: put this here so data does not get out of sync.
-        //    or figuer out how to update the db from the store.
+        //    or figure out how to update the db from the store.
         // _removeEvent(eventIndex)
       })
       .catch(function (error) {
@@ -244,7 +218,6 @@ const EventModal = (props) => {
       </Modal.Header>
       <Modal.Body>
         <Container fluid>
-          {/* <input type="hidden" id="entryId" /> */}
           <Row className="align-items-end pb-4">
             <Col md={6}>
               <Form.Group>
@@ -347,15 +320,24 @@ const EventModal = (props) => {
         </Container>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={removeEvent}>
-          Delete
-        </Button>
-        <Button variant="secondary" onClick={props.handleClose}>
-          Close
-        </Button>
-        <Button variant="primary" onClick={updateEvent}>
-          Save Changes
-        </Button>
+        <Row>
+          <Col>
+            <Button variant="secondary" onClick={removeEvent}>
+              Delete
+            </Button>
+          </Col>
+
+          <Col md="auto">
+            <Button variant="secondary" onClick={props.handleClose}>
+              Close
+            </Button>
+          </Col>
+          <Col md="auto">
+            <Button variant="primary" onClick={updateEvent}>
+              Save Changes
+            </Button>
+          </Col>
+        </Row>
       </Modal.Footer>
     </Modal>
   )
@@ -409,7 +391,7 @@ const Week = (props) => {
     },
 
     onChange: async function (event, eventIndex) {
-      const gql_data = eventToGql2(event, startDate)
+      const gql_data = eventToGql(event, startDate)
 
       const resp = update({
         variables: {
@@ -438,7 +420,7 @@ const Week = (props) => {
         },
       }
 
-      const gql_data = eventToGql2(event, startDate)
+      const gql_data = eventToGql(event, startDate)
       console.log('gql data', gql_data)
 
       const resp = await create({ variables: { input: gql_data } })
@@ -451,6 +433,15 @@ const Week = (props) => {
 
       addEvent(event)
 
+      for (let i = events.length - 1; i >= 0; i--) {
+        if (events[i].data.entry == event.data.entry) {
+          setEvent(i, event)
+          break
+        }
+      }
+
+      // setEvent(i, event)
+      showModal()
       // TODO: open modal here
     },
   }
@@ -477,6 +468,7 @@ const Week = (props) => {
   ).current
 
   const computed = useStore(store, (state) => state.computed)
+  const events = useStore(store, (state) => state.events)
   const config = useStore(store, (state) => state.config)
   const addEvent = useStore(store, (state) => state.addEvent)
   const clearEvents = useStore(store, (state) => state.clearEvents)
