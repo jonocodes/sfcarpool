@@ -4,11 +4,7 @@ import type { EventsQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
-import {
-  formatTime,
-  parseDateTime,
-  rowsToDays as rowsToDates,
-} from '../Scheduler/helpers'
+import { parseDateTime, rowsToDays as rowsToDates } from '../Scheduler/helpers'
 import { Config, Event } from '../Scheduler/types'
 import Week from '../Week/Week'
 
@@ -38,7 +34,6 @@ const myConfig: Config = {
 const rows = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 
 function gqlToEvent(item): Event {
-
   return {
     row: parseDateTime(item.date).weekday - 1,
     text: item.label,
@@ -61,7 +56,8 @@ export const Failure = ({ error }: CellFailureProps) => (
 )
 
 function formatDate(dateStr) {
-  return DateTime.fromISO(dateStr, { zone: 'utc' }).toFormat('ccc LLL dd yyyy')
+  // return DateTime.fromISO(dateStr, { zone: 'utc' }).toFormat('ccc LLL dd yyyy')
+  return DateTime.fromISO(dateStr, { zone: 'utc' }).toFormat('LLL dd, yyyy')
 }
 
 export const Success = ({
@@ -87,7 +83,7 @@ export const Success = ({
   const dates = rowsToDates(rows, after, before)
 
   return (
-    <Container>
+    <>
       <Row style={{ paddingTop: '30px' }}>
         <Col xm={7}>
           <h3>
@@ -105,6 +101,6 @@ export const Success = ({
       <Row>
         <Week rows={rows} dates={dates} data={_events} config={myConfig} />
       </Row>
-    </Container>
+    </>
   )
 }

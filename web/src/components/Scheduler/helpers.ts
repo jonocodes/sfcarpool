@@ -2,7 +2,7 @@ import { DateTime } from 'luxon'
 
 import { Event } from './types'
 
-export function formatTime(val) {
+export function formatTime(val: number) {
   const i1 = val % 3600
 
   const h = '' + (Math.floor(val / 36000) || '') + Math.floor((val / 3600) % 10)
@@ -15,6 +15,21 @@ export function calcStringTime(str) {
   const h = Number(slice[0]) * 60 * 60
   const i = Number(slice[1]) * 60
   return h + i
+}
+
+export function getTimeSlots(
+  tableStartTime: number,
+  tableEndTime: number,
+  widthTime: number
+) {
+  let time = tableStartTime
+  const times = [time]
+  while (time < tableEndTime) {
+    time = time + widthTime
+    times.push(time)
+  }
+
+  return times
 }
 
 export function eventToGql(evnt: Event, startDate: DateTime) {
@@ -68,3 +83,27 @@ export function rowsToDays(rows, startDateStr, endDateStr) {
 
   return dates
 }
+
+export const CREATE_EVENT = gql`
+  mutation CreateEventMutation($input: CreateEventInput!) {
+    createEvent(input: $input) {
+      id
+    }
+  }
+`
+
+export const UPDATE_EVENT = gql`
+  mutation UpdateEventMutation($id: Int!, $input: UpdateEventInput!) {
+    updateEvent(id: $id, input: $input) {
+      id
+    }
+  }
+`
+
+export const DELETE_EVENT = gql`
+  mutation DeleteEventMutation($id: Int!) {
+    deleteEvent(id: $id) {
+      id
+    }
+  }
+`

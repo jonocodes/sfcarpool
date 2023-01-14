@@ -10,6 +10,9 @@ li {
   display: inline-block;
   margin: 0 1rem 0 0 ;
 }
+.about h2, .about h3 {
+  padding-top: 20px;
+}
 h1 > a {
   text-decoration: none;
   color: black;
@@ -49,24 +52,24 @@ input.error, textarea.error {
   display: inline;
 }
 
-.active  {
+/* .active  {
   font-weight: bold;
   font-size: xx-large;
   text-decoration: none;
-}
+} */
 
-main {
+/* main {
   display: flex;
   justify-content: center;
-}
+} */
 
-main div{
+/* main div{
   width: 900px;
-}
+} */
 
-header{
+/* header{
   text-align: center;
-}
+} */
 
 /* --------- */
 

@@ -1,11 +1,13 @@
+import { Container } from 'react-bootstrap'
+
 import { MetaTags } from '@redwoodjs/web'
 
 const AboutPage = () => {
   return (
-    <>
+    <Container>
       <MetaTags title="About" description="About page" />
 
-      <div>
+      <div className="about">
         <h2>About</h2>
         <p>
           The pandemic has brought SF casual carpool to a halt. This site is an
@@ -36,8 +38,6 @@ const AboutPage = () => {
           Hopefully it is a short term solution to get back to where we were a
           few years back. Then we wont need to coordinate, and can just go to
           the line at the curb.
-          <h3>Is this just a glorified spreadsheet?</h3>
-          Yes.
           <h3>Why not use an already existing carpool app?</h3>
           There are several good resources for coordinating carpools, but I have
           not found one that fits the needs of casual carpool. Tools like{' '}
@@ -49,7 +49,7 @@ const AboutPage = () => {
           Please contact <a href="mailto:carpool@zop.anonaddy.com">Jono</a>.
         </p>
       </div>
-    </>
+    </Container>
   )
 }
 

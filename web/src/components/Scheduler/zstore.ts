@@ -82,19 +82,6 @@ function randInt(x, y) {
   return x + Math.floor(Math.random() * y)
 }
 
-export function getTimeSlots(tableStartTime, tableEndTime, widthTime) {
-  let time = tableStartTime
-  // const times = [formatTime(time)]
-  const times = [time]
-  while (time < tableEndTime) {
-    time = time + widthTime
-    // times.push(formatTime(time))
-    times.push(time)
-  }
-
-  return times
-}
-
 export function _generateEvent(times, rowCount) {
   const randStartIndex = Math.floor(Math.random() * (times.length - 8))
   const randEndIndex = randStartIndex + 2 + Math.floor(Math.random() * 8)
@@ -248,28 +235,6 @@ export function calculateGeometries(
   }
 }
 
-// interface SchedulerProps {
-//   // bears: number
-//   config: Config
-//   events: Event[]
-//   rows: string[]
-//   computed: Computed
-// }
-
-// interface SchedulerState extends SchedulerProps {
-//   // addBear: () => void
-//   addEvent: (event: Event) => void
-// }
-
-// type SchedulerStore = ReturnType<typeof createSchedulerStore>
-
-// export function getStore(context): StoreApi<SchedulerState> {
-
-//   const store = useContext(context)
-//   if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
-//   return store;
-// }
-
 function refreshComputed(userConf, rows, events): Computed {
   const config = { ...configDefault, ...userConf }
   let tableStartTime = calcStringTime(config.startTime)
@@ -359,15 +324,15 @@ const DELETE_EVENT = gql`
 export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
   const config = { ...configDefault, ...initProps.config }
 
-  const [_delete] = useMutation<
-    DeleteEventMutation,
-    DeleteEventMutationVariables
-  >(DELETE_EVENT, {
-    // onCompleted: (a) => {
-    //   console.log(a)
-    //   toast.success('Thank you for your submission!')
-    // },
-  })
+  // const [_delete] = useMutation<
+  //   DeleteEventMutation,
+  //   DeleteEventMutationVariables
+  // >(DELETE_EVENT, {
+  //   // onCompleted: (a) => {
+  //   //   console.log(a)
+  //   //   toast.success('Thank you for your submission!')
+  //   // },
+  // })
 
   return createStore<SchedulerState>()((set) => ({
     events: initProps.events,

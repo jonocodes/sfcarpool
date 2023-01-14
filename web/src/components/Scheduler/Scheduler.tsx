@@ -11,6 +11,7 @@ function formatTimeSpan(start: number, end: number) {
   return formatTime(start) + '-' + formatTime(end)
 }
 
+// TODO: figure a way to move the icons out of this file since its not generic to the scheduler component
 const icons = {
   passenger: (
     <svg
@@ -49,22 +50,7 @@ const Event = (props) => {
   const events = useStore(store, (state) => state.events)
   const computed = useStore(store, (state) => state.computed)
 
-  // const [startTime, setStartTime] = useState(
-  //   // 0
-  //   calcStringTime(events[props.eventIndex].start)
-  // )
-  // const [endTime, setEndTime] = useState(
-  //   // 0
-  //   calcStringTime(events[props.eventIndex].end)
-  //   // calcStringTime(props.event.end)
-  // )
-
-  // const newTime = formatTimeSpan(
-  //   calcStringTime(events[props.eventIndex].start),
-  //   calcStringTime(events[props.eventIndex].end)
-  // )
-
-  const [timeStr, setTimeStr] = useState(
+  const [_, setTimeStr] = useState(
     formatTimeSpan(
       calcStringTime(events[props.eventIndex].start),
       calcStringTime(events[props.eventIndex].end)
@@ -72,14 +58,6 @@ const Event = (props) => {
   )
 
   const tableStartTime = calcStringTime(config.startTime)
-
-  // console.log(
-  //   'Event',
-  //   props,
-  //   events[props.eventIndex],
-  //   props.event.end,
-  //   timeStr
-  // )
 
   return (
     <Rnd
@@ -465,13 +443,13 @@ const Main = () => {
 const Scheduler = () => {
   return (
     <>
-      <div className="container">
-        <div style={{ padding: '10px 0 40px' }}>
-          <div id="schedule" className="jq-schedule">
-            <Main />
-          </div>
-        </div>
+      {/* <div className="container"> */}
+      {/* <div style={{ padding: '10px 0 40px' }}> */}
+      <div id="schedule" className="jq-schedule">
+        <Main />
       </div>
+      {/* </div> */}
+      {/* </div> */}
     </>
   )
 }
