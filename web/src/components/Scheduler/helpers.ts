@@ -32,6 +32,36 @@ export function getTimeSlots(
   return times
 }
 
+export function getWeekStart(today: DateTime) {
+  // the monday of the current work week
+  // if the work week is over, get the next monday
+
+  const day = today.weekday - 1
+
+  // if (day == 5) diff = 2
+  // if (day == 6) diff = 1
+
+  let diff = -1 * day
+  if (day >= 5) diff = 7 - day
+  // else diff = -1 * day
+
+  return today.plus({ days: diff })
+}
+
+export function getWeekSpan() {
+  const todayStr = DateTime.now().toISODate()
+
+  const start = getWeekStart(DateTime.fromISO(todayStr, { zone: 'utc' }))
+  const end = start.plus({ days: 4 })
+
+  const startStr = start.toISODate()
+  const endStr = end.toISODate()
+
+  // TODO: this shoult probably return DateTimes not Strings
+
+  return [startStr, endStr]
+}
+
 export function eventToGql(evnt: Event, startDate: DateTime) {
   const passenger = evnt.data.mode == 'passenger'
 

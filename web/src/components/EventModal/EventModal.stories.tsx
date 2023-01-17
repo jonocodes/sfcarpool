@@ -5,7 +5,7 @@ import { calcStringTime, getTimeSlots } from '../Scheduler/helpers'
 
 import EventModal from './EventModal'
 
-export const generated = () => {
+export const updateEvent = () => {
   // const [modalVisible, setModalVisible] = useState(true)
 
   // const

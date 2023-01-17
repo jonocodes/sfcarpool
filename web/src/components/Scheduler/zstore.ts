@@ -21,7 +21,7 @@ import {
 const modes = ['passenger', 'driver']
 
 const configDefault: Config = {
-  className: 'jq-schedule',
+  className: 'r-schedule',
   startTime: '07:00',
   endTime: '19:30',
   widthTimeX: 25,

@@ -445,7 +445,7 @@ const Scheduler = () => {
     <>
       {/* <div className="container"> */}
       {/* <div style={{ padding: '10px 0 40px' }}> */}
-      <div id="schedule" className="jq-schedule">
+      <div id="schedule" className="r-schedule">
         <Main />
       </div>
       {/* </div> */}
