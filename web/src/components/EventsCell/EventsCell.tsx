@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { Col, Container, Form, Row } from 'react-bootstrap'
+import { Col, Form, Row } from 'react-bootstrap'
 import type { EventsQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'

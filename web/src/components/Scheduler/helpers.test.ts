@@ -39,7 +39,6 @@ describe('eventToGql', () => {
 
 describe('getWeekStart', () => {
   it('calculates successfully', () => {
-
     const thisMonday = DateTime.fromISO('2023-01-09', {
       zone: 'utc',
     })
@@ -64,6 +63,5 @@ describe('getWeekStart', () => {
         })
       )
     ).toEqual(nextMonday)
-
   })
 })

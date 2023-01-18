@@ -1,13 +1,6 @@
 import { createContext } from 'react'
 
-import {
-  DeleteEventMutation,
-  DeleteEventMutationVariables,
-} from 'types/graphql'
 import { createStore } from 'zustand'
-
-import { useMutation } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/dist/toast'
 
 import { calcStringTime, formatTime } from './helpers'
 import {
@@ -265,13 +258,13 @@ function refreshComputed(userConf, rows, events): Computed {
   }
 }
 
-const DELETE_EVENT = gql`
-  mutation DeleteEventMutation($id: Int!) {
-    deleteEvent(id: $id) {
-      id
-    }
-  }
-`
+// const DELETE_EVENT = gql`
+//   mutation DeleteEventMutation($id: Int!) {
+//     deleteEvent(id: $id) {
+//       id
+//     }
+//   }
+// `
 
 // const [_delete2] = useMutation<
 //   DeleteEventMutation,

@@ -91,12 +91,7 @@ input.error, textarea.error {
   background: #555;
   position: relative;
 }
-.r-schedule .sc_menu .sc_header_scroll,
-.r-schedule .sc_data .sc_data_scroll {
-  /* position: absolute; */
-  /* left: 0; */
-  /* top: 0; */
-}
+
 .r-schedule .sc_menu .sc_header_cell,
 .r-schedule .sc_header .sc_time,
 .r-schedule .sc_main_scroll .sc_time,
