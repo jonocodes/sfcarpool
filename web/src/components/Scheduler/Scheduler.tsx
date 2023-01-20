@@ -93,6 +93,7 @@ const Event = (props) => {
       maxHeight={config.timeLineY}
       dragGrid={[config.widthTimeX, 1]}
       resizeGrid={[config.widthTimeX, 1]}
+      bounds=".sc_main"
       enableResizing={{
         top: false,
         right: true,
