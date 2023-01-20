@@ -59,6 +59,9 @@ const Event = (props) => {
 
   const tableStartTime = calcStringTime(config.startTime)
 
+  const opacity =
+    0.5 + Number(events[props.eventIndex].data.likelihood) / 100 / 2
+
   return (
     <Rnd
       style={{
@@ -241,6 +244,7 @@ const Event = (props) => {
         style={{
           width: '100%',
           height: config.timeLineY + 'px',
+          opacity: opacity,
         }}
       >
         <span className="head">

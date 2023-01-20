@@ -209,14 +209,14 @@ input.error, textarea.error {
 #schedule .driver {
   background-color: rosybrown;
 }
-#schedule .example2{
+/* #schedule .example2{
   background-color: #3eb698;
 }
 #schedule .example3{
   color: #2c0000;
   font-weight: bold;
   background-color: #c7ae50;
-}
+} */
 #schedule .sc_bar.sc_bar_photo .head,
 #schedule .sc_bar.sc_bar_photo .text{
   padding-left: 60px;

@@ -26,6 +26,20 @@ export const QUERY = gql`
   }
 `
 
+// FOR HASURA
+
+// query FindEvents {
+//   events(where: {date: {_gte: "2023-01-16", _lte: "2023-01-20"}}) {
+//     active
+//     date
+//     end
+//     id
+//     location_id
+//     passenger
+//     start
+//   }
+// }
+
 const myConfig: Config = {
   startTime: '06:00',
   endTime: '11:00',
