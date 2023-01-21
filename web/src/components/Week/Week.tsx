@@ -102,8 +102,12 @@ const Week = (props) => {
 
       update({
         variables: {
-          id: Number(event.data.entry),
-          input: gql_data,
+          ...gql_data,
+          ...{ id: Number(event.data.entry) },
+
+          // gql_data.concat()
+          // id: Number(event.data.entry),
+          // input: gql_data,
         },
       }) //then.error, toast error
     },
@@ -128,15 +132,16 @@ const Week = (props) => {
       }
 
       const gql_data = eventToGql(event, startDate)
-      console.log('gql data', gql_data)
+      console.log('create gql data', gql_data)
 
-      const resp = await create({ variables: { input: gql_data } })
+      const resp = await create({ variables: gql_data })
 
-      event.data.entry = resp.data.createEvent.id
+      // const resp = await create({ variables: { locationId: 1 } })
+
+      console.log('new id', resp, event)
+      event.data.entry = resp.data.insert_events.returning[0].id
 
       // TODO: handle db failure promise, toast. show loading?
-
-      console.log(resp)
 
       addEvent(event)
 

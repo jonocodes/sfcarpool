@@ -89,9 +89,7 @@ const EventModal = (props) => {
     console.log('gql data', gql_data)
 
     // const resp = await
-    update({
-      variables: { id: Number(event.data.entry), input: gql_data },
-    })
+    update({ variables: { ...gql_data, ...{ id: Number(event.data.entry) } } })
       .then(function () {
         props.updateEvent(props.eventIndex, event)
       })

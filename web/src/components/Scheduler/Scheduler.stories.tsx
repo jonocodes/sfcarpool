@@ -159,6 +159,9 @@ export const demo = () => {
   )
 }
 
+// const Template = (args) => <Scheduler {...args} />;
+
+
 export default {
   title: 'Components/Scheduler',
   component: Scheduler,

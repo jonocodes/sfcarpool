@@ -8,37 +8,43 @@ import { parseDateTime, rowsToDays as rowsToDates } from '../Scheduler/helpers'
 import { Config, Event } from '../Scheduler/types'
 import Week from '../Week/Week'
 
+// export const QUERY = gql`
+//   query EventsQuery($before: Date, $after: Date, $locationId: Int) {
+//     weekEvents(before: $before, after: $after, locationId: $locationId) {
+//       id
+//       createdAt
+//       updatedAt
+//       label
+//       date
+//       start
+//       end
+//       passenger
+//       likelihood
+//       active
+//       locationId
+//     }
+//   }
+// `
+
 export const QUERY = gql`
-  query EventsQuery($before: Date, $after: Date, $locationId: Int) {
-    weekEvents(before: $before, after: $after, locationId: $locationId) {
-      id
-      createdAt
-      updatedAt
-      label
-      date
-      start
-      end
-      passenger
-      likelihood
+  query EventsQuery($before: date, $after: date, $locationId: Int) {
+    weekEvents: events(
+      where: {
+        location_id: { _eq: $locationId }
+        date: { _gte: $after, _lte: $before }
+      }
+    ) {
       active
-      locationId
+      date
+      end
+      id
+      passenger
+      start
+      label
+      likelihood
     }
   }
 `
-
-// FOR HASURA
-
-// query FindEvents {
-//   events(where: {date: {_gte: "2023-01-16", _lte: "2023-01-20"}}) {
-//     active
-//     date
-//     end
-//     id
-//     location_id
-//     passenger
-//     start
-//   }
-// }
 
 const myConfig: Config = {
   startTime: '06:00',
@@ -76,11 +82,14 @@ function formatDate(dateStr) {
 
 export const Success = ({
   weekEvents,
+  locations,
   before,
   after,
   locationId,
 }: CellSuccessProps<EventsQuery>) => {
   const _events = []
+
+  console.log(locations)
 
   for (let i = 0; i < weekEvents.length; i++) {
     if (weekEvents[i].active) {
@@ -98,7 +107,7 @@ export const Success = ({
 
   return (
     <>
-      <Row style={{ paddingTop: '30px' }}>
+      {/* <Row style={{ paddingTop: '30px' }}>
         <Col xm={7}>
           <h3>
             {weekStart} - {weekEnd}
@@ -111,9 +120,15 @@ export const Success = ({
             </option>
           </Form.Select>
         </Col>
-      </Row>
+      </Row> */}
       <Row>
-        <Week rows={rows} dates={dates} data={_events} config={myConfig} />
+        <Week
+          rows={rows}
+          dates={dates}
+          data={_events}
+          config={myConfig}
+          locationId={locationId}
+        />
       </Row>
     </>
   )

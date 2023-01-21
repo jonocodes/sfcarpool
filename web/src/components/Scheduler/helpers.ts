@@ -79,8 +79,10 @@ export function eventToGql(evnt: Event, startDate: DateTime) {
     label: evnt.text,
     passenger,
     locationId: 1,
-    start: '1970-01-10T' + start + ':00Z',
-    end: '1970-01-10T' + end + ':00Z',
+    // start: '1970-01-10T' + start + ':00Z',
+    // end: '1970-01-10T' + end + ':00Z',
+    start,
+    end,
     date: dateStr,
     likelihood: Number(evnt.data.likelihood),
     active: true,
@@ -114,25 +116,83 @@ export function rowsToDays(rows, startDateStr, endDateStr) {
   return dates
 }
 
+// export const CREATE_EVENT = gql`
+//   mutation CreateEventMutation($input: CreateEventInput!) {
+//     createEvent(input: $input) {
+//       id
+//     }
+//   }
+// `
+
 export const CREATE_EVENT = gql`
-  mutation CreateEventMutation($input: CreateEventInput!) {
-    createEvent(input: $input) {
-      id
+  mutation CreateEventMutation(
+    $locationId: Int!
+    $date: date!
+    $start: time!
+    $end: time!
+    $likelihood: Int!
+    $passenger: Boolean!
+  ) {
+    insert_events(
+      objects: {
+        date: $date
+        end: $end
+        likelihood: $likelihood
+        start: $start
+        passenger: $passenger
+        location_id: $locationId
+      }
+    ) {
+      returning {
+        id
+      }
     }
   }
 `
 
 export const UPDATE_EVENT = gql`
-  mutation UpdateEventMutation($id: Int!, $input: UpdateEventInput!) {
-    updateEvent(id: $id, input: $input) {
-      id
+  mutation UpdateEventMutation(
+    $id: Int!
+    $locationId: Int
+    $date: date
+    $start: time!
+    $end: time!
+    $likelihood: Int!
+    $passenger: Boolean!
+  ) {
+    # updateEvent(id: $id, input: $input) {
+    #   id
+    # }
+
+    update_events(
+      where: { id: { _eq: $id } }
+      _set: {
+        date: $date
+        end: $end
+        likelihood: $likelihood
+        start: $start
+        passenger: $passenger
+        location_id: $locationId
+      }
+    ) {
+      returning {
+        id
+      }
     }
   }
 `
 
+// mutation MyMutation {
+// update_events(where: {id: {_eq: 3}}, _set: {date: "2023-01-16"}) {
+//   returning {
+//     id
+//   }
+// }
+// }
+
 export const DELETE_EVENT = gql`
   mutation DeleteEventMutation($id: Int!) {
-    deleteEvent(id: $id) {
+    delete_events_by_pk(id: $id) {
       id
     }
   }
