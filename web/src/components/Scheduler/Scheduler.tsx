@@ -105,7 +105,8 @@ const Event = (props) => {
         topLeft: false,
       }}
       onDrag={(e, data) => {
-        const offset = (data.x / config.widthTimeX) * config.widthTime
+        const offset =
+          (Math.round(data.x) / config.widthTimeX) * config.widthTime
 
         const lengthTime =
           calcStringTime(events[props.eventIndex].end) -
@@ -134,7 +135,7 @@ const Event = (props) => {
         console.log('onDragStop', e, data, data.lastX, data.lastY)
 
         // handle the case where the drag seems like a click
-        if (deltaX == 0 && deltaY == 0) {
+        if (Math.abs(deltaX) <= 2 && Math.abs(deltaY) <= 2) {
           console.log(
             'that drag seemed like a click!',
             deltaX,
@@ -153,7 +154,7 @@ const Event = (props) => {
 
           for (let i = 0; i < events[props.eventIndex].row; i++) {
             origTopY += computed.rowHeights[i]
-            console.log(origTopY)
+            // console.log(origTopY)
           }
 
           const newTopY = origTopY + data.lastY
@@ -398,6 +399,9 @@ const Main = () => {
 
   const scrollWidth = useStore(store, (state) => state.computed.scrollWidth)
 
+  const events = useStore(store, (state) => state.events)
+  console.log('Main events', events)
+
   for (let i = 0; i < rows.length; i++) {
     timelines.push(<Row rowNum={i} key={i} />)
     titles.push(
@@ -416,21 +420,24 @@ const Main = () => {
       <div
         className="sc_data"
         style={{
-          width: config.dataWidth + 'px',
+          // width: config.dataWidth + 'px',
           flexShrink: 0,
         }}
       >
         <div
           className="sc_header_cell"
-          style={{
-            width: config.dataWidth,
-          }}
+          // style={{
+          //   width: config.dataWidth,
+          // }}
         >
           <span>&nbsp;</span>
         </div>
         <div
           className="sc_data_scroll"
-          style={{ width: config.dataWidth, top: '0' }}
+          style={{
+            //width: config.dataWidth,
+            top: '0',
+          }}
         >
           {titles}
         </div>
@@ -447,15 +454,9 @@ const Main = () => {
 
 const Scheduler = () => {
   return (
-    <>
-      {/* <div className="container"> */}
-      {/* <div style={{ padding: '10px 0 40px' }}> */}
-      <div id="schedule" className="r-schedule">
-        <Main />
-      </div>
-      {/* </div> */}
-      {/* </div> */}
-    </>
+    <div id="schedule" className="r-schedule">
+      <Main />
+    </div>
   )
 }
 

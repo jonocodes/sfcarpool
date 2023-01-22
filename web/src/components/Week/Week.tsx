@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 import { Button } from 'react-bootstrap'
 import {
@@ -28,7 +28,7 @@ import {
   SchedulerContext,
 } from 'src/components/Scheduler/zstore'
 
-import 'bootstrap/dist/css/bootstrap.min.css'
+// import 'bootstrap/dist/css/bootstrap.min.css'
 import EventModal from '../EventModal/EventModal'
 
 interface PageState {
@@ -73,14 +73,14 @@ const Week = (props) => {
 
   const startDate = props.dates[0]
 
-  console.log('rendering Week')
+  console.log('rendering Week, location', props.locationId, props.data)
 
   const pageConfig: Config = {
     startTime: '06:00', // schedule start time(HH:ii)
     endTime: '10:00', // schedule end time(HH:ii)
     widthTime: 60 * 5, // 300 seconds per cell (5 minutes) ?
     timeLineY: 60, // height(px)
-    dataWidth: 120,
+    // dataWidth: 120,
     verticalScrollbar: 20, // scrollbar (px)
     timeLineBorder: 0, // border(top and bottom)
     timeLinePaddingTop: 0,
@@ -98,7 +98,7 @@ const Week = (props) => {
     },
 
     onChange: async function (event, _) {
-      const gql_data = eventToGql(event, startDate)
+      const gql_data = eventToGql(event, startDate, props.locationId)
 
       update({
         variables: {
@@ -131,12 +131,10 @@ const Week = (props) => {
         },
       }
 
-      const gql_data = eventToGql(event, startDate)
+      const gql_data = eventToGql(event, startDate, props.locationId)
       console.log('create gql data', gql_data)
 
       const resp = await create({ variables: gql_data })
-
-      // const resp = await create({ variables: { locationId: 1 } })
 
       console.log('new id', resp, event)
       event.data.entry = resp.data.insert_events.returning[0].id
@@ -154,7 +152,6 @@ const Week = (props) => {
 
       // setEvent(i, event)
       showModal()
-      // TODO: open modal here
     },
   }
 
@@ -171,10 +168,12 @@ const Week = (props) => {
     addEvent(newEvent)
   }
 
+  // const [evnts, setEvnts] = useState(props.data)
+
   const store = useRef(
     createSchedulerStore({
       rows: props.rows,
-      events: props.data,
+      events: props.data, // TODO: the location switch issue is probably here
       config: myConfig,
     })
   ).current
@@ -194,6 +193,8 @@ const Week = (props) => {
 
   const _updateEvent = useStore(store, (state) => state.updateEvent)
   const _removeEvent = useStore(store, (state) => state.removeEvent)
+
+  console.log('week store events', events)
 
   // TODO: maybe move this to computed? so it does not regen with every change to the Week
   const timeSlots = getTimeSlots(
@@ -215,6 +216,7 @@ const Week = (props) => {
         timeSlots={timeSlots}
         updateEvent={_updateEvent}
         removeEvent={_removeEvent}
+        locationId={props.locationId}
       />
     )
   }

@@ -67,7 +67,7 @@ function gqlToEvent(item): Event {
   }
 }
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => <div>Loading events...</div>
 
 // export const Empty = () => <div>Empty</div>
 
@@ -75,21 +75,20 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
-function formatDate(dateStr) {
-  // return DateTime.fromISO(dateStr, { zone: 'utc' }).toFormat('ccc LLL dd yyyy')
-  return DateTime.fromISO(dateStr, { zone: 'utc' }).toFormat('LLL dd, yyyy')
-}
+// function formatDate(dateStr) {
+//   // return DateTime.fromISO(dateStr, { zone: 'utc' }).toFormat('ccc LLL dd yyyy')
+//   return DateTime.fromISO(dateStr, { zone: 'utc' }).toFormat('LLL dd, yyyy')
+// }
 
 export const Success = ({
   weekEvents,
-  locations,
   before,
   after,
   locationId,
 }: CellSuccessProps<EventsQuery>) => {
   const _events = []
 
-  console.log(locations)
+  // console.log(locations)
 
   for (let i = 0; i < weekEvents.length; i++) {
     if (weekEvents[i].active) {
@@ -97,12 +96,12 @@ export const Success = ({
     }
   }
 
-  console.log(_events)
+  // console.log(_events)
 
-  const locationText = 'North Berkeley BART -> SF Financial District'
+  // const locationText = 'North Berkeley BART -> SF Financial District'
 
-  const weekEnd = formatDate(before)
-  const weekStart = formatDate(after)
+  // const weekEnd = formatDate(before)
+  // const weekStart = formatDate(after)
   const dates = rowsToDates(rows, after, before)
 
   return (

@@ -10,15 +10,18 @@
 
 mockGraphQLMutation('CreateEventMutation', () => {
   return {
-    createEvent: {
-      id: 1000 + Math.floor(Math.random() * 1000),
+    // createEvent: {
+    //   id: 1000 + Math.floor(Math.random() * 1000),
+    // },
+    insert_events: {
+      returning: [{ id: 1000 + Math.floor(Math.random() * 1000) }],
     },
   }
 })
 
 mockGraphQLMutation('DeleteEventMutation', () => {
   return {
-    deleteEvent: {
+    delete_events_by_pk: {
       id: 1,
     },
   }
@@ -26,8 +29,10 @@ mockGraphQLMutation('DeleteEventMutation', () => {
 
 mockGraphQLMutation('UpdateEventMutation', () => {
   return {
-    updateEvent: {
-      id: 1,
+    update_events: {
+      returning: {
+        id: 1,
+      },
     },
   }
 })

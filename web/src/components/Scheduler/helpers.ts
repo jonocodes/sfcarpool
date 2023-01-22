@@ -62,7 +62,11 @@ export function getWeekSpan() {
   return [startStr, endStr]
 }
 
-export function eventToGql(evnt: Event, startDate: DateTime) {
+export function eventToGql(
+  evnt: Event,
+  startDate: DateTime,
+  locationId: number
+) {
   const passenger = evnt.data.mode == 'passenger'
 
   const date = startDate.plus({ days: evnt.row })
@@ -78,7 +82,7 @@ export function eventToGql(evnt: Event, startDate: DateTime) {
     // id: evnt.data.entry,
     label: evnt.text,
     passenger,
-    locationId: 1,
+    locationId,
     // start: '1970-01-10T' + start + ':00Z',
     // end: '1970-01-10T' + end + ':00Z',
     start,
@@ -182,13 +186,6 @@ export const UPDATE_EVENT = gql`
   }
 `
 
-// mutation MyMutation {
-// update_events(where: {id: {_eq: 3}}, _set: {date: "2023-01-16"}) {
-//   returning {
-//     id
-//   }
-// }
-// }
 
 export const DELETE_EVENT = gql`
   mutation DeleteEventMutation($id: Int!) {

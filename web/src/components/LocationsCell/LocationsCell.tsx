@@ -1,4 +1,4 @@
-import { Form, ListGroupItem } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import type { LocationsQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'

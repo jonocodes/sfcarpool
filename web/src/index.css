@@ -92,6 +92,19 @@ input.error, textarea.error {
   position: relative;
 }
 
+@media (max-width: 768px){
+  .timeline-title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .sc_data {
+    width: 70px;
+  }
+}
+
+
+
 .r-schedule .sc_menu .sc_header_cell,
 .r-schedule .sc_header .sc_time,
 .r-schedule .sc_main_scroll .sc_time,

@@ -58,9 +58,16 @@ const icon_driver = (
 )
 
 const EventModal = (props) => {
-  const event = props.currentEvent
+  // const event = props.currentEvent
+  // const origEvent = props.currentEvent
+
+  const [event, setEvent] = useState(props.currentEvent)
 
   const [likelihood, setLikelihood] = useState(event.data.likelihood)
+
+  const [validated, setValidated] = useState(true)
+
+  const [timespanError, setTimespanError] = useState('')
 
   const [update] = useMutation<
     UpdateEventMutation,
@@ -85,7 +92,7 @@ const EventModal = (props) => {
   async function updateEvent() {
     console.log('update', props.eventIndex, event)
 
-    const gql_data = eventToGql(event, props.startDate)
+    const gql_data = eventToGql(event, props.startDate, props.locationId)
     console.log('gql data', gql_data)
 
     // const resp = await
@@ -103,6 +110,16 @@ const EventModal = (props) => {
 
     props.handleClose()
   }
+
+  // const handleSubmit = (e) => {
+  //   const form = e.currentTarget
+  //   if (form.checkValidity() === false) {
+  //     e.preventDefault()
+  //     e.stopPropagation()
+  //   }
+
+  //   setValidated(true)
+  // }
 
   async function removeEvent() {
     _delete({ variables: { id: Number(event.data.entry) } })
@@ -132,135 +149,171 @@ const EventModal = (props) => {
     )
   }
 
+  function validateTimespan() {
+    if (event.end <= event.start) {
+      // console.log('timespan invaild')
+      setTimespanError('invalid time span')
+      setValidated(false)
+    } else {
+      // console.log('timespan vaild')
+      setTimespanError('')
+      setValidated(true)
+    }
+  }
+
   return (
     <Modal show={props.show} onHide={props.handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Update Event</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Container fluid>
-          <Row className="align-items-end pb-4">
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label
-                  style={{
-                    paddingRight: '5px',
-                  }}
-                >
-                  Label
-                </Form.Label>
-                <OverlayTrigger
-                  delay={{ hide: 350, show: 100 }}
-                  overlay={(props) => (
-                    <Tooltip {...props}>
-                      Enter anything here (like nickname, or initials) such that
-                      you can identify your entry in case you want to modify it
-                      later.
-                    </Tooltip>
-                  )}
-                  placement="bottom"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="12"
-                    height="12"
-                    fill="currentColor"
-                    className="bi bi-info-circle-fill"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-                  </svg>
-                </OverlayTrigger>
-                <Form.Control
-                  size="sm"
-                  type="text"
-                  defaultValue={event.text}
-                  onChange={(e) => (event.text = e.target.value)}
-                  // autoFocus
-                />
-              </Form.Group>
-            </Col>
-
-            <Col md={6} className="h-25">
-              <ToggleButtonGroup
-                type="radio"
-                name="options"
-                defaultValue={event.data.mode}
-              >
-                <ToggleButton
-                  id="tbg-radio-1"
-                  value={'passenger'}
-                  onChange={(e) => (event.data.mode = e.target.value)}
-                >
-                  {icon_passenger} Passenger
-                </ToggleButton>
-                <ToggleButton
-                  id="tbg-radio-2"
-                  value={'driver'}
-                  onChange={(e) => (event.data.mode = e.target.value)}
-                >
-                  {icon_driver} Driver
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </Col>
-
-            <Row>
-              <Col md={3}>
-                From
-                <Form.Select
-                  size="sm"
-                  aria-label="choose start time"
-                  defaultValue={event.start}
-                  onChange={(e) => (event.start = e.target.value)}
-                >
-                  {timeDivs}
-                </Form.Select>
-              </Col>
-              <Col md={3}>
-                To
-                <Form.Select
-                  size="sm"
-                  aria-label="choose end time"
-                  defaultValue={event.end}
-                  onChange={(e) => (event.end = e.target.value)}
-                >
-                  {timeDivs}
-                </Form.Select>
-              </Col>
+      <Form noValidate>
+        {/* <Modal.Header closeButton>
+          <Modal.Title>Update Event</Modal.Title>
+        </Modal.Header> */}
+        <Modal.Body>
+          <Container fluid>
+            <Row className="align-items-end pb-4">
               <Col md={6}>
-                <Form.Label>Likelihood %{likelihood}</Form.Label>
-                <Form.Range
-                  defaultValue={likelihood}
-                  onChange={(e) => {
-                    event.data.likelihood = e.target.value
-                    setLikelihood(e.target.value)
-                  }}
-                />
+                <Form.Group>
+                  <Form.Label
+                    style={{
+                      paddingRight: '5px',
+                    }}
+                  >
+                    Label
+                  </Form.Label>
+                  <OverlayTrigger
+                    delay={{ hide: 350, show: 100 }}
+                    overlay={(props) => (
+                      <Tooltip {...props}>
+                        Enter anything here (like nickname, or initials) so you
+                        can identify your entry in case you want to modify it
+                        later.
+                      </Tooltip>
+                    )}
+                    placement="bottom"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      fill="currentColor"
+                      className="bi bi-info-circle-fill"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                    </svg>
+                  </OverlayTrigger>
+                  <Form.Control
+                    size="sm"
+                    type="text"
+                    defaultValue={event.text}
+                    onChange={(e) => (event.text = e.target.value)}
+                    // autoFocus
+                  />
+                </Form.Group>
               </Col>
-            </Row>
-          </Row>
-        </Container>
-      </Modal.Body>
-      <Modal.Footer>
-        <Row>
-          <Col>
-            <Button variant="secondary" onClick={removeEvent}>
-              Delete
-            </Button>
-          </Col>
 
-          <Col md="auto">
-            <Button variant="secondary" onClick={props.handleClose}>
-              Close
-            </Button>
-          </Col>
-          <Col md="auto">
-            <Button variant="primary" onClick={updateEvent}>
-              Save Changes
-            </Button>
-          </Col>
-        </Row>
-      </Modal.Footer>
+              <Col md={6} className="h-25">
+                <ToggleButtonGroup
+                  type="radio"
+                  name="options"
+                  defaultValue={event.data.mode}
+                >
+                  <ToggleButton
+                    id="tbg-radio-1"
+                    value={'passenger'}
+                    onChange={(e) => (event.data.mode = e.target.value)}
+                  >
+                    {icon_passenger} Passenger
+                  </ToggleButton>
+                  <ToggleButton
+                    id="tbg-radio-2"
+                    value={'driver'}
+                    onChange={(e) => (event.data.mode = e.target.value)}
+                  >
+                    {icon_driver} Driver
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Col>
+
+              <Row>
+                <Col md={3}>
+                  From
+                  <Form.Select
+                    size="sm"
+                    aria-label="choose start time"
+                    defaultValue={event.start}
+                    onChange={(e) => {
+                      event.start = e.target.value
+                      validateTimespan()
+                    }}
+                  >
+                    {timeDivs}
+                  </Form.Select>
+                </Col>
+                <Col md={3}>
+                  To
+                  <Form.Select
+                    size="sm"
+                    aria-label="choose end time"
+                    defaultValue={event.end}
+                    onChange={(e) => {
+                      event.end = e.target.value
+                      validateTimespan()
+                    }}
+                  >
+                    {timeDivs}
+                  </Form.Select>
+                </Col>
+                <Col md={6}>
+                  <Form.Label>Likelihood %{likelihood}</Form.Label>
+                  <Form.Range
+                    defaultValue={likelihood}
+                    onChange={(e) => {
+                      event.data.likelihood = e.target.value
+                      setLikelihood(e.target.value)
+                    }}
+                  />
+                </Col>
+                <Col className="error">{timespanError}</Col>
+              </Row>
+            </Row>
+          </Container>
+        </Modal.Body>
+        <Modal.Footer>
+          <Row>
+            <Col>
+              <Button variant="secondary" onClick={removeEvent}>
+                Delete
+              </Button>
+            </Col>
+
+            <Col md="auto">
+              <Button
+                variant="secondary"
+                // onClick={props.handleClose}
+                onClick={() => {
+                  console.log('clicked close!')
+                  setEvent(props.currentEvent)
+
+                  // TODO: bug, closing saves locally instead of discarding???
+                  props.handleClose()
+                }}
+              >
+                Close
+              </Button>
+            </Col>
+            <Col md="auto">
+              <Button
+                variant="primary"
+                // type="submit"
+                onClick={updateEvent}
+                disabled={!validated}
+              >
+                Save Changes
+              </Button>
+            </Col>
+          </Row>
+        </Modal.Footer>
+      </Form>
     </Modal>
   )
 }

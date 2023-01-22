@@ -3,6 +3,8 @@ import { Container, Nav, Navbar } from 'react-bootstrap'
 import { routes } from '@redwoodjs/router'
 import { NavLink } from '@redwoodjs/router'
 
+// import 'bootstrap/dist/css/bootstrap.min.css'
+
 type SiteBootLayoutProps = {
   children?: React.ReactNode
 }

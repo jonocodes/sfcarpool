@@ -59,7 +59,7 @@ export interface Config {
   timeLinePaddingTop?: number
   timeLinePaddingBottom?: number
   headTimeBorder?: number // time border width
-  dataWidth?: number // data width
+  // dataWidth?: number // data width
   verticalScrollbar?: number // vertical scrollbar width
   bundleMoveWidth?: number
   // width to move all schedules to the right of the clicked time cell

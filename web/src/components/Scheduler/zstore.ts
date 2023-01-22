@@ -25,7 +25,7 @@ const configDefault: Config = {
   timeLinePaddingTop: 0,
   timeLinePaddingBottom: 0,
   headTimeBorder: 1, // time border width
-  dataWidth: 160, // data width
+  // dataWidth: 160, // data width
   verticalScrollbar: 0, // vertical scrollbar width
   bundleMoveWidth: 1,
   // width to move all schedules to the right of the clicked time cell
@@ -326,6 +326,8 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
   //   //   toast.success('Thank you for your submission!')
   //   // },
   // })
+
+  console.log('createStore initProps.events', initProps.events)
 
   return createStore<SchedulerState>()((set) => ({
     events: initProps.events,

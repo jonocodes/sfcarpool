@@ -14,8 +14,17 @@ const AboutPage = () => {
           effort to get it up an running again.
         </p>
         <p>
-          For general info about how Casual Carpool works visit{' '}
-          <a href="https://www.ridenow.org/carpool">Ridenow</a>.
+          There is no official site for Casual Carpool, but for general info
+          about how Casual Carpool works these links may be helpful{' '}
+          <a href="https://www.ridenow.org/carpool">Ridenow</a>,{' '}
+          <a href="https://sfcasualcarpool.com/how_it_works#!">
+            SF Casual Carpool
+          </a>
+          , <a href="https://511.org/carpool/casual">511.org</a>,{' '}
+          <a href="https://www.berkeleyside.org/2022/11/20/casual-carpool-bay-bridge-covid-traffi">
+            Article about the pandemic's affect on Casual Carpool
+          </a>
+          .
         </p>
 
         <h2>FAQ</h2>
@@ -35,16 +44,33 @@ const AboutPage = () => {
           And then I thought if we make that communication public others could
           easily join as well and help it grow.
           <h3>Is this really still &quot;casual&quot;?</h3>
-          Hopefully it is a short term solution to get back to where we were a
+          Hopefully this is a short term solution to get back to where we were a
           few years back. Then we wont need to coordinate, and can just go to
-          the line at the curb.
-          <h3>Why not use an already existing carpool app?</h3>
+          the line at the curb - as we did before the days of the internet.
+          <h3>
+            This look like a website. Is there an app I could use instead?
+          </h3>
+          You can use this as an "app" that lives in your phone's home screen by
+          going to the home page and then{' '}
+          <a href="https://www.howtogeek.com/196087/how-to-add-websites-to-the-home-screen-on-any-smartphone-or-tablet/">
+            following these instructions
+          </a>
+          .
+          <h3>
+            Why not use an already existing carpool app instead of making this
+            site?
+          </h3>
           There are several good resources for coordinating carpools, but I have
           not found one that fits the needs of casual carpool. Tools like{' '}
           <a href="https://merge.511.org/">Merge</a> are for coordinating
           one-to-one with neighbors for ongoing carpool arrangements. While that
           does help make carpools happen, it will not bring back the line
           outside BART that anyone can just walk up to.
+          <h3>
+            I'm available the same time every week. Can I add a time slot that
+            repeats?
+          </h3>
+          <p>Not yet. Maybe in the future.</p>
           <h3>What if I have complaints/suggestions/questions?</h3>
           Please contact <a href="mailto:carpool@zop.anonaddy.com">Jono</a>.
         </p>

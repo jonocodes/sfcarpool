@@ -13,7 +13,7 @@ export const basicWeek = () => {
     widthTimeX: 20,
     widthTime: 60 * 5, // 5 minutes
     timeLineY: 60, // height(px)
-    dataWidth: 120,
+    // dataWidth: 120,
     verticalScrollbar: 20, // scrollbar (px)
     timeLineBorder: 2, // border(top and bottom)
     bundleMoveWidth: 6, // width to move all schedules to the right of the clicked time line cell

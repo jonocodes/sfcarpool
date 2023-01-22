@@ -9,7 +9,11 @@
   title = "SF Carpool"
   port = 8910
 #  apiUrl = "/.redwood/functions" # you can customise graphql and dbauth urls individually too: see https://redwoodjs.com/docs/app-configuration-redwood-toml#api-paths
-  apiUrl = "http://localhost:8080/v1"
+#  apiUrl = "http://localhost:8080/v1"
+
+#  apiUrl = "${API_URL:http://localhost:8080/v1}"
+  apiUrl = "${API_URL}"
+
 #  apiGraphqlEndpoint = "http://localhost:8080/v1"
   includeEnvironmentVariables = [] # any ENV vars that should be available to the web side, see https://redwoodjs.com/docs/environment-variables#web
 [api]
