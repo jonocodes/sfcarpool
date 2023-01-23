@@ -1,6 +1,7 @@
 import { Form } from 'react-bootstrap'
 import type { LocationsQuery } from 'types/graphql'
 
+import { navigate, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 export const QUERY = gql`
@@ -30,7 +31,11 @@ export const Success = ({
     <Form.Select
       aria-label="choose location"
       defaultValue={1}
-      onChange={(e) => setLocationId(e.target.value)}
+      // onChange={(e) => setLocationId(e.target.value)}
+
+      // onChange={(e) =>  navigate(routes.home(
+      onChange={(e) => navigate(routes.scheduler({ location: e.target.value }))}
+      // )}
     >
       {locations.map((item) => {
         return (

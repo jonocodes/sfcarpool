@@ -243,3 +243,15 @@ input.error, textarea.error {
 #schedule .sc_bar.sc_bar_photo .photo img{
   max-width: 100%;
 }
+
+
+.nav-week {
+  display: inline;
+  font-size: xx-large;
+  /* padding: 20px; */
+}
+
+.nav-week a {
+  padding: 10px;
+  color: inherit;
+}

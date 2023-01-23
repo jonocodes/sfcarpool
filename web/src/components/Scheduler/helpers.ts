@@ -54,12 +54,13 @@ export function getWeekSpan() {
   const start = getWeekStart(DateTime.fromISO(todayStr, { zone: 'utc' }))
   const end = start.plus({ days: 4 })
 
-  const startStr = start.toISODate()
-  const endStr = end.toISODate()
+  // const startStr = start.toISODate()
+  // const endStr = end.toISODate()
 
-  // TODO: this shoult probably return DateTimes not Strings
+  // TODO: this should probably return DateTimes not Strings
 
-  return [startStr, endStr]
+  // return [startStr, endStr]
+  return [start, end]
 }
 
 export function eventToGql(
@@ -99,11 +100,11 @@ export function parseDateTime(dateStr) {
   })
 }
 
-export function rowsToDays(rows, startDateStr, endDateStr) {
-  // let currentDate = DateTime.fromISO(startDateStr, { zone: 'utc' })
-  let currentDate = parseDateTime(startDateStr)
-  // const endDate = DateTime.fromISO(endDateStr, { zone: 'utc' })
-  const endDate = parseDateTime(endDateStr)
+export function rowsToDays(rows, startDate, endDate) {
+  // let currentDate = parseDateTime(startDateStr)
+  // const endDate = parseDateTime(endDateStr)
+
+  let currentDate = startDate
 
   const dates = []
 
@@ -185,7 +186,6 @@ export const UPDATE_EVENT = gql`
     }
   }
 `
-
 
 export const DELETE_EVENT = gql`
   mutation DeleteEventMutation($id: Int!) {
