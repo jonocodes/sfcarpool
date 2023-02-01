@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { DateTime } from 'luxon'
 import { Col, Form, Row } from 'react-bootstrap'
 import type { EventsQuery } from 'types/graphql'
@@ -86,13 +88,17 @@ export const Success = ({
   after,
   locationId,
 }: CellSuccessProps<EventsQuery>) => {
-  const _events = []
+  const events = []
 
-  // console.log(locations)
+  // const [events, setEvents] = useState([])
+
+  // setEvents([])
+  console.log('events in Success', events.length)
 
   for (let i = 0; i < weekEvents.length; i++) {
     if (weekEvents[i].active) {
-      _events.push(gqlToEvent(weekEvents[i]))
+      events.push(gqlToEvent(weekEvents[i]))
+      // _events.push(gqlToEvent(weekEvents[i]))
     }
   }
 
@@ -124,7 +130,7 @@ export const Success = ({
         <Week
           rows={rows}
           dates={dates}
-          data={_events}
+          data={events}
           config={myConfig}
           locationId={locationId}
         />

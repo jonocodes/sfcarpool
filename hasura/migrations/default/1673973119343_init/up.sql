@@ -3,8 +3,8 @@ CREATE SCHEMA audit;
 COMMENT ON SCHEMA audit IS 'Out-of-table audit/history logging tables and trigger functions';
 CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
-CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
-COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+-- CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+-- COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 CREATE FUNCTION audit.audit_table(target_table regclass) RETURNS void
     LANGUAGE sql
     AS $_$
@@ -32,8 +32,8 @@ BEGIN
         IF array_length(ignored_cols,1) > 0 THEN
             _ignored_cols_snip = ', ' || quote_literal(ignored_cols);
         END IF;
-        _q_txt = 'CREATE TRIGGER audit_trigger_row AFTER INSERT OR UPDATE OR DELETE ON ' || 
-                 target_table || 
+        _q_txt = 'CREATE TRIGGER audit_trigger_row AFTER INSERT OR UPDATE OR DELETE ON ' ||
+                 target_table ||
                  ' FOR EACH ROW EXECUTE PROCEDURE audit.if_modified_func(' ||
                  quote_literal(audit_query_text) || _ignored_cols_snip || ');';
         RAISE NOTICE '%',_q_txt;

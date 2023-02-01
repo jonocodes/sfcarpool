@@ -13,7 +13,7 @@ import {
 
 const modes = ['passenger', 'driver']
 
-const configDefault: Config = {
+export const configDefault: Config = {
   className: 'r-schedule',
   startTime: '07:00',
   endTime: '19:30',
@@ -228,7 +228,7 @@ export function calculateGeometries(
   }
 }
 
-function refreshComputed(userConf, rows, events): Computed {
+export function refreshComputed(userConf, rows, events): Computed {
   const config = { ...configDefault, ...userConf }
   let tableStartTime = calcStringTime(config.startTime)
   tableStartTime -= tableStartTime % config.widthTime
@@ -314,6 +314,16 @@ function refreshComputed(userConf, rows, events): Computed {
 //   }
 // }
 
+// export const useStore3 = create((set) => ({
+//   rows: [],
+//   events: [],
+//   config: {},
+//   computed: [],
+//   onClickEvent: null,
+//   currentEvent: null,
+//   currentEventIndex: null,
+// }))
+
 export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
   const config = { ...configDefault, ...initProps.config }
 
@@ -337,6 +347,22 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
     onClickEvent: null,
     currentEvent: null,
     currentEventIndex: null,
+
+    setup: (config, rows, events) =>
+      set((state) => {
+        state.config = config
+        state.rows = rows
+        state.events = events
+
+        const computed = refreshComputed(config, rows, events)
+
+        return {
+          rows: state.rows,
+          config: state.config,
+          events: state.events,
+          computed: computed,
+        }
+      }),
 
     clearEvents: () =>
       // this is a helper function for dev and testing only

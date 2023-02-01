@@ -7,7 +7,7 @@ import {
   UpdateEventMutation,
   UpdateEventMutationVariables,
 } from 'types/graphql'
-import { useStore } from 'zustand'
+import { createStore, useStore } from 'zustand'
 import create from 'zustand'
 
 import { useMutation } from '@redwoodjs/web'
@@ -21,11 +21,13 @@ import {
   UPDATE_EVENT,
 } from 'src/components/Scheduler/helpers'
 import Scheduler from 'src/components/Scheduler/Scheduler'
-import { Config, Event } from 'src/components/Scheduler/types'
+import { Config, Event, SchedulerState } from 'src/components/Scheduler/types'
 import {
   createSchedulerStore,
   _generateEvent,
   SchedulerContext,
+  configDefault,
+  refreshComputed,
 } from 'src/components/Scheduler/zstore'
 
 // import 'bootstrap/dist/css/bootstrap.min.css'
@@ -49,6 +51,111 @@ const usePageStore = create<PageState>()((set) => ({
   setEvent: (index, event) =>
     set(() => ({ currentEventIndex: index, currentEvent: event })),
 }))
+
+const store = createStore<SchedulerState>((set) => ({
+  rows: [],
+  events: [],
+  config: {},
+  computed: {
+    rowMap: [],
+    geometries: [],
+    rowHeights: [],
+    tableHeight: 0,
+    tableStartTime: 0,
+    tableEndTime: 0,
+    cellsWide: 0,
+    scrollWidth: 0,
+  },
+  onClickEvent: null,
+  currentEvent: null,
+  currentEventIndex: null,
+  // count: 1,
+  // inc: () => set((state) => ({ count: state.count + 1 })),
+
+  setup: (config, rows, events) =>
+    set((state) => {
+      state.config = { ...configDefault, ...config }
+      state.rows = rows
+      state.events = events
+
+      const computed = refreshComputed(config, rows, events)
+
+      return {
+        rows: state.rows,
+        config: state.config,
+        events: state.events,
+        computed: computed,
+      }
+    }),
+
+  clearEvents: () =>
+    // this is a helper function for dev and testing only
+    set((state) => {
+      state.events = []
+
+      const computed = refreshComputed(state.config, state.rows, state.events)
+
+      return {
+        events: state.events,
+        computed: computed,
+      }
+    }),
+
+  addEvent: (event: Event) =>
+    set((state) => {
+      state.events.push(event)
+      const computed = refreshComputed(state.config, state.rows, state.events)
+
+      return {
+        currentEvent: event,
+        events: state.events,
+        computed: computed,
+      }
+    }),
+
+  removeEvent: (eventIndex: number) =>
+    set((state) => {
+      state.events.splice(eventIndex, 1)
+
+      const computed = refreshComputed(state.config, state.rows, state.events)
+
+      console.log('removeEvent', eventIndex, state.events, computed)
+
+      return {
+        // currentEvent: event,
+        events: state.events,
+        computed: computed,
+      }
+    }),
+
+  updateEvent: (eventIndex: number, event: Event) =>
+    set((state) => {
+      console.log('updateEvent', eventIndex, event)
+
+      state.events[eventIndex] = event
+      const computed = refreshComputed(state.config, state.rows, state.events)
+
+      console.log(
+        'updateEvent finished',
+        eventIndex,
+        event,
+        state.events[eventIndex],
+        computed.geometries[eventIndex]
+      )
+
+      return {
+        currentEvent: event,
+        events: state.events,
+        computed: computed,
+      }
+    }),
+}))
+
+// const store = createSchedulerStore({
+//   rows: [],
+//   events: [],
+//   config: {},
+// })
 
 const Week = (props) => {
   const [create /*{ loading, error }*/] = useMutation<
@@ -177,6 +284,9 @@ const Week = (props) => {
       config: myConfig,
     })
   ).current
+
+  // const setup = useStore(store, (state) => state.setup)
+  // setup(myConfig, props.rows, props.data)
 
   const computed = useStore(store, (state) => state.computed)
   const events = useStore(store, (state) => state.events)

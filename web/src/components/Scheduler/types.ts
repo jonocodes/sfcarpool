@@ -93,4 +93,5 @@ export interface SchedulerState extends SchedulerProps {
   removeEvent: (index: number) => void
   clearEvents: () => void
   // mergeConfig: (config: Config) => void
+  setup: (config, rows, events) => void
 }

@@ -48,14 +48,17 @@ function formatDate2(date) {
   return date.toFormat('LLL dd, yyyy')
 }
 
-const SchedulerPage = ({ locationXXX, weekStart }) => {
+const SchedulerPage = ({ locationXXX, week }) => {
   let start
 
-  try {
-    start = DateTime.fromISO(weekStart, { zone: 'utc' })
-    // TODO: if it cant parse, set to today
-  } catch (error) {
-    console.error(error)
+  // try {
+  start = DateTime.fromISO(week, { zone: 'utc' })
+  // TODO: if it cant parse, set to today
+  // } catch (error) {
+  //   console.error(error)
+  //   start = DateTime.now() //.toISODate()
+  // }
+  if (start.invalid) {
     start = DateTime.now() //.toISODate()
   }
 
@@ -78,12 +81,18 @@ const SchedulerPage = ({ locationXXX, weekStart }) => {
   // const [locationId, setLocationId] = useState(location)
   const { location } = useParams()
 
+  let loc = 1
+  if (!Number.isNaN(parseInt(location))) {
+    // or check that its an int, or an existing location
+    loc = Number(location)
+  }
+
   // const weekEnd = formatDate(before)
   // const weekStart = formatDate(after)
 
   const dateSpanStr = formatDate2(start) + ' - ' + formatDate2(end)
 
-  console.log('scheduler page location', location, dateSpanStr)
+  console.log('scheduler page location', loc, dateSpanStr)
 
   return (
     <>
@@ -93,8 +102,8 @@ const SchedulerPage = ({ locationXXX, weekStart }) => {
             <NavLink
               // style={{ padding: '10px' }}
               to={routes.scheduler({
-                location: location,
-                weekStart: prevWeekStr,
+                location: loc,
+                week: prevWeekStr,
               })}
             >
               {caret_left}
@@ -105,8 +114,8 @@ const SchedulerPage = ({ locationXXX, weekStart }) => {
             <NavLink
               // className="nav-link"
               to={routes.scheduler({
-                location: location,
-                weekStart: nextWeekStr,
+                location: loc,
+                week: nextWeekStr,
               })}
             >
               {caret_right}
@@ -115,7 +124,8 @@ const SchedulerPage = ({ locationXXX, weekStart }) => {
         </Col>
         <Col xs="auto">
           <LocationsCell
-          // setLocationId={setLocationId}
+            locationId={location}
+            // setLocationId={setLocationId}
           ></LocationsCell>
         </Col>
       </Row>
