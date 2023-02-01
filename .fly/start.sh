@@ -2,8 +2,8 @@
 
 set -ex
 
-if [ -n $MIGRATE_ON_BOOT ]; then
-  $(dirname $0)/migrate.sh
-fi
+# if [ -n $MIGRATE_ON_BOOT ]; then
+#   $(dirname $0)/migrate.sh
+# fi
 
 npx rw-server --port ${PORT} $@

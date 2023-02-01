@@ -12,11 +12,12 @@
 #  apiUrl = "http://localhost:8080/v1"
 
 #  apiUrl = "${API_URL:http://localhost:8080/v1}"
-  apiUrl = "${API_URL}"
+#  apiUrl = "${API_URL}"
+  apiUrl = "https://dmghclecxsldchpsduky.hasura.us-east-1.nhost.run/v1"
 
 #  apiGraphqlEndpoint = "http://localhost:8080/v1"
-  includeEnvironmentVariables = [] # any ENV vars that should be available to the web side, see https://redwoodjs.com/docs/environment-variables#web
-[api]
-  port = 8911
+  includeEnvironmentVariables = ['API_URL'] # any ENV vars that should be available to the web side, see https://redwoodjs.com/docs/environment-variables#web
+#[api]
+#  port = 8911
 [browser]
-  open = true
+  open = false
