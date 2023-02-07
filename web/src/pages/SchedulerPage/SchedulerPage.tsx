@@ -11,6 +11,7 @@ import {
   getWeekSpan,
   getWeekdateSpanStr,
   getWeekStart,
+  formatDateSpan,
 } from 'src/components/Scheduler/helpers'
 
 // function formatDate(dateStr) {
@@ -44,9 +45,9 @@ const caret_left = (
   </svg>
 )
 
-function formatDate2(date) {
-  return date.toFormat('LLL dd, yyyy')
-}
+// function formatDate2(date) {
+//   return date.toFormat('LLL dd, yyyy')
+// }
 
 const SchedulerPage = ({ locationXXX, week }) => {
   let start
@@ -90,7 +91,13 @@ const SchedulerPage = ({ locationXXX, week }) => {
   // const weekEnd = formatDate(before)
   // const weekStart = formatDate(after)
 
-  const dateSpanStr = formatDate2(start) + ' - ' + formatDate2(end)
+  // const dateSpanStr = formatDate2(start) + ' - ' + formatDate2(end)
+
+  const dateSpanStr = formatDateSpan(start, end)
+
+  // const dateSpanStr = `${start.toFormat('LLL dd')} - ${end.toFormat(
+  //   'dd, yyyy'
+  // )}`
 
   console.log('scheduler page location', loc, dateSpanStr)
 
@@ -105,6 +112,7 @@ const SchedulerPage = ({ locationXXX, week }) => {
                 location: loc,
                 week: prevWeekStr,
               })}
+              activeClassName="active"
             >
               {caret_left}
             </NavLink>
@@ -117,6 +125,7 @@ const SchedulerPage = ({ locationXXX, week }) => {
                 location: loc,
                 week: nextWeekStr,
               })}
+              activeClassName="active"
             >
               {caret_right}
             </NavLink>
@@ -124,13 +133,14 @@ const SchedulerPage = ({ locationXXX, week }) => {
         </Col>
         <Col xs="auto">
           <LocationsCell
-            locationId={location}
+            locationId={loc}
             // setLocationId={setLocationId}
+            week={start.toISODate()}
           ></LocationsCell>
         </Col>
       </Row>
 
-      <EventsCell before={end} after={start} locationId={location} />
+      <EventsCell before={end} after={start} locationId={loc} />
     </>
   )
 }

@@ -4,8 +4,10 @@ import type { LocationsQuery } from 'types/graphql'
 import { navigate, routes, useParams } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
+// NOTE: only using one location until I figure the page change bug
 export const QUERY = gql`
   query LocationsQuery {
+    # locations(where: { id: { _eq: 1 } }) {
     locations {
       id
       name
@@ -24,11 +26,12 @@ export const Failure = ({ error }: CellFailureProps) => (
 export const Success = ({
   locations,
   locationId,
+  week,
 }: // setLocationId,
 CellSuccessProps<LocationsQuery>) => {
   // console.log(locations)
 
-  const { week } = useParams()
+  // const { week } = useParams()
   return (
     <Form.Select
       aria-label="choose location"

@@ -21,7 +21,7 @@ describe('eventToGql', () => {
       },
     }
 
-    const gql_data = eventToGql(event, new DateTime(2020, 2, 20))
+    const gql_data = eventToGql(event, new DateTime(2020, 2, 20), 1)
 
     // TODO: finish writing this
     expect(gql_data).toEqual({

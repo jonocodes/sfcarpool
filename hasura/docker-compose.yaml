@@ -33,6 +33,6 @@ services:
       # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
       ## uncomment next line to set an admin secret
       HASURA_GRAPHQL_ADMIN_SECRET: mysecretkey
-      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anon
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
 volumes:
   db_data:

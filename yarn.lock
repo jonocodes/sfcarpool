@@ -6906,6 +6906,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@use-it/event-listener@npm:^0.1.2":
+  version: 0.1.7
+  resolution: "@use-it/event-listener@npm:0.1.7"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: a47d631124021349ab8fffd452289b9d977c1dbe2b6e548661f6114970817a5033186de700b30514b52c58b20f0311dc508229c069fb696cb1dcf5715e55434b
+  languageName: node
+  linkType: hard
+
 "@webassemblyjs/ast@npm:1.11.1":
   version: 1.11.1
   resolution: "@webassemblyjs/ast@npm:1.11.1"
@@ -21692,6 +21701,7 @@ __metadata:
     npm: ^9.2.0
     react-bootstrap: ^2.7.0
     react-rnd: 10.3.6
+    use-dark-mode: ^2.3.1
     zustand: 4.0.0
   languageName: unknown
   linkType: soft
@@ -24374,6 +24384,29 @@ __metadata:
     punycode: 1.3.2
     querystring: 0.2.0
   checksum: bbe05f9f570ec5c06421c50ca63f287e61279092eed0891db69a9619323703ccd3987e6eed234c468794cf25680c599680d5c1f58d26090f1956c8e9ed8346a2
+  languageName: node
+  linkType: hard
+
+"use-dark-mode@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "use-dark-mode@npm:2.3.1"
+  dependencies:
+    "@use-it/event-listener": ^0.1.2
+    use-persisted-state: ^0.3.0
+  peerDependencies:
+    react: ^16.8.0
+  checksum: 4342c52cba0cfcfad4c663b1c43e7aa5af626a691a2e01aae44b2cca75dceeb19f27bf0bb9b49b5045d3c161636ca749f76896bbe5e3fabf46b4478134ce276c
+  languageName: node
+  linkType: hard
+
+"use-persisted-state@npm:^0.3.0":
+  version: 0.3.3
+  resolution: "use-persisted-state@npm:0.3.3"
+  dependencies:
+    "@use-it/event-listener": ^0.1.2
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0
+  checksum: 5d0d27863d89cbeeeb1fd3e6aa4d142ebaa27cd9f8a964bb658e7e768c5b6f15855564ddf6acd6164489da2162842e9c5218ce600000a2805ab668e15470bd12
   languageName: node
   linkType: hard
 

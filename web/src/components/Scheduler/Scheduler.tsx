@@ -273,18 +273,19 @@ const Event = (props) => {
 }
 
 const Row = (props) => {
-  const store = useContext(SchedulerContext)
-  if (!store) throw new Error('Missing SchedulerContext.Provider in the tree')
+  const useStore = useContext(SchedulerContext)
+  if (!useStore)
+    throw new Error('Missing SchedulerContext.Provider in the tree')
 
-  const rowMap = useStore(store, (state) => state.computed.rowMap)
+  const rowMap = useStore((state) => state.computed.rowMap)
   const items_map = rowMap[props.rowNum]
 
   const blankCells = []
 
-  const config = useStore(store, (state) => state.config)
+  const config = useStore((state) => state.config)
 
-  const cellsWide = useStore(store, (state) => state.computed.cellsWide)
-  const rowHeights = useStore(store, (state) => state.computed.rowHeights)
+  const cellsWide = useStore((state) => state.computed.cellsWide)
+  const rowHeights = useStore((state) => state.computed.rowHeights)
 
   for (let i = 0; i < cellsWide; i++) {
     blankCells.push(
@@ -302,7 +303,7 @@ const Row = (props) => {
     )
   }
 
-  const events = useStore(store, (state) => state.events)
+  const events = useStore((state) => state.events)
 
   const eventBlocks = []
   for (let i = 0; i < items_map.length; i++) {
@@ -395,7 +396,7 @@ const Main = () => {
 
   const rows = useStore(store, (state) => state.rows)
   const rowHeights = useStore(store, (state) => state.computed.rowHeights)
-  const config = useStore(store, (state) => state.config)
+  // const config = useStore(store, (state) => state.config)
 
   const scrollWidth = useStore(store, (state) => state.computed.scrollWidth)
 

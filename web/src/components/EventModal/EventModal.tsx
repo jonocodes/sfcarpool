@@ -23,6 +23,7 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/dist/toast'
 
 import {
+  calcStringTime,
   DELETE_EVENT,
   eventToGql,
   formatTime,
@@ -150,8 +151,8 @@ const EventModal = (props) => {
   }
 
   function validateTimespan() {
-    if (event.end <= event.start) {
-      // console.log('timespan invaild')
+    if (calcStringTime(event.end) <= calcStringTime(event.start)) {
+      // console.log('timespan invalid')
       setTimespanError('invalid time span')
       setValidated(false)
     } else {
@@ -220,6 +221,7 @@ const EventModal = (props) => {
                   <ToggleButton
                     id="tbg-radio-1"
                     value={'passenger'}
+                    variant={'outline-primary'}
                     onChange={(e) => (event.data.mode = e.target.value)}
                   >
                     {icon_passenger} Passenger
@@ -227,6 +229,7 @@ const EventModal = (props) => {
                   <ToggleButton
                     id="tbg-radio-2"
                     value={'driver'}
+                    variant={'outline-danger'}
                     onChange={(e) => (event.data.mode = e.target.value)}
                   >
                     {icon_driver} Driver
@@ -264,7 +267,7 @@ const EventModal = (props) => {
                   </Form.Select>
                 </Col>
                 <Col md={6}>
-                  <Form.Label>Likelihood %{likelihood}</Form.Label>
+                  <Form.Label>Likelihood {likelihood}%</Form.Label>
                   <Form.Range
                     defaultValue={likelihood}
                     onChange={(e) => {

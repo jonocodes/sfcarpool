@@ -7,7 +7,7 @@ import {
   UpdateEventMutation,
   UpdateEventMutationVariables,
 } from 'types/graphql'
-import { createStore, useStore } from 'zustand'
+// import { createStore, useStore } from 'zustand'
 import create from 'zustand'
 
 import { useMutation } from '@redwoodjs/web'
@@ -52,104 +52,104 @@ const usePageStore = create<PageState>()((set) => ({
     set(() => ({ currentEventIndex: index, currentEvent: event })),
 }))
 
-const store = createStore<SchedulerState>((set) => ({
-  rows: [],
-  events: [],
-  config: {},
-  computed: {
-    rowMap: [],
-    geometries: [],
-    rowHeights: [],
-    tableHeight: 0,
-    tableStartTime: 0,
-    tableEndTime: 0,
-    cellsWide: 0,
-    scrollWidth: 0,
-  },
-  onClickEvent: null,
-  currentEvent: null,
-  currentEventIndex: null,
-  // count: 1,
-  // inc: () => set((state) => ({ count: state.count + 1 })),
+// const store = createStore<SchedulerState>((set) => ({
+//   rows: [],
+//   events: [],
+//   config: {},
+//   computed: {
+//     rowMap: [],
+//     geometries: [],
+//     rowHeights: [],
+//     tableHeight: 0,
+//     tableStartTime: 0,
+//     tableEndTime: 0,
+//     cellsWide: 0,
+//     scrollWidth: 0,
+//   },
+//   onClickEvent: null,
+//   currentEvent: null,
+//   currentEventIndex: null,
+//   // count: 1,
+//   // inc: () => set((state) => ({ count: state.count + 1 })),
 
-  setup: (config, rows, events) =>
-    set((state) => {
-      state.config = { ...configDefault, ...config }
-      state.rows = rows
-      state.events = events
+//   setup: (config, rows, events) =>
+//     set((state) => {
+//       state.config = { ...configDefault, ...config }
+//       state.rows = rows
+//       state.events = events
 
-      const computed = refreshComputed(config, rows, events)
+//       const computed = refreshComputed(config, rows, events)
 
-      return {
-        rows: state.rows,
-        config: state.config,
-        events: state.events,
-        computed: computed,
-      }
-    }),
+//       return {
+//         rows: state.rows,
+//         config: state.config,
+//         events: state.events,
+//         computed: computed,
+//       }
+//     }),
 
-  clearEvents: () =>
-    // this is a helper function for dev and testing only
-    set((state) => {
-      state.events = []
+//   clearEvents: () =>
+//     // this is a helper function for dev and testing only
+//     set((state) => {
+//       state.events = []
 
-      const computed = refreshComputed(state.config, state.rows, state.events)
+//       const computed = refreshComputed(state.config, state.rows, state.events)
 
-      return {
-        events: state.events,
-        computed: computed,
-      }
-    }),
+//       return {
+//         events: state.events,
+//         computed: computed,
+//       }
+//     }),
 
-  addEvent: (event: Event) =>
-    set((state) => {
-      state.events.push(event)
-      const computed = refreshComputed(state.config, state.rows, state.events)
+//   addEvent: (event: Event) =>
+//     set((state) => {
+//       state.events.push(event)
+//       const computed = refreshComputed(state.config, state.rows, state.events)
 
-      return {
-        currentEvent: event,
-        events: state.events,
-        computed: computed,
-      }
-    }),
+//       return {
+//         currentEvent: event,
+//         events: state.events,
+//         computed: computed,
+//       }
+//     }),
 
-  removeEvent: (eventIndex: number) =>
-    set((state) => {
-      state.events.splice(eventIndex, 1)
+//   removeEvent: (eventIndex: number) =>
+//     set((state) => {
+//       state.events.splice(eventIndex, 1)
 
-      const computed = refreshComputed(state.config, state.rows, state.events)
+//       const computed = refreshComputed(state.config, state.rows, state.events)
 
-      console.log('removeEvent', eventIndex, state.events, computed)
+//       console.log('removeEvent', eventIndex, state.events, computed)
 
-      return {
-        // currentEvent: event,
-        events: state.events,
-        computed: computed,
-      }
-    }),
+//       return {
+//         // currentEvent: event,
+//         events: state.events,
+//         computed: computed,
+//       }
+//     }),
 
-  updateEvent: (eventIndex: number, event: Event) =>
-    set((state) => {
-      console.log('updateEvent', eventIndex, event)
+//   updateEvent: (eventIndex: number, event: Event) =>
+//     set((state) => {
+//       console.log('updateEvent', eventIndex, event)
 
-      state.events[eventIndex] = event
-      const computed = refreshComputed(state.config, state.rows, state.events)
+//       state.events[eventIndex] = event
+//       const computed = refreshComputed(state.config, state.rows, state.events)
 
-      console.log(
-        'updateEvent finished',
-        eventIndex,
-        event,
-        state.events[eventIndex],
-        computed.geometries[eventIndex]
-      )
+//       console.log(
+//         'updateEvent finished',
+//         eventIndex,
+//         event,
+//         state.events[eventIndex],
+//         computed.geometries[eventIndex]
+//       )
 
-      return {
-        currentEvent: event,
-        events: state.events,
-        computed: computed,
-      }
-    }),
-}))
+//       return {
+//         currentEvent: event,
+//         events: state.events,
+//         computed: computed,
+//       }
+//     }),
+// }))
 
 // const store = createSchedulerStore({
 //   rows: [],
@@ -277,22 +277,42 @@ const Week = (props) => {
 
   // const [evnts, setEvnts] = useState(props.data)
 
-  const store = useRef(
-    createSchedulerStore({
-      rows: props.rows,
-      events: props.data, // TODO: the location switch issue is probably here
-      config: myConfig,
-    })
-  ).current
+  // props.data[0].data['rand'] = Math.random().toString()
 
-  // const setup = useStore(store, (state) => state.setup)
-  // setup(myConfig, props.rows, props.data)
+  const useStore = createSchedulerStore({
+    rows: props.rows,
+    events: props.data, // TODO: the location switch issue is probably here
+    config: myConfig,
+  })
 
-  const computed = useStore(store, (state) => state.computed)
-  const events = useStore(store, (state) => state.events)
-  const config = useStore(store, (state) => state.config)
-  const addEvent = useStore(store, (state) => state.addEvent)
-  const clearEvents = useStore(store, (state) => state.clearEvents)
+  // const store2 = createSchedulerStore({
+  //   rows: props.rows,
+  //   events: props.data, // TODO: the location switch issue is probably here
+  //   config: myConfig,
+  // })
+
+  // const storeRef = useRef(_store)
+
+  // const store = useRef(_store).current
+
+  // useEffect(() => _store.subscribe(
+  //   scratches => (scratchRef.current = scratches),
+  //   state => state.scratches
+  // ), [])
+
+  // console.log('store', store)
+
+  // const store = createSchedulerStore({
+  //   rows: props.rows,
+  //   events: props.data, // TODO: the location switch issue is probably here
+  //   config: myConfig,
+  // })
+
+  const computed = useStore((state) => state.computed)
+  const events = useStore((state) => state.events)
+  const config = useStore((state) => state.config)
+  const addEvent = useStore((state) => state.addEvent)
+  const clearEvents = useStore((state) => state.clearEvents)
 
   const modalVisible = usePageStore((state) => state.modalVisible)
   const showModal = usePageStore((state) => state.showModal)
@@ -301,8 +321,11 @@ const Week = (props) => {
   const currentEvent = usePageStore((state) => state.currentEvent)
   const eventIndex = usePageStore((state) => state.currentEventIndex)
 
-  const _updateEvent = useStore(store, (state) => state.updateEvent)
-  const _removeEvent = useStore(store, (state) => state.removeEvent)
+  const _updateEvent = useStore((state) => state.updateEvent)
+  const _removeEvent = useStore((state) => state.removeEvent)
+
+  // const setup = useStore(store, (state) => state.setup)
+  // setup(myConfig, props.rows, props.data)
 
   console.log('week store events', events)
 
@@ -319,7 +342,7 @@ const Week = (props) => {
       <EventModal
         show={modalVisible}
         handleClose={hideModal}
-        store={store}
+        // store={useStore}
         startDate={startDate}
         currentEvent={currentEvent}
         eventIndex={eventIndex}
@@ -348,7 +371,7 @@ const Week = (props) => {
   }
 
   return (
-    <SchedulerContext.Provider value={store}>
+    <SchedulerContext.Provider value={useStore}>
       <Toaster />
       {modal}
       {rand}

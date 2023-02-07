@@ -9,11 +9,12 @@
   title = "SF Carpool"
   port = 8910
 #  apiUrl = "/.redwood/functions" # you can customise graphql and dbauth urls individually too: see https://redwoodjs.com/docs/app-configuration-redwood-toml#api-paths
-#  apiUrl = "http://localhost:8080/v1"
 
-#  apiUrl = "${API_URL:http://localhost:8080/v1}"
-#  apiUrl = "${API_URL}"
-  apiUrl = "https://dmghclecxsldchpsduky.hasura.us-east-1.nhost.run/v1"
+  # NOTE: defaulting to prod URL here since I cant get env vars to evaluate in fly deploy.
+#  apiUrl = "http://localhost:8080/v1"
+  apiUrl = "${API_URL:https://dmghclecxsldchpsduky.hasura.us-east-1.nhost.run/v1}"
+#  apiUrl = "${RWJS_API_URL:testtest8888}"
+#  apiUrl = "https://dmghclecxsldchpsduky.hasura.us-east-1.nhost.run/v1"
 
 #  apiGraphqlEndpoint = "http://localhost:8080/v1"
   includeEnvironmentVariables = ['API_URL'] # any ENV vars that should be available to the web side, see https://redwoodjs.com/docs/environment-variables#web

@@ -6,7 +6,7 @@ import SiteBootLayout from 'src/layouts/SiteBootLayout/SiteBootLayout'
 const Routes = () => {
   return (
     <Router>
-      <Set wrap={ScaffoldLayout} title="Locations" titleTo="locations" buttonLabel="New Location" buttonTo="newLocation">
+      {/* <Set wrap={ScaffoldLayout} title="Locations" titleTo="locations" buttonLabel="New Location" buttonTo="newLocation">
         <Route path="/admin/locations/new" page={LocationNewLocationPage} name="newLocation" />
         <Route path="/admin/locations/{id:Int}/edit" page={LocationEditLocationPage} name="editLocation" />
         <Route path="/admin/locations/{id:Int}" page={LocationLocationPage} name="location" />
@@ -17,7 +17,7 @@ const Routes = () => {
         <Route path="/admin/events/{id:Int}/edit" page={EventEditEventPage} name="editEvent" />
         <Route path="/admin/events/{id:Int}" page={EventEventPage} name="event" />
         <Route path="/admin/events" page={EventEventsPage} name="events" />
-      </Set>
+      </Set> */}
 
       <Set wrap={SiteBootLayout}>
         <Route path="/" page={SchedulerPage} name="scheduler" />

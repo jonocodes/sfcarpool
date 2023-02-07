@@ -10,30 +10,13 @@ import { parseDateTime, rowsToDays as rowsToDates } from '../Scheduler/helpers'
 import { Config, Event } from '../Scheduler/types'
 import Week from '../Week/Week'
 
-// export const QUERY = gql`
-//   query EventsQuery($before: Date, $after: Date, $locationId: Int) {
-//     weekEvents(before: $before, after: $after, locationId: $locationId) {
-//       id
-//       createdAt
-//       updatedAt
-//       label
-//       date
-//       start
-//       end
-//       passenger
-//       likelihood
-//       active
-//       locationId
-//     }
-//   }
-// `
-
 export const QUERY = gql`
   query EventsQuery($before: date, $after: date, $locationId: Int) {
     weekEvents: events(
       where: {
         location_id: { _eq: $locationId }
         date: { _gte: $after, _lte: $before }
+        active: { _eq: true }
       }
     ) {
       active
@@ -71,16 +54,9 @@ function gqlToEvent(item): Event {
 
 export const Loading = () => <div>Loading events...</div>
 
-// export const Empty = () => <div>Empty</div>
-
 export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
-
-// function formatDate(dateStr) {
-//   // return DateTime.fromISO(dateStr, { zone: 'utc' }).toFormat('ccc LLL dd yyyy')
-//   return DateTime.fromISO(dateStr, { zone: 'utc' }).toFormat('LLL dd, yyyy')
-// }
 
 export const Success = ({
   weekEvents,
@@ -90,51 +66,23 @@ export const Success = ({
 }: CellSuccessProps<EventsQuery>) => {
   const events = []
 
-  // const [events, setEvents] = useState([])
-
-  // setEvents([])
-  console.log('events in Success', events.length)
-
   for (let i = 0; i < weekEvents.length; i++) {
     if (weekEvents[i].active) {
       events.push(gqlToEvent(weekEvents[i]))
-      // _events.push(gqlToEvent(weekEvents[i]))
     }
   }
 
-  // console.log(_events)
-
-  // const locationText = 'North Berkeley BART -> SF Financial District'
-
-  // const weekEnd = formatDate(before)
-  // const weekStart = formatDate(after)
   const dates = rowsToDates(rows, after, before)
 
   return (
-    <>
-      {/* <Row style={{ paddingTop: '30px' }}>
-        <Col xm={7}>
-          <h3>
-            {weekStart} - {weekEnd}
-          </h3>
-        </Col>
-        <Col xs="auto">
-          <Form.Select>
-            <option aria-label="location" value={locationId}>
-              {locationText}
-            </option>
-          </Form.Select>
-        </Col>
-      </Row> */}
-      <Row>
-        <Week
-          rows={rows}
-          dates={dates}
-          data={events}
-          config={myConfig}
-          locationId={locationId}
-        />
-      </Row>
-    </>
+    <Row>
+      <Week
+        rows={rows}
+        dates={dates}
+        data={events}
+        config={myConfig}
+        locationId={locationId}
+      />
+    </Row>
   )
 }

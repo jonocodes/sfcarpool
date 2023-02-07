@@ -13,9 +13,9 @@ processes = []
 #  MIGRATE_ON_BOOT = "true"
   PORT = "8910"
   REDWOOD_DISABLE_TELEMETRY = "1"
-  API_URL = "https://dmghclecxsldchpsduky.hasura.us-east-1.nhost.run/v1"
+  API_URL = "test2"
 #  REDWOOD_ENV_API_URL = "https://dmghclecxsldchpsduky.hasura.us-east-1.nhost.run/v1"
-#  RWJS_API_URL = "https://dmghclecxsldchpsduky.hasura.us-east-1.nhost.run/v1"
+  RWJS_API_URL = "test2"
 
 [experimental]
   allowed_public_ports = []

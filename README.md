@@ -31,7 +31,7 @@ TBD...
 To start the development server:
 
 ```
-yarn redwood dev
+yarn redwood dev web
 ```
 
 To start the storybook for front end development:

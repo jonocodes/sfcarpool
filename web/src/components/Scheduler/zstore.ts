@@ -1,6 +1,9 @@
 import { createContext } from 'react'
 
 import { createStore } from 'zustand'
+// import create from 'zustand/react'
+
+import create from 'zustand'
 
 import { calcStringTime, formatTime } from './helpers'
 import {
@@ -219,7 +222,7 @@ export function calculateGeometries(
   }
   // setTableHeight(tableHeight)
 
-  console.log('updateGeometries finished', tableHeight, geometries, rowHeights)
+  // console.log('updateGeometries finished', tableHeight, geometries, rowHeights)
 
   return {
     tableHeight: tableHeight,
@@ -339,7 +342,8 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
 
   console.log('createStore initProps.events', initProps.events)
 
-  return createStore<SchedulerState>()((set) => ({
+  // return createStore<SchedulerState>()((set) => ({
+  return create<SchedulerState>()((set) => ({
     events: initProps.events,
     rows: initProps.rows,
     config: config,
@@ -353,6 +357,8 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
         state.config = config
         state.rows = rows
         state.events = events
+
+        console.log('setup events', state.events.length)
 
         const computed = refreshComputed(config, rows, events)
 

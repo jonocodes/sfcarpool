@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon'
+import { entries } from 'mobx'
 
 import { Event } from './types'
 
@@ -30,6 +31,18 @@ export function getTimeSlots(
   }
 
   return times
+}
+
+export function formatDateSpan(start: DateTime, end: DateTime) {
+  if (start.year !== end.year) {
+    return `${start.toFormat('LLL dd, yyyy')} - ${end.toFormat('LLL dd, yyyy')}`
+  }
+
+  if (start.month !== end.month) {
+    return `${start.toFormat('LLL dd')} - ${end.toFormat('LLL dd, yyyy')}`
+  }
+
+  return `${start.toFormat('LLL dd')} - ${end.toFormat('dd, yyyy')}`
 }
 
 export function getWeekStart(today: DateTime) {
@@ -113,7 +126,7 @@ export function rowsToDays(rows, startDate, endDate) {
     currentDate = currentDate.plus({ days: 1 })
   }
 
-  console.log('dates', dates)
+  // console.log('dates', dates)
 
   if (rows.length != dates.length)
     throw new Error('Row count and day span do not match')
@@ -187,10 +200,17 @@ export const UPDATE_EVENT = gql`
   }
 `
 
+// soft delete
 export const DELETE_EVENT = gql`
   mutation DeleteEventMutation($id: Int!) {
-    delete_events_by_pk(id: $id) {
-      id
+    update_events(where: { id: { _eq: $id } }, _set: { active: false }) {
+      returning {
+        id
+      }
     }
+
+    # delete_events_by_pk(id: $id) {
+    #   id
+    # }
   }
 `
