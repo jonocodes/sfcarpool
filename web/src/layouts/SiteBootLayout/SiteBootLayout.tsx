@@ -1,5 +1,7 @@
 import { env } from 'process'
 
+import { useState } from 'react'
+
 import { Container, Form, Nav, Navbar, ToggleButton } from 'react-bootstrap'
 import useDarkMode from 'use-dark-mode'
 
@@ -61,17 +63,43 @@ const DarkModeToggle = () => {
 }
 
 const SiteBootLayout = ({ children }: SiteBootLayoutProps) => {
+  const [isDark, setDark] = useState(false)
+
+  const toggleDark = () => {
+    setDark(!isDark)
+  }
+
   return (
     <>
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
           <Navbar.Brand href={routes.scheduler()}>
+            <img
+              style={{
+                marginRight: '5px',
+              }}
+              alt=""
+              src="/icons8-carpool-ios-16-filled-96.png"
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />{' '}
             San Francisco Carpool Coordinator
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse className="justify-content-end">
             <Nav>
               {/* <DarkModeToggle /> */}
+
+              {/* <Nav>
+                <Nav.Item>
+                  <Form.Check
+                    type="switch"
+                    id="custom-switch"
+                    onChange={toggleDark}
+                  />
+                </Nav.Item>
+              </Nav> */}
 
               <NavLink
                 className="nav-link"
@@ -92,7 +120,7 @@ const SiteBootLayout = ({ children }: SiteBootLayoutProps) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <main>
+      <main className={isDark ? 'dark-theme' : 'light-theme'}>
         <Container>{children}</Container>
       </main>
     </>

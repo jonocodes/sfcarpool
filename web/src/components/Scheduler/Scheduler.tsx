@@ -68,8 +68,8 @@ const Event = (props) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        border: 'solid 1px #ddd',
-        background: '#f0f0f0',
+        // border: 'solid 5px #777',
+        // background: '#f0f0f0',
         zIndex: 80,
       }}
       default={{

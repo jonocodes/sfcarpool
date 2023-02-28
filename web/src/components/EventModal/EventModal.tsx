@@ -59,12 +59,11 @@ const icon_driver = (
 )
 
 const EventModal = (props) => {
-  // const event = props.currentEvent
-  // const origEvent = props.currentEvent
+  const [event] = useState(props.currentEvent)
 
-  const [event, setEvent] = useState(props.currentEvent)
+  const origEvent = structuredClone(event)
 
-  const [likelihood, setLikelihood] = useState(event.data.likelihood)
+  const [likelihood] = useState(event.data.likelihood)
 
   const [validated, setValidated] = useState(true)
 
@@ -96,7 +95,6 @@ const EventModal = (props) => {
     const gql_data = eventToGql(event, props.startDate, props.locationId)
     console.log('gql data', gql_data)
 
-    // const resp = await
     update({ variables: { ...gql_data, ...{ id: Number(event.data.entry) } } })
       .then(function () {
         props.updateEvent(props.eventIndex, event)
@@ -106,21 +104,10 @@ const EventModal = (props) => {
         console.log(error)
       })
 
-    // console.log(resp)
     // TODO: what if db update fails?
 
     props.handleClose()
   }
-
-  // const handleSubmit = (e) => {
-  //   const form = e.currentTarget
-  //   if (form.checkValidity() === false) {
-  //     e.preventDefault()
-  //     e.stopPropagation()
-  //   }
-
-  //   setValidated(true)
-  // }
 
   async function removeEvent() {
     _delete({ variables: { id: Number(event.data.entry) } })
@@ -162,15 +149,21 @@ const EventModal = (props) => {
     }
   }
 
+  function cancelAndClose() {
+    props.updateEvent(props.eventIndex, origEvent)
+    console.log('cancel rolling back to', origEvent)
+    props.handleClose()
+  }
+
   return (
-    <Modal show={props.show} onHide={props.handleClose}>
+    <Modal show={props.show} onHide={cancelAndClose} centered>
       <Form noValidate>
         {/* <Modal.Header closeButton>
           <Modal.Title>Update Event</Modal.Title>
         </Modal.Header> */}
         <Modal.Body>
-          <Container fluid>
-            <Row className="align-items-end pb-4">
+          <Container className="dark-theme" fluid>
+            <Row className="align-items-end pb-1">
               <Col md={6}>
                 <Form.Group>
                   <Form.Label
@@ -207,7 +200,8 @@ const EventModal = (props) => {
                     type="text"
                     defaultValue={event.text}
                     onChange={(e) => (event.text = e.target.value)}
-                    // autoFocus
+                    // eslint-disable-next-line jsx-a11y/no-autofocus
+                    autoFocus
                   />
                 </Form.Group>
               </Col>
@@ -221,7 +215,8 @@ const EventModal = (props) => {
                   <ToggleButton
                     id="tbg-radio-1"
                     value={'passenger'}
-                    variant={'outline-primary'}
+                    // variant={'outline-primary'}
+                    variant={'outline-success'}
                     onChange={(e) => (event.data.mode = e.target.value)}
                   >
                     {icon_passenger} Passenger
@@ -229,17 +224,21 @@ const EventModal = (props) => {
                   <ToggleButton
                     id="tbg-radio-2"
                     value={'driver'}
-                    variant={'outline-danger'}
+                    // variant={'outline-danger'}
+                    variant={'outline-warning'}
                     onChange={(e) => (event.data.mode = e.target.value)}
                   >
                     {icon_driver} Driver
                   </ToggleButton>
                 </ToggleButtonGroup>
               </Col>
+            </Row>
 
-              <Row>
-                <Col md={3}>
-                  From
+            <Row>
+              <Col md={3}>
+                <Form.Group>
+                  <Form.Label>From</Form.Label>
+
                   <Form.Select
                     size="sm"
                     aria-label="choose start time"
@@ -251,9 +250,12 @@ const EventModal = (props) => {
                   >
                     {timeDivs}
                   </Form.Select>
-                </Col>
-                <Col md={3}>
-                  To
+                </Form.Group>
+              </Col>
+              <Col md={3}>
+                <Form.Group>
+                  <Form.Label>To</Form.Label>
+
                   <Form.Select
                     size="sm"
                     aria-label="choose end time"
@@ -265,56 +267,57 @@ const EventModal = (props) => {
                   >
                     {timeDivs}
                   </Form.Select>
-                </Col>
-                <Col md={6}>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
                   <Form.Label>Likelihood {likelihood}%</Form.Label>
                   <Form.Range
                     defaultValue={likelihood}
                     onChange={(e) => {
                       event.data.likelihood = e.target.value
-                      setLikelihood(e.target.value)
+                      // setLikelihood(e.target.value)
+                      // setLikelihood(e.target.value)
                     }}
                   />
-                </Col>
-                <Col className="error">{timespanError}</Col>
-              </Row>
+                </Form.Group>
+              </Col>
+              <Col className="error">{timespanError}</Col>
             </Row>
+            {/* </Row> */}
           </Container>
         </Modal.Body>
         <Modal.Footer>
-          <Row>
-            <Col>
-              <Button variant="secondary" onClick={removeEvent}>
-                Delete
-              </Button>
-            </Col>
+          <Container>
+            <Row>
+              <Col xs={6} md={8}>
+                <Button variant="danger" onClick={removeEvent}>
+                  Delete
+                </Button>
+              </Col>
 
-            <Col md="auto">
-              <Button
-                variant="secondary"
-                // onClick={props.handleClose}
-                onClick={() => {
-                  console.log('clicked close!')
-                  setEvent(props.currentEvent)
-
-                  // TODO: bug, closing saves locally instead of discarding???
-                  props.handleClose()
-                }}
-              >
-                Close
-              </Button>
-            </Col>
-            <Col md="auto">
-              <Button
-                variant="primary"
-                // type="submit"
-                onClick={updateEvent}
-                disabled={!validated}
-              >
-                Save Changes
-              </Button>
-            </Col>
-          </Row>
+              <Col xs={3} md={2}>
+                <Button
+                  className="float-end"
+                  variant="secondary"
+                  onClick={cancelAndClose}
+                >
+                  Close
+                </Button>
+              </Col>
+              <Col xs={3} md={2}>
+                <Button
+                  className="float-end"
+                  variant="primary"
+                  type="submit"
+                  onClick={updateEvent}
+                  disabled={!validated}
+                >
+                  Save
+                </Button>
+              </Col>
+            </Row>
+          </Container>
         </Modal.Footer>
       </Form>
     </Modal>

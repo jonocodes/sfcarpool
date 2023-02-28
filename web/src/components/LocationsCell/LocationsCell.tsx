@@ -1,4 +1,4 @@
-import { Form } from 'react-bootstrap'
+import { Form, Placeholder } from 'react-bootstrap'
 import type { LocationsQuery } from 'types/graphql'
 
 import { navigate, routes, useParams } from '@redwoodjs/router'
@@ -15,7 +15,9 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+// export const Loading = () => <div>Loading...</div>
+
+export const Loading = () => <Placeholder />
 
 export const Empty = () => <div>Empty</div>
 
@@ -34,10 +36,11 @@ CellSuccessProps<LocationsQuery>) => {
   // const { week } = useParams()
   return (
     <Form.Select
+      className="select"
       aria-label="choose location"
       defaultValue={locationId}
       // onChange={(e) => setLocationId(e.target.value)}
-
+      variant="dark"
       // onChange={(e) =>  navigate(routes.home(
       onChange={(e) =>
         navigate(routes.scheduler({ location: e.target.value, week: week }))

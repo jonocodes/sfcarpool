@@ -342,7 +342,6 @@ const Week = (props) => {
       <EventModal
         show={modalVisible}
         handleClose={hideModal}
-        // store={useStore}
         startDate={startDate}
         currentEvent={currentEvent}
         eventIndex={eventIndex}

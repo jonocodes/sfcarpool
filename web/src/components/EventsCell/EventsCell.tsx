@@ -1,7 +1,14 @@
 import { useState } from 'react'
 
 import { DateTime } from 'luxon'
-import { Col, Form, Row } from 'react-bootstrap'
+import {
+  Col,
+  Container,
+  Form,
+  Placeholder,
+  Row,
+  Spinner,
+} from 'react-bootstrap'
 import type { EventsQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
@@ -52,7 +59,22 @@ function gqlToEvent(item): Event {
   }
 }
 
-export const Loading = () => <div>Loading events...</div>
+// export const Loading = () => <div>Loading events...</div>
+
+// export const Loading = () => (
+//   <div>
+//     <Placeholder xs={6} />
+//     <Placeholder className="w-75" /> <Placeholder style={{ width: '25%' }} />
+//   </div>
+// )
+
+export const Loading = () => (
+  <Row className="justify-content-md-center">
+    <Spinner animation="border" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
+  </Row>
+)
 
 export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
