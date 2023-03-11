@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { useSubscription } from '@apollo/react-hooks'
 import { DateTime } from 'luxon'
 import {
   Col,
@@ -19,6 +20,18 @@ import Week from '../Week/Week'
 
 export const QUERY = gql`
   query EventsQuery($before: date, $after: date, $locationId: Int) {
+    weekEvents: events(limit: 1) {
+      id
+    }
+  }
+`
+
+export const SUBSCRIPTION = gql`
+  subscription EventsSubscription(
+    $before: date
+    $after: date
+    $locationId: Int
+  ) {
     weekEvents: events(
       where: {
         location_id: { _eq: $locationId }
@@ -86,11 +99,24 @@ export const Success = ({
   after,
   locationId,
 }: CellSuccessProps<EventsQuery>) => {
-  const events = []
 
-  for (let i = 0; i < weekEvents.length; i++) {
-    if (weekEvents[i].active) {
-      events.push(gqlToEvent(weekEvents[i]))
+  // NOTE: EventsQuery is a dummy query while I figure out how to integrate the subsciption as the main query into the redwood cell.
+
+  const { data, loading } = useSubscription(SUBSCRIPTION, {
+    variables: { before, after, locationId },
+  })
+
+  // console.log('sub weekEvents', data)
+
+  let events = []
+
+  if (data && data.weekEvents) {
+    events = []
+
+    for (let i = 0; i < data.weekEvents.length; i++) {
+      if (data.weekEvents[i].active) {
+        events.push(gqlToEvent(data.weekEvents[i]))
+      }
     }
   }
 

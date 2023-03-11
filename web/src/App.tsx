@@ -1,3 +1,8 @@
+import { split, HttpLink } from '@apollo/client'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { getMainDefinition } from '@apollo/client/utilities'
+import { createClient } from 'graphql-ws'
+
 import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
 import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
 
@@ -7,10 +12,41 @@ import Routes from 'src/Routes'
 import './scaffold.css'
 import './index.css'
 
+const uri = global.RWJS_API_GRAPHQL_URL
+
+const wsUrl = uri.replace(/https?\:\/\//, 'ws://')
+
+console.log(global)
+
+const httpLink = new HttpLink({
+  uri: uri,
+})
+
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: wsUrl,
+  })
+)
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+
+  wsLink,
+
+  httpLink
+)
+
 const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
     <RedwoodProvider titleTemplate="%AppTitle">
-      <RedwoodApolloProvider>
+      <RedwoodApolloProvider graphQLClientConfig={{ link: splitLink }}>
         <Routes />
       </RedwoodApolloProvider>
     </RedwoodProvider>

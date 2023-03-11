@@ -23,6 +23,7 @@
   },
   "packageManager": "yarn@3.2.4",
   "dependencies": {
+    "@apollo/react-hooks": "^4.0.0",
     "bootstrap": "^5.2.3",
     "luxon": "^3.2.1",
     "mobx": "^6.7.0",
