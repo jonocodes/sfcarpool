@@ -113,9 +113,11 @@ export function parseDateTime(dateStr) {
   })
 }
 
-export function rowsToDays(rows, startDate, endDate) {
+export function rowsToDays(rows, startDate: DateTime, endDate: DateTime) {
   // let currentDate = parseDateTime(startDateStr)
   // const endDate = parseDateTime(endDateStr)
+
+  console.log('rowsToDays startDate', startDate)
 
   let currentDate = startDate
 
@@ -133,14 +135,6 @@ export function rowsToDays(rows, startDate, endDate) {
 
   return dates
 }
-
-// export const CREATE_EVENT = gql`
-//   mutation CreateEventMutation($input: CreateEventInput!) {
-//     createEvent(input: $input) {
-//       id
-//     }
-//   }
-// `
 
 export const CREATE_EVENT = gql`
   mutation CreateEventMutation(
@@ -177,6 +171,7 @@ export const UPDATE_EVENT = gql`
     $end: time!
     $likelihood: Int!
     $passenger: Boolean!
+    $label: String
   ) {
     # updateEvent(id: $id, input: $input) {
     #   id
@@ -191,6 +186,7 @@ export const UPDATE_EVENT = gql`
         start: $start
         passenger: $passenger
         location_id: $locationId
+        label: $label
       }
     ) {
       returning {

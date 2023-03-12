@@ -2,13 +2,13 @@ import type { ComponentMeta } from '@storybook/react'
 
 import { Config } from 'src/components/Scheduler/types'
 
-import { rowsToDays as rowsToDates } from '../Scheduler/helpers'
+import { parseDateTime, rowsToDays as rowsToDates } from '../Scheduler/helpers'
 
 import Week from './Week'
 
 export const carpool = () => {
-  const after = '2023-01-09'
-  const before = '2023-01-13'
+  const after = parseDateTime('2023-01-09')
+  const before = parseDateTime('2023-01-13')
 
   const myConfig: Config = {
     startTime: '06:00',
@@ -84,6 +84,7 @@ export const carpool = () => {
       data={data}
       config={myConfig}
       provideCreateRandom={true}
+      // locationId=???
     />
   )
 }

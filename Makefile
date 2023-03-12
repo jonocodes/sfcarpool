@@ -20,7 +20,7 @@ storybook: ## Run local storybook for component development
 	yarn redwood storybook
 
 .PHONY: deploy
-deploy:	# Install node dependencies
+deploy:	## Deploy to prod
 	fly deploy
 
 .PHONY: help

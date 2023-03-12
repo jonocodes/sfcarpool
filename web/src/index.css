@@ -225,7 +225,7 @@ input.error, textarea.error {
 .r-schedule .sc_bar {
   position: absolute;
   /* color: #fff; */
-  /* background: #4f93d6; */
+  background: #7abcfd;
   cursor: pointer;
   z-index: 10;
 }

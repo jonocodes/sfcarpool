@@ -12,6 +12,7 @@ import {
   getWeekdateSpanStr,
   getWeekStart,
   formatDateSpan,
+  parseDateTime,
 } from 'src/components/Scheduler/helpers'
 
 // function formatDate(dateStr) {
@@ -53,7 +54,7 @@ const SchedulerPage = ({ locationXXX, week }) => {
   let start
 
   // try {
-  start = DateTime.fromISO(week, { zone: 'utc' })
+  start = parseDateTime(week)
   // TODO: if it cant parse, set to today
   // } catch (error) {
   //   console.error(error)
@@ -64,7 +65,7 @@ const SchedulerPage = ({ locationXXX, week }) => {
   }
 
   if (start.weekday !== 1) {
-    start = getWeekStart(DateTime.fromISO(start, { zone: 'utc' }))
+    start = getWeekStart(parseDateTime(start))
 
     console.error('BAD WEEK START. SETTING TO ', start)
   }

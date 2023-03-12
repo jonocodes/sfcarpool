@@ -9,14 +9,13 @@ import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
 import FatalErrorPage from 'src/pages/FatalErrorPage'
 import Routes from 'src/Routes'
 
-import './scaffold.css'
 import './index.css'
 
 const uri = global.RWJS_API_GRAPHQL_URL
 
-const wsUrl = uri.replace(/https?\:\/\//, 'ws://')
+const wsUrl = uri.replace(/http(s)?\:\/\//, 'ws$1://')
 
-console.log(global)
+console.log(wsUrl)
 
 const httpLink = new HttpLink({
   uri: uri,

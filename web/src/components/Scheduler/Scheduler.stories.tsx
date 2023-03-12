@@ -30,55 +30,35 @@ export const basicWeek = () => {
       start: '8:00',
       end: '8:10',
       text: 'JK',
-      data: {
-        entry: 8,
-        mode: 'passenger',
-        likelihood: 20,
-      },
+      data: {},
     },
     {
       row: 1, //tuesday
       start: '6:30',
       end: '7:10',
       text: 'Jono',
-      data: {
-        entry: 4,
-        mode: 'passenger',
-        likelihood: 95,
-      },
+      data: {},
     },
     {
       row: 1, // tuesday
       start: '7:05',
       end: '7:30',
       text: 'Jodi',
-      data: {
-        entry: 5,
-        mode: 'driver',
-        likelihood: 70,
-      },
+      data: {},
     },
     {
       row: 1, // tuesday
       start: '7:40',
       end: '8:50',
       text: 'Jono',
-      data: {
-        entry: 9,
-        mode: 'passenger',
-        likelihood: 70,
-      },
+      data: {},
     },
     {
       row: 4, // friday
       start: '8:40',
       end: '8:50',
       text: 'Jono',
-      data: {
-        entry: 10,
-        mode: 'passenger',
-        likelihood: 70,
-      },
+      data: {},
     },
   ]
 
@@ -160,7 +140,6 @@ export const demo = () => {
 }
 
 // const Template = (args) => <Scheduler {...args} />;
-
 
 export default {
   title: 'Components/Scheduler',

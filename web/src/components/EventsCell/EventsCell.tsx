@@ -22,6 +22,7 @@ export const QUERY = gql`
   query EventsQuery($before: date, $after: date, $locationId: Int) {
     weekEvents: events(limit: 1) {
       id
+      label
     }
   }
 `
@@ -99,14 +100,13 @@ export const Success = ({
   after,
   locationId,
 }: CellSuccessProps<EventsQuery>) => {
-
   // NOTE: EventsQuery is a dummy query while I figure out how to integrate the subsciption as the main query into the redwood cell.
 
   const { data, loading } = useSubscription(SUBSCRIPTION, {
     variables: { before, after, locationId },
   })
 
-  // console.log('sub weekEvents', data)
+  console.log('sub weekEvents', data, after)
 
   let events = []
 

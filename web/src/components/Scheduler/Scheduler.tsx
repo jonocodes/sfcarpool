@@ -240,9 +240,7 @@ const Event = (props) => {
       }}
     >
       <div
-        className={`sc_bar ${events[props.eventIndex].data.class}  ${
-          events[props.eventIndex].data.mode
-        }`}
+        className={`sc_bar ${events[props.eventIndex].data.mode}`}
         style={{
           width: '100%',
           height: config.timeLineY + 'px',

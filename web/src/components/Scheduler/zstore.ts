@@ -375,10 +375,12 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
       set((state) => {
         state.events = []
 
-        const computed = refreshComputed(config, initProps.rows, state.events)
+        console.log('clearing events')
+
+        const computed = refreshComputed(config, initProps.rows, [])
 
         return {
-          events: state.events,
+          events: [],
           computed: computed,
         }
       }),
