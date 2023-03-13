@@ -21,3 +21,4 @@ api/src/lib/generateGraphiQLHeader.*
 !.yarn/sdks
 !.yarn/versions
 hasura/prod.env
+web/public/storybook

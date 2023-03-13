@@ -5,6 +5,12 @@ This is an experimental web app to help initiate carpools to San Fancisco during
 ## Screenshot
 ![screenshot](screenshot.png?raw=true "screenshot")
 
+## Features
+* Live updates (GraphQL subscription)
+* No-code backend (Hasura)
+* Storybook preview
+* Audit logging
+
 ## Prerequisites
 - [Node.js](https://nodejs.org/en/) (>=14.19.x <=16.x) and [Yarn](https://yarnpkg.com/) (>=1.15)
 - docker with compose
