@@ -26,6 +26,17 @@ const AboutPage = () => {
           </a>
           .
         </p>
+        <p>
+          If you would like to help contribute or discuss solutions for casual
+          carpool please take{' '}
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSeM-C8f8YoWdCClkFBg686T8rGmqXSoHbJTOWOsfgM7hbfSWg/viewform?usp=sf_link">
+            this survey
+          </a>{' '}
+          and join the facebook group{' '}
+          <a href="https://www.facebook.com/groups/bringbacksfcarpool">
+            Let's Bring Back SF Bay Area Casual Carpool.
+          </a>
+        </p>
         <h2>FAQ</h2> <h3>Why did you make this?</h3>
         <p>
           The longer we wait to get the carpool running again, the less likely
@@ -76,11 +87,11 @@ const AboutPage = () => {
         <p>Not yet. Maybe in the future.</p>
         <h3>Can I use this site to start a casual carpool in my town?</h3>
         <p>
-          This site is open{' '}
+          This site is{' '}
           <a href="https://github.com/jonocodes/sfcarpool/tree/hasura">
-            source
+            open source
           </a>
-          , so you can host a copy of it.
+          , so you can host a copy of it and make it fit your needs.
         </p>
         <h3>What if I have complaints/suggestions/questions?</h3>
         <p>

@@ -23,8 +23,20 @@ storybook: ## Run local storybook for component development
 deploy:	## Deploy to prod
 	fly deploy
 
+.ONESHELL:
+.SHELLFLAGS: -e
 deploy-storybook-gh: ## Deploy storybook to github pages
-	yarn redwood storybook --build && npx gh-pages -d web/public/storybook
+
+#	yarn redwood storybook --build
+
+	# workaround for https://github.com/redwoodjs/redwood/issues/5534#issuecomment-1481697193
+	cp web/public/mockServiceWorker.js web/public/storybook/
+
+	#sed -i 's/\/mockServiceWorker.js/mockServiceWorker.js/' web/public/storybook/main.*.iframe.bundle.js
+
+	npx gh-pages -d web/public/storybook
+
+	# yarn redwood storybook --build && cp web/public/mockServiceWorker.js web/public/storybook/mockServiceWorker.js && npx gh-pages -d web/public/storybook
 
 .PHONY: help
 help: ## Show this help
