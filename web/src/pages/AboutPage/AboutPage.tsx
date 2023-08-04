@@ -93,7 +93,12 @@ const AboutPage = () => {
           </a>
           , so you can host a copy of it and make it fit your needs.
         </p>
-        <h3>What if I have complaints/suggestions/questions?</h3>
+        <h3>Have you considered trying X instead of this?</h3>This website is
+        only one of{' '}
+        <a href="https://digitus.notion.site/San-Francisco-Casual-Carpool-0f62a4e23df14e159c845ec6b73884b3?pvs=4">
+          the many things I (Jono) have tried.
+        </a>
+        .<h3>What if I have complaints/suggestions/questions?</h3>
         <p>
           Please contact <a href="mailto:carpool@zop.anonaddy.com">Jono</a>.
         </p>
