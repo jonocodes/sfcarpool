@@ -12,7 +12,7 @@ web: ## Run local frontend
 	yarn redwood dev web
 
 .PHONY: test
-web: ## Run tests
+test: ## Run tests
 	yarn rw test
 
 .PHONY: api

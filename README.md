@@ -12,9 +12,13 @@ This is an experimental web app to help initiate carpools to San Fancisco during
 * Audit logging
 
 ## Prerequisites
-- [Node.js](https://nodejs.org/en/) (>=14.19.x <=16.x) and [Yarn](https://yarnpkg.com/) (>=1.15)
+- [Node.js](https://nodejs.org/en/) 20
 - docker with compose
 - gnu make
+
+## TODO
+* fix storybook. it broke when upgrading to redwood 8 with vite.
+* replace Makefile with Taskfile
 
 ## Development setup
 

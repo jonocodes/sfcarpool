@@ -103,7 +103,7 @@ const SiteBootLayout = ({ children }: SiteBootLayoutProps) => {
 
               <NavLink
                 className="nav-link"
-                activeClassName="active"
+                activeClassName="active nav-link"
                 to={routes.scheduler()}
               >
                 View Schedule
@@ -111,7 +111,7 @@ const SiteBootLayout = ({ children }: SiteBootLayoutProps) => {
 
               <NavLink
                 className="nav-link"
-                activeClassName="active"
+                activeClassName="active nav-link"
                 to={routes.about()}
               >
                 About

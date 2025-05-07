@@ -13,12 +13,13 @@
     "build-storybook": "yarn redwood storybook --build"
   },
   "devDependencies": {
-    "@redwoodjs/cli-storybook": "7.7.5",
-    "@redwoodjs/core": "7.7.5",
+    "@redwoodjs/cli-storybook-vite": "8.6.1",
+    "@redwoodjs/core": "8.6.1",
     "@types/pg": "^8.15.0",
     "chromatic": "^6.17.2",
     "gh-pages": "^5.0.0",
-    "pg": "^8.15.6"
+    "pg": "^8.15.6",
+    "storybook-framework-redwoodjs-vite": "^8.6.1"
   },
   "eslintConfig": {
     "extends": "@redwoodjs/eslint-config",
@@ -27,15 +28,13 @@
   "engines": {
     "node": "=20.x"
   },
-  "packageManager": "yarn@3.2.4",
+  "packageManager": "yarn@4.4.0",
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
-    "@redwoodjs/api-server": "7.7.5",
+    "@redwoodjs/api-server": "8.6.1",
     "@storybook/addon-storysource": "^6.5.16",
     "bootstrap": "^5.2.3",
     "luxon": "^3.2.1",
-    "mobx": "^6.7.0",
-    "mobx-react-lite": "^3.4.0",
     "npm": "^9.2.0",
     "react-bootstrap": "^2.7.0",
     "react-rnd": "10.3.6",

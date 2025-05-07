@@ -11,7 +11,7 @@ import {
 import create from 'zustand'
 
 import { useMutation } from '@redwoodjs/web'
-import { Toaster } from '@redwoodjs/web/dist/toast'
+import { Toaster } from '@redwoodjs/web/toast'
 
 import {
   CREATE_EVENT,
