@@ -3,8 +3,8 @@
   "manifest": {
     "version": 1,
     "install": {
-      "nodejs_14": {
-        "pkg-path": "nodejs_14"
+      "nodejs_18": {
+        "pkg-path": "nodejs_18"
       },
       "yarn": {
         "pkg-path": "yarn"
@@ -18,20 +18,24 @@
         "aarch64-linux",
         "x86_64-darwin",
         "x86_64-linux"
-      ]
+      ],
+      "allow": {
+        "licenses": []
+      },
+      "semver": {}
     }
   },
   "packages": [
     {
-      "attr_path": "nodejs_14",
+      "attr_path": "nodejs_18",
       "broken": false,
-      "derivation": "/nix/store/gq6gr6r8sp78wy6xm8agnm3f8mar11i6-nodejs-14.21.3.drv",
+      "derivation": "/nix/store/ynh56phggjdmgkps31sh7mrs3j05caan-nodejs-18.16.0.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
-      "install_id": "nodejs_14",
+      "install_id": "nodejs_18",
       "license": "MIT",
       "locked_url": "https://github.com/flox/nixpkgs?rev=897876e4c484f1e8f92009fd11b7d988a121a4e7",
-      "name": "nodejs-14.21.3",
-      "pname": "nodejs_14",
+      "name": "nodejs-18.16.0",
+      "pname": "nodejs_18",
       "rev": "897876e4c484f1e8f92009fd11b7d988a121a4e7",
       "rev_count": 481752,
       "rev_date": "2023-05-06T21:28:42Z",
@@ -41,28 +45,28 @@
         "unstable"
       ],
       "unfree": false,
-      "version": "14.21.3",
+      "version": "18.16.0",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "libv8": "/nix/store/z9l8d48xhla3h1rfpnykxv4w49i3flwf-nodejs-14.21.3-libv8",
-        "out": "/nix/store/si5sss1j81m2i4rbrsdy5qsq661c8sk8-nodejs-14.21.3"
+        "libv8": "/nix/store/5zcc3d7sxqj62ml4i5bb9qia2j0smlqy-nodejs-18.16.0-libv8",
+        "out": "/nix/store/ldv0mxq83ghp1ajws0c8k5vhmpxpwdqz-nodejs-18.16.0"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "nodejs_14",
+      "attr_path": "nodejs_18",
       "broken": false,
-      "derivation": "/nix/store/4qflyiqyr0asnl1rwxqdd5xa0h9455n0-nodejs-14.21.3.drv",
+      "derivation": "/nix/store/w2k29jr13m2nbs51vyrq714qvvql616g-nodejs-18.16.0.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
-      "install_id": "nodejs_14",
+      "install_id": "nodejs_18",
       "license": "MIT",
       "locked_url": "https://github.com/flox/nixpkgs?rev=897876e4c484f1e8f92009fd11b7d988a121a4e7",
-      "name": "nodejs-14.21.3",
-      "pname": "nodejs_14",
+      "name": "nodejs-18.16.0",
+      "pname": "nodejs_18",
       "rev": "897876e4c484f1e8f92009fd11b7d988a121a4e7",
       "rev_count": 481752,
       "rev_date": "2023-05-06T21:28:42Z",
@@ -72,28 +76,28 @@
         "unstable"
       ],
       "unfree": false,
-      "version": "14.21.3",
+      "version": "18.16.0",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "libv8": "/nix/store/p0l3l67s7rvxg8fi5v7bwaxji6j6m1xm-nodejs-14.21.3-libv8",
-        "out": "/nix/store/kz28zafw8a0bbkginz9gj4wzg2fapf0j-nodejs-14.21.3"
+        "libv8": "/nix/store/hdqsvx2msyf5wfybvp4wsjdx5dap1m93-nodejs-18.16.0-libv8",
+        "out": "/nix/store/kfsdakjwgh67ar2yz31b2cgvxn3z8zgq-nodejs-18.16.0"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "nodejs_14",
+      "attr_path": "nodejs_18",
       "broken": false,
-      "derivation": "/nix/store/pl6a95dznscxw384hwlrwz3nb4f2pfbm-nodejs-14.21.3.drv",
+      "derivation": "/nix/store/mr4nziyqviam8i6bzzj9hxi8p5z2143a-nodejs-18.16.0.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
-      "install_id": "nodejs_14",
+      "install_id": "nodejs_18",
       "license": "MIT",
       "locked_url": "https://github.com/flox/nixpkgs?rev=897876e4c484f1e8f92009fd11b7d988a121a4e7",
-      "name": "nodejs-14.21.3",
-      "pname": "nodejs_14",
+      "name": "nodejs-18.16.0",
+      "pname": "nodejs_18",
       "rev": "897876e4c484f1e8f92009fd11b7d988a121a4e7",
       "rev_count": 481752,
       "rev_date": "2023-05-06T21:28:42Z",
@@ -103,28 +107,28 @@
         "unstable"
       ],
       "unfree": false,
-      "version": "14.21.3",
+      "version": "18.16.0",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "libv8": "/nix/store/3k271ibyl0cd49s533grl32b558h6ia4-nodejs-14.21.3-libv8",
-        "out": "/nix/store/r849qxszjvmmc9q18qxrcg10kwfn6bqk-nodejs-14.21.3"
+        "libv8": "/nix/store/rizrigd0i1rg1xrba5ngk89dc18clxi1-nodejs-18.16.0-libv8",
+        "out": "/nix/store/gy8fjmlrm868773sc4dqv521fw979zlr-nodejs-18.16.0"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "nodejs_14",
+      "attr_path": "nodejs_18",
       "broken": false,
-      "derivation": "/nix/store/3a159dry6ld8j859jxvn01rpan5q492s-nodejs-14.21.3.drv",
+      "derivation": "/nix/store/rrwxdvnp8pjzg9nr55n39db3a1m7yski-nodejs-18.16.0.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
-      "install_id": "nodejs_14",
+      "install_id": "nodejs_18",
       "license": "MIT",
       "locked_url": "https://github.com/flox/nixpkgs?rev=897876e4c484f1e8f92009fd11b7d988a121a4e7",
-      "name": "nodejs-14.21.3",
-      "pname": "nodejs_14",
+      "name": "nodejs-18.16.0",
+      "pname": "nodejs_18",
       "rev": "897876e4c484f1e8f92009fd11b7d988a121a4e7",
       "rev_count": 481752,
       "rev_date": "2023-05-06T21:28:42Z",
@@ -134,13 +138,13 @@
         "unstable"
       ],
       "unfree": false,
-      "version": "14.21.3",
+      "version": "18.16.0",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "libv8": "/nix/store/hkvj95zv8dfpxf55wvv5m7h088lls95b-nodejs-14.21.3-libv8",
-        "out": "/nix/store/3vv0bfjjjxarq8wy43xvxq208vw1qd4w-nodejs-14.21.3"
+        "libv8": "/nix/store/y4a416k0vxrrm3az6c3x2phcz3p9wwf6-nodejs-18.16.0-libv8",
+        "out": "/nix/store/liwmv8n976qnm2vv55nnqpwmjzfnswi7-nodejs-18.16.0"
       },
       "system": "x86_64-linux",
       "group": "toplevel",

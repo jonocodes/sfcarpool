@@ -13,7 +13,7 @@
     "build-storybook": "yarn redwood storybook --build"
   },
   "devDependencies": {
-    "@redwoodjs/core": "3.5.0",
+    "@redwoodjs/core": "5.4.3",
     "@types/pg": "^8.15.0",
     "chromatic": "^6.17.2",
     "gh-pages": "^5.0.0",
@@ -24,7 +24,7 @@
     "root": true
   },
   "engines": {
-    "node": ">=14.19 <=16.x",
+    "node": ">=16.x <=18.x",
     "yarn": ">=1.15"
   },
   "packageManager": "yarn@3.2.4",
