@@ -11,7 +11,7 @@ import Routes from 'src/Routes'
 
 import './index.css'
 
-const uri = global.RWJS_API_GRAPHQL_URL
+const uri = globalThis.RWJS_API_GRAPHQL_URL
 
 const wsUrl = uri.replace(/http(s)?\:\/\//, 'ws$1://')
 

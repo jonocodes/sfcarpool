@@ -11,6 +11,10 @@ setup:	# Install node dependencies
 web: ## Run local frontend
 	yarn redwood dev web
 
+.PHONY: test
+web: ## Run tests
+	yarn rw test
+
 .PHONY: api
 api: ## Run local backend (Postgres and Hasura)
 	cd hasura && docker compose up
