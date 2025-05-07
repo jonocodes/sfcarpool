@@ -38,10 +38,13 @@ In a new terminal start the development server:
 make setup web
 ```
 
+You may see a bunch of prisma errors, but we are not using prisma, so you can ignore them.
+
+Visit
+http://localhost:8910
+
+
 For additional common commands run:
 ```
 make help
 ```
-
-Visit
-http://localhost:8910

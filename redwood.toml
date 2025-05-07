@@ -18,7 +18,8 @@
 
 #  apiGraphqlEndpoint = "http://localhost:8080/v1"
   includeEnvironmentVariables = ['API_URL'] # any ENV vars that should be available to the web side, see https://redwoodjs.com/docs/environment-variables#web
-#[api]
+[api]
+  enabled = false
 #  port = 8911
 [browser]
   open = false
