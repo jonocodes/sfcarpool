@@ -15,8 +15,10 @@ version = 1
 ##  $ flox show gum     <- show all versions of a package
 ## -------------------------------------------------------------------
 [install]
+nodejs_20.pkg-path = "nodejs_20"
+nodejs_20.version = "20.19.0"
 yarn.pkg-path = "yarn"
-nodejs_18.pkg-path = "nodejs_18"
+yarn.version = "1.22.22"
 # gum.pkg-path = "gum"
 # gum.version = "^0.14.5"
 
