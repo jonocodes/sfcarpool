@@ -1,59 +1,61 @@
+import React from 'react'
 import { Form, Placeholder } from 'react-bootstrap'
-import type { LocationsQuery } from 'types/graphql'
 
-import { navigate, routes, useParams } from '@redwoodjs/router'
-import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
+// Mock data for locations
+const mockLocations = [
+  { id: 1, name: 'Berkeley -> SF' },
+  { id: 2, name: 'Oakland -> SF' },
+  { id: 3, name: 'Orinda -> SF' },
+]
 
-// NOTE: only using one location until I figure the page change bug
-export const QUERY = gql`
-  query LocationsQuery {
-    # locations(where: { id: { _eq: 1 } }) {
-    locations {
-      id
-      name
-    }
+// Mock API call to fetch locations
+const fetchLocations = async () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockLocations)
+    }, 500) // Simulate network delay
+  })
+}
+
+const LocationsCell = ({ locationId, week }: { locationId: number; week: string }) => {
+  // const { data: locations, isLoading, isError, error } = useQuery(['locations'], fetchLocations)
+
+  const isLoading = false // Replace with actual loading state
+  const isError = false // Replace with actual error state
+  const error = null // Replace with actual error object
+  const locations = mockLocations // Replace with actual data from the query
+
+  if (isLoading) {
+    return <Placeholder />
   }
-`
 
-// export const Loading = () => <div>Loading...</div>
+  if (isError) {
+    return <div style={{ color: 'red' }}>Error: {(error as Error).message}</div>
+  }
 
-export const Loading = () => <Placeholder />
+  if (!locations || locations.length === 0) {
+    return <div>Empty</div>
+  }
 
-export const Empty = () => <div>Empty</div>
-
-export const Failure = ({ error }: CellFailureProps) => (
-  <div style={{ color: 'red' }}>Error: {error?.message}</div>
-)
-
-export const Success = ({
-  locations,
-  locationId,
-  week,
-}: // setLocationId,
-CellSuccessProps<LocationsQuery>) => {
-  // console.log(locations)
-
-  // const { week } = useParams()
   return (
     <Form.Select
       className="select"
       aria-label="choose location"
       defaultValue={locationId}
-      // onChange={(e) => setLocationId(e.target.value)}
+      onChange={(e) => {
+        const selectedLocation = e.target.value
+        console.log(`Navigating to scheduler with location: ${selectedLocation}, week: ${week}`)
+        // Replace with your navigation logic
+      }}
       variant="dark"
-      // onChange={(e) =>  navigate(routes.home(
-      onChange={(e) =>
-        navigate(routes.scheduler({ location: e.target.value, week: week }))
-      }
-      // )}
     >
-      {locations.map((item) => {
-        return (
-          <option key={item.id} aria-label="location" value={item.id}>
-            {item.name}
-          </option>
-        )
-      })}
+      {locations.map((item: { id: number; name: string }) => (
+        <option key={item.id} aria-label="location" value={item.id}>
+          {item.name}
+        </option>
+      ))}
     </Form.Select>
   )
 }
+
+export default LocationsCell

@@ -1,56 +1,80 @@
-import { useState } from 'react'
-
-import { useSubscription } from '@apollo/react-hooks'
-import { DateTime } from 'luxon'
-import {
-  Col,
-  Container,
-  Form,
-  Placeholder,
-  Row,
-  Spinner,
-} from 'react-bootstrap'
-import type { EventsQuery } from 'types/graphql'
-
-import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
-
+import React from 'react'
+// import { useQuery } from '@tanstack/react-query'
+import { Row, Spinner } from 'react-bootstrap'
 import { parseDateTime, rowsToDays as rowsToDates } from '../Scheduler/helpers'
 import { Config, Event } from '../Scheduler/types'
 import Week from '../Week/Week'
 
-export const QUERY = gql`
-  query EventsQuery($before: date, $after: date, $locationId: Int) {
-    weekEvents: events(limit: 1) {
-      id
-      label
-    }
-  }
-`
+// Mock data for events
+const mockEvents = [
+  {
+    id: 1,
+    label: 'Morning Carpool',
+    date: '2025-05-13',
+    start: '07:00',
+    end: '08:00',
+    active: true,
+    passenger: true,
+    likelihood: 0.9,
+  },
+  {
+    id: 2,
+    label: 'Evening Carpool',
+    date: '2025-05-12',
+    start: '17:00',
+    end: '18:00',
+    active: true,
+    passenger: false,
+    likelihood: 0.8,
+  },
+]
 
-export const SUBSCRIPTION = gql`
-  subscription EventsSubscription(
-    $before: date
-    $after: date
-    $locationId: Int
-  ) {
-    weekEvents: events(
-      where: {
-        location_id: { _eq: $locationId }
-        date: { _gte: $after, _lte: $before }
-        active: { _eq: true }
-      }
-    ) {
-      active
-      date
-      end
-      id
-      passenger
-      start
-      label
-      likelihood
-    }
-  }
-`
+// export const QUERY = gql`
+//   query EventsQuery($before: date, $after: date, $locationId: Int) {
+//     weekEvents: events(limit: 1) {
+//       id
+//       label
+//     }
+//   }
+// `
+
+// export const SUBSCRIPTION = gql`
+//   subscription EventsSubscription(
+//     $before: date
+//     $after: date
+//     $locationId: Int
+//   ) {
+//     weekEvents: events(
+//       where: {
+//         location_id: { _eq: $locationId }
+//         date: { _gte: $after, _lte: $before }
+//         active: { _eq: true }
+//       }
+//     ) {
+//       active
+//       date
+//       end
+//       id
+//       passenger
+//       start
+//       label
+//       likelihood
+//     }
+//   }
+// `
+
+
+
+// Mock API call to fetch events
+const fetchEvents = async ({ queryKey }: { queryKey: any[] }) => {
+  const [, { before, after, locationId }] = queryKey
+  console.log('Fetching events with:', { before, after, locationId })
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockEvents)
+    }, 500) // Simulate network delay
+  })
+}
 
 const myConfig: Config = {
   startTime: '06:00',
@@ -73,15 +97,6 @@ function gqlToEvent(item): Event {
   }
 }
 
-// export const Loading = () => <div>Loading events...</div>
-
-// export const Loading = () => (
-//   <div>
-//     <Placeholder xs={6} />
-//     <Placeholder className="w-75" /> <Placeholder style={{ width: '25%' }} />
-//   </div>
-// )
-
 export const Loading = () => (
   <Row className="justify-content-md-center">
     <Spinner animation="border" role="status">
@@ -90,34 +105,43 @@ export const Loading = () => (
   </Row>
 )
 
-export const Failure = ({ error }: CellFailureProps) => (
+export const Failure = ({ error }: { error: Error }) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
-export const Success = ({
-  weekEvents,
+const EventsCell = ({
   before,
   after,
   locationId,
-}: CellSuccessProps<EventsQuery>) => {
-  // NOTE: EventsQuery is a dummy query while I figure out how to integrate the subsciption as the main query into the redwood cell.
+}: {
+  before: string
+  after: string
+  locationId: number
+}) => {
+  // const { data, isLoading, isError, error } = useQuery(
+  //   ['events', { before, after, locationId }],
+  //   fetchEvents
+  // )
 
-  const { data, loading } = useSubscription(SUBSCRIPTION, {
-    variables: { before, after, locationId },
-  })
+  const data = mockEvents
+  const isLoading = false // Replace with actual loading state
+  const isError = false // Replace with actual error state
+  const error = null // Replace with actual error object
 
-  console.log('sub weekEvents', data, after)
+  if (isLoading) {
+    return <Loading />
+  }
+
+  if (isError) {
+    return <Failure error={error as Error} />
+  }
 
   let events = []
 
-  if (data && data.weekEvents) {
-    events = []
-
-    for (let i = 0; i < data.weekEvents.length; i++) {
-      if (data.weekEvents[i].active) {
-        events.push(gqlToEvent(data.weekEvents[i]))
-      }
-    }
+  if (data) {
+    events = (data as typeof mockEvents)
+      .filter((event) => event.active)
+      .map(gqlToEvent)
   }
 
   const dates = rowsToDates(rows, after, before)
@@ -134,3 +158,5 @@ export const Success = ({
     </Row>
   )
 }
+
+export default EventsCell
