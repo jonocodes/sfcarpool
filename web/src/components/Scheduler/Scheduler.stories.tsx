@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-import type { ComponentMeta } from '@storybook/react'
+import type { Meta } from '@storybook/react'
 
 import Scheduler from './Scheduler'
 import { Config } from './types'
@@ -144,4 +144,4 @@ export const demo = () => {
 export default {
   title: 'Components/Scheduler',
   component: Scheduler,
-} as ComponentMeta<typeof Scheduler>
+} as Meta<typeof Scheduler>

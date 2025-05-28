@@ -15,11 +15,18 @@
   "devDependencies": {
     "@redwoodjs/cli-storybook-vite": "8.6.1",
     "@redwoodjs/core": "8.6.1",
+    "@storybook/addon-essentials": "7.6.20",
+    "@storybook/addon-storysource": "7.6.20",
+    "@storybook/builder-vite": "7.6.20",
+    "@storybook/react-vite": "7.6.20",
     "@types/pg": "^8.15.0",
     "chromatic": "^6.17.2",
     "gh-pages": "^5.0.0",
     "pg": "^8.15.6",
-    "storybook-framework-redwoodjs-vite": "^8.6.1"
+    "storybook": "7.6.20",
+    "storybook-framework-redwoodjs-vite": "^8.6.1",
+    "vite": "^5.0.0",
+    "vite-plugin-node-polyfills": "^0.23.0"
   },
   "eslintConfig": {
     "extends": "@redwoodjs/eslint-config",
@@ -32,7 +39,6 @@
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
     "@redwoodjs/api-server": "8.6.1",
-    "@storybook/addon-storysource": "^6.5.16",
     "bootstrap": "^5.2.3",
     "luxon": "^3.2.1",
     "npm": "^9.2.0",
