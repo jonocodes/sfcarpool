@@ -1,66 +1,34 @@
 {
-  "version": "0.3.0",
-  "configurations": [
-    {
-      "name": "Run Chrome (redwood)",
-      "type": "chrome",
-      "request": "launch",
-      "url": "http://localhost:8910",
-      "webRoot": "${workspaceFolder}/web"
-    },
-    {
-      "name": "Run Chrome (storybook)",
-      "type": "chrome",
-      "request": "launch",
-      "url": "http://localhost:7910",
-      "webRoot": "${workspaceFolder}/"
-    },
-    {
-      "name": "Run Firefox (storybook) - not working",
-      "type": "firefox",
-      "request": "launch",
-      "url": "http://localhost:8910",
-      "reAttach": true,
-      "file": "${workspaceFolder}/web"
-    },
-    {
-      "command": "yarn redwood dev --apiDebugPort 18911",
-      "name": "Run Dev Server",
-      "request": "launch",
-      "type": "node-terminal"
-    },
-    {
-      "command": "yarn redwood storybook",
-      "name": "Run Dev storybook",
-      "request": "launch",
-      "type": "node-terminal"
-    },
-    {
-      "name": "Attach API debugger",
-      "port": 18911, // you can change this port, see https://redwoodjs.com/docs/project-configuration-dev-test-build#debugger-configuration
-      "request": "attach",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "type": "node",
-      "protocol": "inspector",
-      "stopOnEntry": false,
-      "localRoot": "${workspaceFolder}/node_modules/@redwoodjs/api-server/dist",
-      "remoteRoot": "${workspaceFolder}/node_modules/@redwoodjs/api-server/dist",
-      "sourceMaps": true,
-      "restart": true
-    },
-    {
-      "command": "yarn redwood test api",
-      "name": "Test api",
-      "request": "launch",
-      "type": "node-terminal"
-    },
-    {
-      "command": "yarn redwood test web",
-      "name": "Test web",
-      "request": "launch",
-      "type": "node-terminal"
-    },
-  ]
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch via NPM",
+            "request": "launch",
+            "runtimeArgs": [
+                "run",
+                "dev"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
+            "name": "sotrybook",
+            "request": "launch",
+            "runtimeArgs": [
+                "run",
+                "storybook"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+    ]
 }

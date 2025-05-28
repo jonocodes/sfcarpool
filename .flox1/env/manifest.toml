@@ -16,7 +16,6 @@ version = 1
 ## -------------------------------------------------------------------
 [install]
 nodejs.pkg-path = "nodejs"
-just.pkg-path = "just"
 
 
 ## Environment Variables ---------------------------------------------

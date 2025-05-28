@@ -1,0 +1,314 @@
+/* 
+.light-theme {
+  --text-color: #111;
+  --background-color: #fdfdfd;
+  --hover-cell-color: #f0f0f0;
+  --grid-lines:#ccc;
+  --select-color: black;
+  --select-bg: white;
+}
+.dark-theme {
+  --text-color: #FFF;
+  --background-color: rgb(26, 26, 26);
+  --hover-cell-color: rgb(77, 75, 75);
+
+  --grid-lines: rgb(62, 68, 70);
+  --select-color: white;
+  --select-bg: black;
+}
+
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+} */
+
+#schedule .driver.dark-mode {
+  background-color: rgb(0, 148, 79);
+}
+
+.select {
+  color: var(--select-color);
+  background: var(--select-bg);
+}
+
+.form-select {
+  color: var(--select-color);
+  background: var(--select-bg);
+}
+
+
+ul {
+  list-style-type: none;
+  margin: 1rem 0;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 1rem 0 0 ;
+}
+.about h2, .about h3 {
+  padding-top: 20px;
+}
+h1 > a {
+  text-decoration: none;
+  color: black;
+}
+button, input, label, textarea {
+  display: block;
+  outline: none;
+}
+label {
+  margin-top: 1rem;
+}
+.error {
+  color: red;
+}
+input.error, textarea.error {
+  border: 1px solid red;
+}
+.form-error {
+  color: red;
+  background-color: lavenderblush;
+  padding: 1rem;
+  display: inline-block;
+}
+.form-error ul {
+  list-style-type: disc;
+  margin: 1rem;
+  padding: 1rem;
+}
+.form-error li {
+  display: list-item;
+}
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+}
+.flex-between button {
+  display: inline;
+}
+
+
+/* --------- */
+
+.r-schedule * {
+  box-sizing: border-box;
+  /* font-size: small; */
+}
+.r-schedule .sc_wrapper:after,
+.r-schedule .sc_menu:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.r-schedule .sc_menu {
+  width: 100%;
+  height: 26px;
+}
+.r-schedule .sc_menu .sc_header_cell {
+  float: left;
+}
+.r-schedule .sc_menu .sc_header {
+  float: left;
+  height: 26px;
+  position: relative;
+  overflow: hidden;
+}
+.r-schedule .sc_menu .sc_header .sc_time {
+  text-align: center;
+  border-left: solid 1px #fff;
+  background: #555;
+}
+.r-schedule .sc_menu .sc_header_cell,
+.r-schedule .sc_data {
+  float: left;
+  font-weight: bold;
+  color: #fff;
+  background: #555;
+  position: relative;
+}
+
+@media (max-width: 768px){
+  .timeline-title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .sc_data {
+    width: 70px;
+  }
+}
+
+
+
+.r-schedule .sc_menu .sc_header_cell,
+.r-schedule .sc_header .sc_time,
+.r-schedule .sc_main_scroll .sc_time,
+.sc_header_cell {
+  color: #fff;
+  padding: 0;
+  line-height: 26px;
+  height: 26px;
+  display: block;
+}
+.r-schedule .sc_header .sc_time,
+.r-schedule .sc_main_scroll .sc_time {
+  float: left;
+}
+.r-schedule .sc_main_box,
+.r-schedule .sc_data {
+  /* max-height: 500px; */
+  overflow: hidden;
+}
+.r-schedule .sc_main_box {
+  float: left;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+.r-schedule .sc_main {
+  position: relative;
+}
+.r-schedule .timeline {
+  position: relative;
+}
+.r-schedule .ui-draggable-dragging,
+.r-schedule .ui-resizeable {
+  z-index: 20;
+}
+.r-schedule .sc_bar {
+  position: absolute;
+  /* color: #fff; */
+  background: #7abcfd;
+  cursor: pointer;
+  z-index: 10;
+}
+.r-schedule .sc_bar .head {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  padding: 0 14px;
+  height: 1.2em;
+  overflow: hidden;
+}
+.r-schedule .sc_bar .text {
+  display: block;
+  margin-top: 6px;
+  font-weight: bold;
+  padding: 0 14px;
+  height: 1.2em;
+  overflow: hidden;
+}
+.r-schedule .sc_bar .ui-resizable-handle {
+  display: block;
+  content: " ";
+  position: absolute;
+  height: 100%;
+  right: 0;
+  top: 0;
+  width: 5px;
+  /* background: #2e7ac4; */
+}
+
+.r-schedule .sc_bar .ui-resizable-handle.ui-resizable-e {
+  right: 0;
+}
+.r-schedule .sc_bar .ui-resizable-handle.ui-resizable-w {
+  left: 0;
+}
+.r-schedule .timeline,
+.r-schedule .sc_main .tb {
+  border-bottom: solid 2px #666;
+}
+.r-schedule .sc_data .timeline {
+  overflow: hidden;
+  padding: 10px;
+}
+.r-schedule .sc_data .timeline span {
+  display: block;
+}
+.r-schedule .sc_data .timeline span.timeline-subtitle {
+  font-size: 0.8em;
+  color: #cccccc;
+}
+.r-schedule .sc_main_scroll .sc_main .tl {
+  float: left;
+  height: 100%;
+  /* border-right: solid 1px #ccc; */
+  border-right: solid 1px var(--grid-lines);
+}
+.r-schedule .sc_main_scroll .sc_main .tl:hover {
+  /* background: #f0f0f0;*/
+
+  background: var(--hover-cell-color);
+}
+.r-schedule .ui-state-disabled {
+  opacity: 1;
+}
+.r-schedule .ui-state-disabled .ui-resizable-handle {
+  display: none;
+}
+.r-schedule .ui-state-disabled .ui-resizable-handle:hover {
+  cursor: auto;
+}
+.r-schedule .ui-draggable-disabled {
+  opacity: 0.8;
+}
+
+/* ------ */
+
+.passenger .ui-resizable-handle {
+  /* background: blue; */
+  background: rgb(6, 187, 0);
+
+}
+
+.driver .ui-resizable-handle {
+  background: rgb(255, 123, 0);
+}
+
+
+#schedule .driver {
+  background: #d57201;
+  color: #ffffff;
+}
+
+#schedule .passenger {
+  /* background: var(--darkreader-bg--bs-btn-active-bg); */
+  background: rgb(8, 109, 5);
+  /* background: rgb(21, 44, 255); */
+  color: #fff;
+}
+
+/* #schedule .example2{
+  background-color: #3eb698;
+}
+#schedule .example3{
+  color: #2c0000;
+  font-weight: bold;
+  background-color: #c7ae50;
+} */
+#schedule .sc_bar.sc_bar_photo .head,
+#schedule .sc_bar.sc_bar_photo .text{
+  padding-left: 60px;
+}
+#schedule .sc_bar.sc_bar_photo .photo{
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 38px;
+}
+#schedule .sc_bar.sc_bar_photo .photo img{
+  max-width: 100%;
+}
+
+
+.nav-week {
+  display: inline;
+  font-size: xx-large;
+  /* padding: 20px; */
+}
+
+.nav-week a {
+  padding: 10px;
+  color: inherit;
+}
