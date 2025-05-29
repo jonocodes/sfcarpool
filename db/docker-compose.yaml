@@ -1,9 +1,9 @@
 # this file is for local development, not deployment
 
-# version: '3.6'
+# version: "3.6"
 
 # version: "3.3"
-name: "electric_quickstart"
+# name: "electric_local"
 
 volumes:
   postgres_data:
@@ -34,7 +34,10 @@ services:
       # Not suitable for production. Only use insecure mode in development or if you've otherwise secured the Electric API.
       # See https://electric-sql.com/docs/guides/security
       ELECTRIC_INSECURE: true
+      PG_PROXY_PORT: 65432
+      PG_PROXY_PASSWORD: password
     ports:
-      - "4000:3000" # dont use 3000 since tanstack is using it
+      - "5133:3000" # HTTP API. 3000 is used by tanstack.
+      - "65432:65432" # Postgres proxy for migrations/generate. but process is not starting
     depends_on:
       - postgres

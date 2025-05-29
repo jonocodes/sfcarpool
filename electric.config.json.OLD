@@ -1,0 +1,18 @@
+{
+    "serviceUrl": "http://localhost:51338",
+    "proxyUrl": "postgresql://postgres:password@localhost:65432/electric?sslmode=disable",
+    "database": {
+        "migrations": "db/migrations",
+        "schemas": [
+            "public"
+        ]
+    },
+    "electric": {
+        "database": {
+            "url": "postgresql://postgres:password@localhost:54321/electric?sslmode=disable"
+        }
+    },
+    "generator": {
+        "output": "src/generated"
+    }
+}

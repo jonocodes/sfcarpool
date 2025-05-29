@@ -2,8 +2,10 @@
 import { Form, Placeholder } from "react-bootstrap";
 // import { useQuery } from "@tanstack/react-query";
 import { useShape } from "@electric-sql/react";
-// import type { Row } from "@electric-sql/react"; // Row might not be needed to import
+// Once you run the generator, uncomment this:
+// import { Location } from '../generated/db'
 
+// Remove this once you import the generated type
 interface Location {
   // Keep it simple, electric-sql should map to this
   id: number;
@@ -50,7 +52,7 @@ const LocationsCell = ({ locationId, week }: { locationId: number; week: string 
     error,
     // isError, // Removed as useShape returns error directly
   } = useShape<Location>({
-    url: "http://localhost:4000/v1/shape",
+    url: "http://localhost:5133/v1/shape",
     params: {
       table: "locations",
       // offset: -1 // Assuming electric-sql handles this or has a different way

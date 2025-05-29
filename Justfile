@@ -15,11 +15,19 @@ fe:
 
 # Run local backend (Postgres and Electric)
 be:
-	cd db && docker compose up
+	cd db && docker compose up --force-recreate
 
 # Run local storybook for component development
 storybook:
 	npm run storybook
+
+
+db-generate:
+	npx electric-sql generate \
+		--service http://localhost:5133 \
+		--proxy postgresql://postgres:password@localhost:65432/electric?sslmode=disable \
+		--with-migrations "npx pg-migrations apply --service 'http://localhost:5133' --proxy 'postgresql://postgres:password@localhost:65432/electric?sslmode=disable' --directory ./db/migrations"
+
 
 # deploy:	## Deploy to prod
 # 	fly deploy
