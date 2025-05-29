@@ -6,7 +6,7 @@ import LocationsCell from "../components/LocationsCell";
 // import { Page } from './Page';
 
 const meta = {
-  title: "Example/LocationsCell",
+  title: "Example/Loc",
   component: LocationsCell,
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
@@ -19,10 +19,7 @@ type Story = StoryObj<typeof meta>;
 
 // More on component testing: https://storybook.js.org/docs/writing-tests/component-testing
 export const Orinda: Story = {
-  args: {
-    locationId: 3,
-    week: "2025-05-15",
-  },
+  args: { locationId: 3, week: "2025-05-15" },
   // play: async ({ canvasElement }) => {
   //   const canvas = within(canvasElement);
   //   const loginButton = canvas.getByRole("button", { name: /Log in/i });

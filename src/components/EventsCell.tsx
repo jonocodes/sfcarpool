@@ -19,7 +19,6 @@ const mockEvents = [
   },
   {
     id: 2,
-    // label: "Evening Carpool",
     date: "2025-05-12",
     start: "07:45",
     end: "08:15",
@@ -74,17 +73,14 @@ const fetchEvents = async ({ queryKey }: { queryKey: any[] }) => {
   });
 };
 
-const myConfig: Config = {
-  startTime: "06:00",
-  endTime: "11:00",
-};
+const myConfig: Config = { startTime: "06:00", endTime: "11:00" };
 
 const rows = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-function gqlToEvent(item): Event {
+function gqlToEvent(item: (typeof mockEvents)[0]): Event {
   return {
     row: parseDateTime(item.date).weekday - 1,
-    text: item.label,
+    text: item.label || "Untitled Event",
     start: parseDateTime(item.start).toFormat("H:mm"),
     end: parseDateTime(item.end).toFormat("H:mm"),
     data: {
@@ -116,35 +112,33 @@ const EventsCell = ({
   after: string;
   locationId: number;
 }) => {
-  // const { data, isLoading, isError, error } = useQuery(
-  //   ['events', { before, after, locationId }],
-  //   fetchEvents
-  // )
-
   const data = mockEvents;
-  const isLoading = false; // Replace with actual loading state
-  const isError = false; // Replace with actual error state
-  const error = null; // Replace with actual error object
+  const isLoading = false;
+  const isError = false;
+  const error = null;
 
   if (isLoading) {
     return <Loading />;
   }
 
-  if (isError) {
-    return <Failure error={error as Error} />;
+  if (isError && error) {
+    return <Failure error={error} />;
   }
 
-  let events = [];
-
-  if (data) {
-    events = (data as typeof mockEvents).filter((event) => event.active).map(gqlToEvent);
-  }
-
+  const events: Event[] = data.filter((event) => event.active).map(gqlToEvent);
   const dates = rowsToDates(rows, after, before);
 
   return (
     <Row>
-      <Week rows={rows} dates={dates} data={events} config={myConfig} locationId={locationId} />
+      <Week
+        rows={rows}
+        dates={dates}
+        data={events}
+        config={myConfig}
+        locationId={locationId}
+        provideCreateRandom={false}
+        children={null}
+      />
     </Row>
   );
 };
