@@ -1,8 +1,4 @@
-
 -- psql "postgresql://postgres:password@localhost:65432/electric" -f db/migrations/01_create_accounts.sql
-
-
-
 -- needed for uuid generation
 CREATE extension IF NOT EXISTS pgcrypto;
 -- locations definition
@@ -14,42 +10,38 @@ CREATE TABLE locations (
     "name" text NOT NULL,
     constraint locations_pkey primary key (id)
 );
-ALTER TABLE
-    locations ENABLE ELECTRIC;
 -- events definition
-    -- Drop table
-    -- DROP TABLE events;
-    CREATE TABLE events (
-        id serial4 NOT NULL,
-        "uuid" uuid DEFAULT gen_random_uuid() NOT NULL,
-        created_at timestamptz DEFAULT now() NOT NULL,
-        updated_at timestamptz DEFAULT now() NOT NULL,
-        "date" DATE NOT NULL,
-        passenger bool NOT NULL,
-        likelihood int4 NOT NULL,
-        active bool DEFAULT TRUE NOT NULL,
-        location_id int4 NOT NULL,
-        "label" text NULL,
-        "start" TIME NOT NULL,
-        "end" TIME NOT NULL,
-        constraint events_pkey primary key (id)
-    );
-ALTER TABLE
-    events ENABLE ELECTRIC;
+-- Drop table
+-- DROP TABLE events;
+CREATE TABLE events (
+    id serial4 NOT NULL,
+    "uuid" uuid DEFAULT gen_random_uuid() NOT NULL,
+    created_at timestamptz DEFAULT now() NOT NULL,
+    updated_at timestamptz DEFAULT now() NOT NULL,
+    "date" DATE NOT NULL,
+    passenger bool NOT NULL,
+    likelihood int4 NOT NULL,
+    active bool DEFAULT TRUE NOT NULL,
+    location_id int4 NOT NULL,
+    "label" text NULL,
+    "start" TIME NOT NULL,
+    "end" TIME NOT NULL,
+    constraint events_pkey primary key (id)
+);
 -- Table Triggers
-    -- CREATE TRIGGER audit_trigger_row after
-    -- INSERT
-    --     OR
-    -- DELETE
-    --     OR
-    -- UPDATE
-    --     ON events for each ROW EXECUTE FUNCTION audit.if_modified_func('true');
-    -- CREATE TRIGGER audit_trigger_stm after TRUNCATE
-    --     ON events for each statement EXECUTE FUNCTION audit.if_modified_func('true');
-    -- CREATE TRIGGER set_public_events_updated_at before
-    -- UPDATE
-    --     ON events for each ROW EXECUTE FUNCTION set_current_timestamp_updated_at();
-    -- events foreign keys
+-- CREATE TRIGGER audit_trigger_row after
+-- INSERT
+--     OR
+-- DELETE
+--     OR
+-- UPDATE
+--     ON events for each ROW EXECUTE FUNCTION audit.if_modified_func('true');
+-- CREATE TRIGGER audit_trigger_stm after TRUNCATE
+--     ON events for each statement EXECUTE FUNCTION audit.if_modified_func('true');
+-- CREATE TRIGGER set_public_events_updated_at before
+-- UPDATE
+--     ON events for each ROW EXECUTE FUNCTION set_current_timestamp_updated_at();
+-- events foreign keys
 ALTER TABLE
     events
 ADD

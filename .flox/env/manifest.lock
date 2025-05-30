@@ -27,17 +27,17 @@
     {
       "attr_path": "just",
       "broken": false,
-      "derivation": "/nix/store/prv2lqd2gcjvqj1jbks958srb6j0pbjf-just-1.40.0.drv",
+      "derivation": "/nix/store/82i3lr5c3mqlg33ryzn5wawfd0f8vdn9-just-1.40.0.drv",
       "description": "Handy way to save and run project-specific commands",
       "install_id": "just",
       "license": "CC0-1.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=063f43f2dbdef86376cc29ad646c45c46e93234c",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4faa5f5321320e49a78ae7848582f684d64783e9",
       "name": "just-1.40.0",
       "pname": "just",
-      "rev": "063f43f2dbdef86376cc29ad646c45c46e93234c",
-      "rev_count": 804993,
-      "rev_date": "2025-05-23T18:48:26Z",
-      "scrape_date": "2025-05-26T04:22:16.589702Z",
+      "rev": "4faa5f5321320e49a78ae7848582f684d64783e9",
+      "rev_count": 806853,
+      "rev_date": "2025-05-27T18:28:29Z",
+      "scrape_date": "2025-05-29T04:22:28.196683Z",
       "stabilities": [
         "unstable"
       ],
@@ -48,9 +48,9 @@
         "out"
       ],
       "outputs": {
-        "doc": "/nix/store/zikbq4x4hkpzlai3np37fxqkwyhmb0xv-just-1.40.0-doc",
-        "man": "/nix/store/qzbrc3j5hsl4rlxgvfxpdvjvrmyc4fvk-just-1.40.0-man",
-        "out": "/nix/store/4w4jqx6b693n45qfmwiwn8qd58f08rgf-just-1.40.0"
+        "doc": "/nix/store/rjc9wn7506xzg21y176cx0cpisx1v7jw-just-1.40.0-doc",
+        "man": "/nix/store/xx75550s34xc75lhk7xqkma498h0c9fn-just-1.40.0-man",
+        "out": "/nix/store/3zr8nrrs7vjpm15bi59wranjyhbdljsh-just-1.40.0"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
@@ -59,17 +59,17 @@
     {
       "attr_path": "just",
       "broken": false,
-      "derivation": "/nix/store/g4rnk5n713ij02fbrqdh8y8sh595x4vx-just-1.40.0.drv",
+      "derivation": "/nix/store/4558j1408zfi01k0n93hm3gjm2zmy78d-just-1.40.0.drv",
       "description": "Handy way to save and run project-specific commands",
       "install_id": "just",
       "license": "CC0-1.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=063f43f2dbdef86376cc29ad646c45c46e93234c",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4faa5f5321320e49a78ae7848582f684d64783e9",
       "name": "just-1.40.0",
       "pname": "just",
-      "rev": "063f43f2dbdef86376cc29ad646c45c46e93234c",
-      "rev_count": 804993,
-      "rev_date": "2025-05-23T18:48:26Z",
-      "scrape_date": "2025-05-26T04:40:52.533373Z",
+      "rev": "4faa5f5321320e49a78ae7848582f684d64783e9",
+      "rev_count": 806853,
+      "rev_date": "2025-05-27T18:28:29Z",
+      "scrape_date": "2025-05-29T04:39:59.485095Z",
       "stabilities": [
         "unstable"
       ],
@@ -80,9 +80,9 @@
         "out"
       ],
       "outputs": {
-        "doc": "/nix/store/aiqclswnz9hcr95rczv3v4v12zf5ng8n-just-1.40.0-doc",
-        "man": "/nix/store/g2bnw4b1xzn1wp62sdjyw37v64lr76i7-just-1.40.0-man",
-        "out": "/nix/store/cjc0r478ski28nby2rpkprr33q8pf40a-just-1.40.0"
+        "doc": "/nix/store/vinimf45hxfqykyjz2m54ylw4fpd79wg-just-1.40.0-doc",
+        "man": "/nix/store/ssclxvqvl4cmp0fzpznpccj7awsz7pqf-just-1.40.0-man",
+        "out": "/nix/store/pb4nx8x2nah5djb40dlhh3q8d9f9f52l-just-1.40.0"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
@@ -91,17 +91,17 @@
     {
       "attr_path": "just",
       "broken": false,
-      "derivation": "/nix/store/bhx05p2i79cka569ycrb9arcmwgf2szw-just-1.40.0.drv",
+      "derivation": "/nix/store/jmg41q3af3l5lipax79czrrxjh5xv9li-just-1.40.0.drv",
       "description": "Handy way to save and run project-specific commands",
       "install_id": "just",
       "license": "CC0-1.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=063f43f2dbdef86376cc29ad646c45c46e93234c",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4faa5f5321320e49a78ae7848582f684d64783e9",
       "name": "just-1.40.0",
       "pname": "just",
-      "rev": "063f43f2dbdef86376cc29ad646c45c46e93234c",
-      "rev_count": 804993,
-      "rev_date": "2025-05-23T18:48:26Z",
-      "scrape_date": "2025-05-26T04:57:25.524431Z",
+      "rev": "4faa5f5321320e49a78ae7848582f684d64783e9",
+      "rev_count": 806853,
+      "rev_date": "2025-05-27T18:28:29Z",
+      "scrape_date": "2025-05-29T04:56:03.201415Z",
       "stabilities": [
         "unstable"
       ],
@@ -112,9 +112,9 @@
         "out"
       ],
       "outputs": {
-        "doc": "/nix/store/rnlf9485p2mjrq6bqb8mrv21vwr8qh7f-just-1.40.0-doc",
-        "man": "/nix/store/v9p2zkx88sf0dbfsjv69f33lgnl9yfr7-just-1.40.0-man",
-        "out": "/nix/store/b90i1hkx0dz77pn6bbyzdx4bj586xbh4-just-1.40.0"
+        "doc": "/nix/store/jw2gqm7r2j4apylww284vrnvp0aswr83-just-1.40.0-doc",
+        "man": "/nix/store/s8qsrpz57zzy582arggg9kzhxc7wzj42-just-1.40.0-man",
+        "out": "/nix/store/2vgr2kh5laq7ly21ahyrmbz4q6gdfd7v-just-1.40.0"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
@@ -123,17 +123,17 @@
     {
       "attr_path": "just",
       "broken": false,
-      "derivation": "/nix/store/3mw514ss79qy8n1201i93y0qxydv3489-just-1.40.0.drv",
+      "derivation": "/nix/store/lfqbw93h3s3h3cij3n6cf5dcvjl7n1i4-just-1.40.0.drv",
       "description": "Handy way to save and run project-specific commands",
       "install_id": "just",
       "license": "CC0-1.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=063f43f2dbdef86376cc29ad646c45c46e93234c",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4faa5f5321320e49a78ae7848582f684d64783e9",
       "name": "just-1.40.0",
       "pname": "just",
-      "rev": "063f43f2dbdef86376cc29ad646c45c46e93234c",
-      "rev_count": 804993,
-      "rev_date": "2025-05-23T18:48:26Z",
-      "scrape_date": "2025-05-26T05:16:54.484997Z",
+      "rev": "4faa5f5321320e49a78ae7848582f684d64783e9",
+      "rev_count": 806853,
+      "rev_date": "2025-05-27T18:28:29Z",
+      "scrape_date": "2025-05-29T05:14:33.916380Z",
       "stabilities": [
         "unstable"
       ],
@@ -144,9 +144,9 @@
         "out"
       ],
       "outputs": {
-        "doc": "/nix/store/8k1z9vxfn5cl8dza5ip37vja9wicbbxa-just-1.40.0-doc",
-        "man": "/nix/store/f1mqpjpganswic6lfaf02smhmphjb7md-just-1.40.0-man",
-        "out": "/nix/store/90ddxlc1djbkkjqsdm6ymr3mp1h37y9k-just-1.40.0"
+        "doc": "/nix/store/s70b7w7ndh8fn550xdz0b7hvrxh9zbdm-just-1.40.0-doc",
+        "man": "/nix/store/9j1sxj8p91q99nl7f5hdlb0kfv7kww0a-just-1.40.0-man",
+        "out": "/nix/store/h0agljrxjv0xrxj6y71fsp8sx751vrd6-just-1.40.0"
       },
       "system": "x86_64-linux",
       "group": "toplevel",
@@ -159,13 +159,13 @@
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
       "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=063f43f2dbdef86376cc29ad646c45c46e93234c",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4faa5f5321320e49a78ae7848582f684d64783e9",
       "name": "nodejs-22.14.0",
       "pname": "nodejs",
-      "rev": "063f43f2dbdef86376cc29ad646c45c46e93234c",
-      "rev_count": 804993,
-      "rev_date": "2025-05-23T18:48:26Z",
-      "scrape_date": "2025-05-26T04:22:18.547216Z",
+      "rev": "4faa5f5321320e49a78ae7848582f684d64783e9",
+      "rev_count": 806853,
+      "rev_date": "2025-05-27T18:28:29Z",
+      "scrape_date": "2025-05-29T04:22:30.191056Z",
       "stabilities": [
         "unstable"
       ],
@@ -190,13 +190,13 @@
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
       "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=063f43f2dbdef86376cc29ad646c45c46e93234c",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4faa5f5321320e49a78ae7848582f684d64783e9",
       "name": "nodejs-22.14.0",
       "pname": "nodejs",
-      "rev": "063f43f2dbdef86376cc29ad646c45c46e93234c",
-      "rev_count": 804993,
-      "rev_date": "2025-05-23T18:48:26Z",
-      "scrape_date": "2025-05-26T04:41:00.968474Z",
+      "rev": "4faa5f5321320e49a78ae7848582f684d64783e9",
+      "rev_count": 806853,
+      "rev_date": "2025-05-27T18:28:29Z",
+      "scrape_date": "2025-05-29T04:40:08.020551Z",
       "stabilities": [
         "unstable"
       ],
@@ -221,13 +221,13 @@
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
       "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=063f43f2dbdef86376cc29ad646c45c46e93234c",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4faa5f5321320e49a78ae7848582f684d64783e9",
       "name": "nodejs-22.14.0",
       "pname": "nodejs",
-      "rev": "063f43f2dbdef86376cc29ad646c45c46e93234c",
-      "rev_count": 804993,
-      "rev_date": "2025-05-23T18:48:26Z",
-      "scrape_date": "2025-05-26T04:57:27.550633Z",
+      "rev": "4faa5f5321320e49a78ae7848582f684d64783e9",
+      "rev_count": 806853,
+      "rev_date": "2025-05-27T18:28:29Z",
+      "scrape_date": "2025-05-29T04:56:05.228659Z",
       "stabilities": [
         "unstable"
       ],
@@ -252,13 +252,13 @@
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
       "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=063f43f2dbdef86376cc29ad646c45c46e93234c",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4faa5f5321320e49a78ae7848582f684d64783e9",
       "name": "nodejs-22.14.0",
       "pname": "nodejs",
-      "rev": "063f43f2dbdef86376cc29ad646c45c46e93234c",
-      "rev_count": 804993,
-      "rev_date": "2025-05-23T18:48:26Z",
-      "scrape_date": "2025-05-26T05:17:04.323013Z",
+      "rev": "4faa5f5321320e49a78ae7848582f684d64783e9",
+      "rev_count": 806853,
+      "rev_date": "2025-05-27T18:28:29Z",
+      "scrape_date": "2025-05-29T05:14:44.034020Z",
       "stabilities": [
         "unstable"
       ],

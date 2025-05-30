@@ -1,19 +1,3 @@
-export interface Dictionary<T> {
-  [Key: string | number]: T;
-}
-
-export interface Event {
-  row: number;
-  start: string;
-  end: string;
-  text: string;
-  data: Dictionary<string | number>;
-}
-
-// export interface Event extends EventBase {
-//   timespan: string
-// }
-
 export interface Geometry {
   x: number;
   y: number;

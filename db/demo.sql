@@ -1,5 +1,5 @@
 INSERT INTO
-    PUBLIC.events (
+    events (
         "uuid",
         created_at,
         updated_at,
