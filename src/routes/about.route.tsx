@@ -4,6 +4,7 @@ import { About } from "~/components/About";
 
 export const Route = createFileRoute("/about")({
   component: About,
+  ssr: false,
 });
 
 // export default Route;

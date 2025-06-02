@@ -133,4 +133,5 @@ const SchedulerPage = ({ locationXXX, week }: { locationXXX: number; week: strin
 
 export const Route = createFileRoute("/scheduler")({
   component: SchedulerPage,
+  ssr: false,
 });

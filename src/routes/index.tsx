@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 export const Route = createFileRoute("/")({
   component: Home,
+  ssr: false,
 });
 
 function Home() {
