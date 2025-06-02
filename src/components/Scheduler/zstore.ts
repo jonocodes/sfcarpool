@@ -36,7 +36,7 @@ export const configDefault: Config = {
   onScheduleClick: undefined,
 };
 
-function generateRowMap(rows, events) {
+function generateRowMap(rows: string[], events: Event[]) {
   const dataRowMap = [];
   for (let j = 0; j < rows.length; j++) {
     // doing this since Array.fill([]) causes issues

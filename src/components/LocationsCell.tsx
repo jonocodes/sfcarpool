@@ -51,8 +51,10 @@ const LocationsCell = ({ locationId, week }: { locationId: number; week: string 
     data: locations,
     isLoading,
     error,
-    // isError, // Removed as useShape returns error directly
   } = useShape<Location>({
+
+    // TODO: centralized the db state using @tanstack/db-collection once its stable/released
+    
     url: "http://localhost:5133/v1/shape",
     params: {
       table: "locations",

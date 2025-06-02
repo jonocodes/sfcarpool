@@ -22,7 +22,7 @@ import {
 // import { useMutation } from '@redwoodjs/web'
 // import { toast } from '@redwoodjs/web/toast'
 
-import { Event } from "./Scheduler/types";
+import { Event } from "~/utils/models";
 
 import {
   calcStringTime,
@@ -97,7 +97,6 @@ const EventModal = (props: {
   // });
 
   async function updateEvent() {
-    
     console.log("update", props.eventIndex, event);
 
     // const gql_data = eventToGql(event, props.startDate, props.locationId);
@@ -118,20 +117,33 @@ const EventModal = (props: {
   }
 
   async function removeEvent() {
-    // _delete({ variables: { id: Number(event.data.entry) } })
-    //   .then(function () {
-    //     // TODO: put this here so data does not get out of sync.
-    //     //    or figure out how to update the db from the store.
-    //     // _removeEvent(eventIndex)
-    //   })
-    //   .catch(function (error) {
-    //     toast.error("there was a problem deleting the event");
-    //     console.log(error);
-    //   });
+    console.log("remove", props.eventIndex, event);
 
-    props.removeEvent(props.eventIndex);
+    try {
+      const response = await fetch(`http://localhost:4000/events?id=eq.${event.data.entry}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Prefer: "return=representation",
+        },
+      });
 
-    props.handleClose();
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const deletedEvents = await response.json();
+      if (!Array.isArray(deletedEvents) || deletedEvents.length === 0) {
+        throw new Error("Delete operation failed - no records were deleted");
+      }
+
+      props.removeEvent(props.eventIndex);
+      props.handleClose();
+      toast.success("Event deleted successfully");
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      toast.error("Failed to delete event");
+    }
   }
 
   const timeDivs = [];
