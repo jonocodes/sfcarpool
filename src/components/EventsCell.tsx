@@ -36,11 +36,21 @@ const myConfig: Config = { startTime: "06:00", endTime: "11:00" };
 const rows = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 function dbToEvent(item: EventInDb): Event {
+  const date = new Date(item.date);
+  // const startTime = new Date(item.start);
+  // const endTime = new Date(item.end);
+
   return {
-    row: parseDateTime(item.date).weekday - 1,
+    row: date.getDay() - 1,
     text: item.label || "Untitled Event",
-    start: parseDateTime(item.start).toFormat("H:mm"),
-    end: parseDateTime(item.end).toFormat("H:mm"),
+    // start: startTime.toLocaleTimeString("en-US", {
+    //   hour: "numeric",
+    //   minute: "2-digit",
+    //   hour12: false,
+    // }),
+    // end: endTime.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: false }),
+    start: item.start,
+    end: item.end,
     data: {
       entry: item.id,
       likelihood: item.likelihood,
@@ -66,8 +76,8 @@ const EventsCell = ({
   after,
   locationId,
 }: {
-  before: string;
-  after: string;
+  before: Date;
+  after: Date;
   locationId: number;
 }) => {
   const {
@@ -78,7 +88,6 @@ const EventsCell = ({
     url: "http://localhost:5133/v1/shape",
     params: {
       table: "events",
-      // offset: -1 // Assuming electric-sql handles this or has a different way
     },
   });
 
@@ -90,17 +99,21 @@ const EventsCell = ({
     return <Failure error={error} />;
   }
 
-  const events: Event[] = dbEvents.filter((event) => event.active).map(dbToEvent);
+  const events: Event[] = dbEvents
+    .filter((event) => event.active && event.location_id === locationId)
+    .map(dbToEvent);
   const dates = rowsToDates(rows, after, before);
+
+  // debugger;
 
   return (
     <Row>
       <Week
         rows={rows}
         dates={dates}
-        data={events}
         config={myConfig}
         locationId={locationId}
+        data={events}
         provideCreateRandom={false}
         children={null}
       />

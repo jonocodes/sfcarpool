@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+// import { DateTime } from "luxon";
 import { Col, Form, Row } from "react-bootstrap";
 
 import EventsCell from "../components/EventsCell";
@@ -11,7 +11,7 @@ import {
   parseDateTime,
 } from "../components/Scheduler/helpers";
 // import { routes } from 'vinxi/dist/types/lib/plugins/routes'
-import { createFileRoute, Link, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 
 // function formatDate(dateStr) {
 //   // return DateTime.fromISO(dateStr, { zone: 'utc' }).toFormat('ccc LLL dd yyyy')
@@ -48,79 +48,51 @@ const caret_left = (
 //   return date.toFormat('LLL dd, yyyy')
 // }
 
-const SchedulerPage = ({ locationXXX, week }: { locationXXX: number; week: string }) => {
-  let start;
+// interface SchedulerSearchParams {
+//   location?: number;
+//   week?: string;
+// }
 
-  // try {
-  start = parseDateTime(week);
-  // TODO: if it cant parse, set to today
-  // } catch (error) {
-  //   console.error(error)
-  //   start = DateTime.now() //.toISODate()
-  // }
-  if (start.invalid) {
-    start = DateTime.now(); //.toISODate()
-  }
-
-  if (start.weekday !== 1) {
-    start = getWeekStart(parseDateTime(start));
-
-    console.error("BAD WEEK START. SETTING TO ", start);
-  }
-  const end = start.plus({ days: 4 });
-
-  const prevWeekStr = start.plus({ days: -7 }).toISODate();
-
-  const nextWeekStr = start.plus({ days: 7 }).toISODate();
-
-  const { location } = useParams({ strict: false });
-
-  let loc = 1;
-  if (!Number.isNaN(parseInt(location))) {
-    // or check that its an int, or an existing location
-    loc = Number(location);
-  }
+const SchedulerPage = () => {
+  const { location, week } = Route.useSearch();
+  const start = new Date(week);
+  const end = new Date(start.getTime() + 4 * 24 * 60 * 60 * 1000);
+  const prevWeekStr = new Date(start.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const nextWeekStr = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const loc = location ?? 1;
 
   const dateSpanStr = formatDateSpan(start, end);
-
-  console.log("scheduler page location", loc, dateSpanStr);
 
   return (
     <>
       <Row style={{ paddingTop: "30px" }}>
         <Col xm={7}>
           <span className="nav-week">
-            {/* <Link
-              // style={{ padding: '10px' }}
-              to={routes.scheduler({
+            <Link
+              to="/scheduler"
+              search={{
                 location: loc,
-                week: prevWeekStr,
-              })}
-              activeClassName="active"
+                week: prevWeekStr.toISOString(),
+              }}
             >
               {caret_left}
-            </Link> */}
+            </Link>
 
             {dateSpanStr}
 
-            {/* <Link
-              // className="nav-link"
-              to={routes.scheduler({
+            <Link
+              to="/scheduler"
+              search={{
                 location: loc,
-                week: nextWeekStr,
-              })}
-              activeClassName="active"
+                week: nextWeekStr.toISOString(),
+              }}
             >
               {caret_right}
-            </Link> */}
+            </Link>
           </span>
         </Col>
         <Col xs="auto">
-          <LocationsCell
-            locationId={loc}
-            // setLocationId={setLocationId}
-            week={start.toISODate()}
-          ></LocationsCell>
+          <LocationsCell locationId={loc} week={week}></LocationsCell>
         </Col>
       </Row>
 
@@ -128,10 +100,11 @@ const SchedulerPage = ({ locationXXX, week }: { locationXXX: number; week: strin
     </>
   );
 };
-
-// export default SchedulerPage;
-
 export const Route = createFileRoute("/scheduler")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    location: search.location ? Number(search.location) : 1,
+    week: search.week ? String(search.week) : new Date().toISOString(),
+  }),
   component: SchedulerPage,
   ssr: false,
 });

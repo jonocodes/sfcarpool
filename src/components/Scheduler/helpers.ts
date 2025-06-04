@@ -1,7 +1,8 @@
-import { DateTime } from "luxon";
+// import { DateTime } from "luxon";
 // import { entries } from 'mobx'
 
 import { Event } from "~/utils/models";
+import { format, getYear, getMonth } from "date-fns";
 
 export function formatTime(val: number) {
   const i1 = val % 3600;
@@ -29,54 +30,35 @@ export function getTimeSlots(tableStartTime: number, tableEndTime: number, width
   return times;
 }
 
-export function formatDateSpan(start: DateTime, end: DateTime) {
-  if (start.year !== end.year) {
-    return `${start.toFormat("LLL dd, yyyy")} - ${end.toFormat("LLL dd, yyyy")}`;
+export function formatDateSpan(start: Date, end: Date) {
+  if (getYear(start) !== getYear(end)) {
+    return `${format(start, "LLL dd, yyyy")} - ${format(end, "LLL dd, yyyy")}`;
   }
 
-  if (start.month !== end.month) {
-    return `${start.toFormat("LLL dd")} - ${end.toFormat("LLL dd, yyyy")}`;
+  if (getMonth(start) !== getMonth(end)) {
+    return `${format(start, "LLL dd")} - ${format(end, "LLL dd, yyyy")}`;
   }
 
-  return `${start.toFormat("LLL dd")} - ${end.toFormat("dd, yyyy")}`;
+  return `${format(start, "LLL dd")} - ${format(end, "dd, yyyy")}`;
 }
 
-export function getWeekStart(today: DateTime) {
-  // the monday of the current work week
-  // if the work week is over, get the next monday
-
-  const day = today.weekday - 1;
-
-  // if (day == 5) diff = 2
-  // if (day == 6) diff = 1
-
-  let diff = -1 * day;
-  if (day >= 5) diff = 7 - day;
-  // else diff = -1 * day
-
-  return today.plus({ days: diff });
+export function getWeekStart(today: Date) {
+  const day = today.getDay();
+  const diff = day === 0 ? -6 : 1 - day; // Adjust Sunday to be 6 days back
+  return new Date(today.getTime() + diff * 24 * 60 * 60 * 1000);
 }
 
 export function getWeekSpan() {
-  const todayStr = DateTime.now().toISODate();
-
-  const start = getWeekStart(DateTime.fromISO(todayStr, { zone: "utc" }));
-  const end = start.plus({ days: 4 });
-
-  // const startStr = start.toISODate()
-  // const endStr = end.toISODate()
-
-  // TODO: this should probably return DateTimes not Strings
-
-  // return [startStr, endStr]
+  const today = new Date();
+  const start = getWeekStart(today);
+  const end = new Date(start.getTime() + 4 * 24 * 60 * 60 * 1000);
   return [start, end];
 }
 
-export function eventToGql(evnt: Event, startDate: DateTime, locationId: number) {
+export function eventToGql(evnt: Event, startDate: Date, locationId: number) {
   const passenger = evnt.data.mode == "passenger";
-
-  const date = startDate.plus({ days: evnt.row });
-  const dateStr = date.toISO();
+  const date = new Date(startDate.getTime() + evnt.row * 24 * 60 * 60 * 1000);
+  const dateStr = date.toISOString();
 
   let start = evnt.start;
   if (start.length == 4) start = "0" + start;
@@ -84,43 +66,35 @@ export function eventToGql(evnt: Event, startDate: DateTime, locationId: number)
   let end = evnt.end;
   if (end.length == 4) end = "0" + end;
 
-  return {
-    // id: evnt.data.entry,
+  const result = {
     label: evnt.text,
     passenger,
     locationId,
-    // start: '1970-01-10T' + start + ':00Z',
-    // end: '1970-01-10T' + end + ':00Z',
-    start,
+    start, // TODO: chop off the :00 ?
     end,
     date: dateStr,
     likelihood: Number(evnt.data.likelihood),
     active: true,
   };
+
+  console.log("eventToGql", result);
+  return result;
 }
 
 export function parseDateTime(dateStr: string) {
-  return DateTime.fromISO(dateStr, {
-    zone: "utc",
-  });
+  return new Date(dateStr);
 }
 
-export function rowsToDays(rows: string[], startDate: DateTime, endDate: DateTime) {
-  // let currentDate = parseDateTime(startDateStr)
-  // const endDate = parseDateTime(endDateStr)
-
-  console.log("rowsToDays startDate", startDate);
-
-  let currentDate = startDate;
-
+export function rowsToDays(rows: string[], startDate: Date, endDate: Date) {
+  let currentDate = new Date(startDate);
   const dates = [];
 
   while (currentDate <= endDate) {
     dates.push(currentDate);
-    currentDate = currentDate.plus({ days: 1 });
+    currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
   }
 
-  // console.log('dates', dates)
+  console.log("dates", dates);
 
   if (rows.length != dates.length) throw new Error("Row count and day span do not match");
 

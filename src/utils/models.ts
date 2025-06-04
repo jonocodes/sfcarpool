@@ -8,17 +8,16 @@ export interface ElectricModel {
   [key: string]: any;
 }
 
-
 export interface EventInDb extends ElectricModel {
   id: number;
   label: string;
-  date: string;
+  date: Date;
   start: string;
   end: string;
   active: boolean;
   passenger: boolean;
   likelihood: number;
-  // location_id: number;
+  location_id: number;
 }
 
 export interface Event {

@@ -3,6 +3,7 @@ import { Form, Placeholder } from "react-bootstrap";
 // import { useQuery } from "@tanstack/react-query";
 import { useShape } from "@electric-sql/react";
 import { Location } from "~/utils/models";
+import { useNavigate } from "@tanstack/react-router";
 // Once you run the generator, uncomment this:
 // import { Location } from '../generated/db'
 
@@ -47,18 +48,18 @@ import { Location } from "~/utils/models";
 // };
 
 const LocationsCell = ({ locationId, week }: { locationId: number; week: string }) => {
+  const navigate = useNavigate();
+
   const {
     data: locations,
     isLoading,
     error,
   } = useShape<Location>({
-
     // TODO: centralized the db state using @tanstack/db-collection once its stable/released
-    
+
     url: "http://localhost:5133/v1/shape",
     params: {
       table: "locations",
-      // offset: -1 // Assuming electric-sql handles this or has a different way
     },
   });
 
@@ -84,6 +85,13 @@ const LocationsCell = ({ locationId, week }: { locationId: number; week: string 
         const selectedLocation = e.target.value;
         console.log(`Navigating to scheduler with location: ${selectedLocation}, week: ${week}`);
         // Replace with your navigation logic
+        navigate({
+          to: "/scheduler",
+          search: {
+            location: Number(selectedLocation),
+            week: week,
+          },
+        });
       }}
       // variant="dark"
     >
