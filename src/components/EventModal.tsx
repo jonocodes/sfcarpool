@@ -67,7 +67,7 @@ const EventModal = (props: {
   handleClose: () => void;
   removeEvent: (index: number) => void;
   updateEvent: (index: number, event: Event) => void;
-  startDate: string;
+  startDate: Date;
   locationId: number;
   eventIndex: number;
   timeSlots: number[];

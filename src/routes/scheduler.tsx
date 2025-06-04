@@ -1,22 +1,13 @@
-// import { DateTime } from "luxon";
 import { Col, Form, Row } from "react-bootstrap";
 
 import EventsCell from "../components/EventsCell";
 import LocationsCell from "../components/LocationsCell";
 import {
-  getWeekSpan,
-  // getWeekdateSpanStr,
-  getWeekStart,
   formatDateSpan,
-  parseDateTime,
 } from "../components/Scheduler/helpers";
 // import { routes } from 'vinxi/dist/types/lib/plugins/routes'
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 
-// function formatDate(dateStr) {
-//   // return DateTime.fromISO(dateStr, { zone: 'utc' }).toFormat('ccc LLL dd yyyy')
-//   return DateTime.fromISO(dateStr, { zone: 'utc' }).toFormat('LLL dd, yyyy')
-// }
 
 const caret_right = (
   <svg

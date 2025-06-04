@@ -1,6 +1,3 @@
-// import { DateTime } from "luxon";
-// import { entries } from 'mobx'
-
 import { Event } from "~/utils/models";
 import { format, getYear, getMonth } from "date-fns";
 
