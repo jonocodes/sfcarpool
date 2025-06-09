@@ -19,15 +19,11 @@ import {
 //   UpdateEventMutationVariables,
 // } from 'types/graphql'
 
-// import { useMutation } from '@redwoodjs/web'
-// import { toast } from '@redwoodjs/web/toast'
-
 import { Event } from "~/utils/models";
 
 import {
   calcStringTime,
   // DELETE_EVENT,
-  // eventToGql,
   formatTime,
   // UPDATE_EVENT,
 } from "../components/Scheduler/helpers";
@@ -178,9 +174,9 @@ const EventModal = (props: {
   return (
     <Modal show={props.show} onHide={cancelAndClose} centered>
       <Form noValidate>
-        {/* <Modal.Header closeButton>
-          <Modal.Title>Update Event</Modal.Title>
-        </Modal.Header> */}
+        <Modal.Header closeButton>
+          <Modal.Title>??? {props.startDate.toLocaleDateString()} ???</Modal.Title>
+        </Modal.Header>
         <Modal.Body>
           <Container className="dark-theme" fluid>
             <Row className="align-items-end pb-1">

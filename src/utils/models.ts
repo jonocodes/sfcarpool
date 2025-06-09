@@ -25,7 +25,17 @@ export interface Event {
   start: string;
   end: string;
   text: string;
-  data: Dictionary<string | number>;
+  data: CarpoolMetadata;
+  // data: Dictionary<string | number | Date>;
+}
+
+export interface CarpoolMetadata {
+  entry: number;
+  mode: string;
+  likelihood: number;
+  date: Date;
+  // location_id: number;
+  // id: number;
 }
 
 export interface Location extends ElectricModel {

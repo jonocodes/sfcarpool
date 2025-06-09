@@ -1,13 +1,10 @@
-import { Col, Form, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 
 import EventsCell from "../components/EventsCell";
 import LocationsCell from "../components/LocationsCell";
-import {
-  formatDateSpan,
-} from "../components/Scheduler/helpers";
+import { formatDateSpan, getMonday, formatDateOnly } from "../components/Scheduler/helpers";
 // import { routes } from 'vinxi/dist/types/lib/plugins/routes'
-import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
-
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 const caret_right = (
   <svg
@@ -35,67 +32,65 @@ const caret_left = (
   </svg>
 );
 
-// function formatDate2(date) {
-//   return date.toFormat('LLL dd, yyyy')
-// }
-
-// interface SchedulerSearchParams {
-//   location?: number;
-//   week?: string;
-// }
-
-const SchedulerPage = () => {
-  const { location, week } = Route.useSearch();
-  const start = new Date(week);
-  const end = new Date(start.getTime() + 4 * 24 * 60 * 60 * 1000);
-  const prevWeekStr = new Date(start.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const nextWeekStr = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
-  const loc = location ?? 1;
-
-  const dateSpanStr = formatDateSpan(start, end);
-
-  return (
-    <>
-      <Row style={{ paddingTop: "30px" }}>
-        <Col xm={7}>
-          <span className="nav-week">
-            <Link
-              to="/scheduler"
-              search={{
-                location: loc,
-                week: prevWeekStr.toISOString(),
-              }}
-            >
-              {caret_left}
-            </Link>
-
-            {dateSpanStr}
-
-            <Link
-              to="/scheduler"
-              search={{
-                location: loc,
-                week: nextWeekStr.toISOString(),
-              }}
-            >
-              {caret_right}
-            </Link>
-          </span>
-        </Col>
-        <Col xs="auto">
-          <LocationsCell locationId={loc} week={week}></LocationsCell>
-        </Col>
-      </Row>
-
-      <EventsCell before={end} after={start} locationId={loc} />
-    </>
-  );
-};
 export const Route = createFileRoute("/scheduler")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    location: search.location ? Number(search.location) : 1,
-    week: search.week ? String(search.week) : new Date().toISOString(),
-  }),
-  component: SchedulerPage,
-  ssr: false,
+  component: () => {
+    const { location = "1", week } = Route.useSearch();
+    const start = week ? new Date(week) : getMonday();
+    const end = new Date(start);
+    end.setDate(start.getDate() + 4);
+
+    const prevWeek = new Date(start);
+    prevWeek.setDate(start.getDate() - 7);
+    const nextWeek = new Date(start);
+    nextWeek.setDate(start.getDate() + 7);
+
+    const prevWeekStr = formatDateOnly(prevWeek);
+    const nextWeekStr = formatDateOnly(nextWeek);
+    const loc = Number(location);
+
+    const dateSpanStr = formatDateSpan(start, end);
+
+    return (
+      <>
+        <Row style={{ paddingTop: "30px" }}>
+          <Col xm={7}>
+            <span className="nav-week">
+              <Link
+                to="/scheduler"
+                search={{
+                  location: String(loc),
+                  week: prevWeekStr,
+                }}
+              >
+                {caret_left}
+              </Link>
+
+              {dateSpanStr}
+
+              <Link
+                to="/scheduler"
+                search={{
+                  location: String(loc),
+                  week: nextWeekStr,
+                }}
+              >
+                {caret_right}
+              </Link>
+            </span>
+          </Col>
+          <Col xs="auto">
+            <LocationsCell locationId={loc} week={week || formatDateOnly(start)} />
+          </Col>
+        </Row>
+
+        <EventsCell before={end} after={start} locationId={loc} />
+      </>
+    );
+  },
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      location: search.location ? String(search.location) : "1",
+      week: search.week ? String(search.week) : undefined,
+    };
+  },
 });

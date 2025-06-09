@@ -1,4 +1,4 @@
-import { Event } from "~/utils/models";
+import { Event, EventInDb } from "~/utils/models";
 import { format, getYear, getMonth } from "date-fns";
 
 export function formatTime(val: number) {
@@ -28,21 +28,34 @@ export function getTimeSlots(tableStartTime: number, tableEndTime: number, width
 }
 
 export function formatDateSpan(start: Date, end: Date) {
-  if (getYear(start) !== getYear(end)) {
-    return `${format(start, "LLL dd, yyyy")} - ${format(end, "LLL dd, yyyy")}`;
+  // Create new dates and ensure they're in UTC, adding a day to account for timezone differences
+  const startLocal = new Date(
+    Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate() + 1)
+  );
+  const endLocal = new Date(
+    Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate() + 1)
+  );
+
+  if (getYear(startLocal) !== getYear(endLocal)) {
+    return `${format(startLocal, "LLL dd, yyyy")} - ${format(endLocal, "LLL dd, yyyy")}`;
   }
 
-  if (getMonth(start) !== getMonth(end)) {
-    return `${format(start, "LLL dd")} - ${format(end, "LLL dd, yyyy")}`;
+  if (getMonth(startLocal) !== getMonth(endLocal)) {
+    return `${format(startLocal, "LLL dd")} - ${format(endLocal, "LLL dd, yyyy")}`;
   }
 
-  return `${format(start, "LLL dd")} - ${format(end, "dd, yyyy")}`;
+  return `${format(startLocal, "LLL dd")} - ${format(endLocal, "dd, yyyy")}`;
 }
 
 export function getWeekStart(today: Date) {
-  const day = today.getDay();
-  const diff = day === 0 ? -6 : 1 - day; // Adjust Sunday to be 6 days back
-  return new Date(today.getTime() + diff * 24 * 60 * 60 * 1000);
+  const date = new Date(today);
+  date.setUTCHours(0, 0, 0, 0); // Set to midnight UTC
+  const day = date.getUTCDay();
+
+  // Calculate days to previous Monday
+  const diff = day === 0 ? -6 : 1 - day; // If Sunday, go back 6 days, otherwise calculate days since last Monday
+  date.setUTCDate(date.getUTCDate() + diff);
+  return date;
 }
 
 export function getWeekSpan() {
@@ -52,10 +65,32 @@ export function getWeekSpan() {
   return [start, end];
 }
 
-export function eventToGql(evnt: Event, startDate: Date, locationId: number) {
+export function getMonday(fromDate?: Date) {
+  const today = fromDate ? new Date(fromDate) : new Date();
+  today.setUTCHours(0, 0, 0, 0); // Set to start of day in UTC
+  const day = today.getUTCDay(); // 0 is Sunday, 1 is Monday, etc.
+
+  const monday = new Date(today);
+  if (day === 1 && !fromDate) {
+    // If it's Monday and we're using current date (not a specific date)
+    monday.setUTCDate(monday.getUTCDate() + 1); // Add one day to account for timezone
+    return monday;
+  }
+
+  // For specific dates or non-Mondays, calculate days until next Monday
+  const daysUntilMonday = day === 0 ? 2 : 9 - day; // Add one extra day to account for timezone
+  monday.setUTCDate(monday.getUTCDate() + daysUntilMonday);
+  return monday;
+}
+
+export function formatDateOnly(date: Date) {
+  return date.toLocaleDateString("en-CA"); // Returns YYYY-MM-DD format
+}
+
+export function eventToDbRepresentation(evnt: Event, locationId: number): EventInDb {
   const passenger = evnt.data.mode == "passenger";
-  const date = new Date(startDate.getTime() + evnt.row * 24 * 60 * 60 * 1000);
-  const dateStr = date.toISOString();
+  // const date = new Date(startDate.getTime() + evnt.row * 24 * 60 * 60 * 1000);
+  // const dateStr = date.toISOString().split("T")[0]; // Get just the YYYY-MM-DD part
 
   let start = evnt.start;
   if (start.length == 4) start = "0" + start;
@@ -64,18 +99,42 @@ export function eventToGql(evnt: Event, startDate: Date, locationId: number) {
   if (end.length == 4) end = "0" + end;
 
   const result = {
+    id: Number(evnt.data.entry),
     label: evnt.text,
     passenger,
-    locationId,
-    start, // TODO: chop off the :00 ?
+    location_id: locationId, // Changed from locationId to location_id
+    start,
     end,
-    date: dateStr,
+    // date: dateStr,
+    date: evnt.data.date,
     likelihood: Number(evnt.data.likelihood),
     active: true,
   };
 
-  console.log("eventToGql", result);
+  console.log("eventToDbRepresentation", result);
   return result;
+}
+
+export function dbToEvent(item: EventInDb): Event {
+  const dte = new Date(item.date);
+  const day = dte.getUTCDay(); // 0 (Sunday) to 6 (Saturday)
+
+  // Convert to row number (Monday=0 to Sunday=6)
+  // For UTC dates, we need to handle the day-to-row mapping differently
+  const row = day === 0 ? 6 : day - 1;
+
+  return {
+    row,
+    text: item.label || "Untitled Event",
+    start: item.start,
+    end: item.end,
+    data: {
+      entry: item.id,
+      likelihood: item.likelihood,
+      mode: item.passenger ? "passenger" : "driver",
+      date: dte,
+    },
+  };
 }
 
 export function parseDateTime(dateStr: string) {

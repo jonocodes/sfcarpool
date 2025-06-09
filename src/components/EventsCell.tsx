@@ -1,7 +1,7 @@
 // import React from "react";
 // import { useQuery } from '@tanstack/react-query'
 import { Row, Spinner } from "react-bootstrap";
-import { parseDateTime, rowsToDays as rowsToDates } from "./Scheduler/helpers";
+import { parseDateTime, rowsToDays as rowsToDates, dbToEvent } from "./Scheduler/helpers";
 import { Config } from "./Scheduler/types";
 import Week from "./Week";
 
@@ -35,40 +35,10 @@ const myConfig: Config = { startTime: "06:00", endTime: "11:00" };
 
 const rows = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-function dbToEvent(item: EventInDb): Event {
-  const date = new Date(item.date);
-  // const startTime = new Date(item.start);
-  // const endTime = new Date(item.end);
+const Loading = () => <Spinner animation="border" />;
 
-  return {
-    row: date.getDay() - 1,
-    text: item.label || "Untitled Event",
-    // start: startTime.toLocaleTimeString("en-US", {
-    //   hour: "numeric",
-    //   minute: "2-digit",
-    //   hour12: false,
-    // }),
-    // end: endTime.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: false }),
-    start: item.start,
-    end: item.end,
-    data: {
-      entry: item.id,
-      likelihood: item.likelihood,
-      mode: item.passenger ? "passenger" : "driver",
-    },
-  };
-}
-
-export const Loading = () => (
-  <Row className="justify-content-md-center">
-    <Spinner animation="border" role="status">
-      <span className="visually-hidden">Loading...</span>
-    </Spinner>
-  </Row>
-);
-
-export const Failure = ({ error }: { error: Error }) => (
-  <div style={{ color: "red" }}>Error: {error?.message}</div>
+const Failure = ({ error }: { error: Error }) => (
+  <div style={{ color: "red" }}>Error: {error.message}</div>
 );
 
 const EventsCell = ({

@@ -10,18 +10,16 @@ import { Button } from "react-bootstrap";
 // import { createStore, useStore } from 'zustand'
 import { create } from "zustand";
 
-// import { useMutation } from '@redwoodjs/web'
-// import { Toaster } from '@redwoodjs/web/toast'
-
 import {
   // CREATE_EVENT,
-  eventToGql,
+  eventToDbRepresentation,
   formatTime,
   getTimeSlots,
   // UPDATE_EVENT,
 } from "../components/Scheduler/helpers";
 import SchedulerComponent from "../components/Scheduler/Scheduler";
-import { Config, Event, SchedulerState } from "../components/Scheduler/types";
+import { Config, SchedulerState } from "../components/Scheduler/types";
+import { Event } from "~/utils/models";
 import {
   createSchedulerStore,
   _generateEvent,
@@ -52,111 +50,6 @@ const usePageStore = create<PageState>()((set) => ({
   setEvent: (index, event) => set(() => ({ currentEventIndex: index, currentEvent: event })),
 }));
 
-// const store = createStore<SchedulerState>((set) => ({
-//   rows: [],
-//   events: [],
-//   config: {},
-//   computed: {
-//     rowMap: [],
-//     geometries: [],
-//     rowHeights: [],
-//     tableHeight: 0,
-//     tableStartTime: 0,
-//     tableEndTime: 0,
-//     cellsWide: 0,
-//     scrollWidth: 0,
-//   },
-//   onClickEvent: null,
-//   currentEvent: null,
-//   currentEventIndex: null,
-//   // count: 1,
-//   // inc: () => set((state) => ({ count: state.count + 1 })),
-
-//   setup: (config, rows, events) =>
-//     set((state) => {
-//       state.config = { ...configDefault, ...config }
-//       state.rows = rows
-//       state.events = events
-
-//       const computed = refreshComputed(config, rows, events)
-
-//       return {
-//         rows: state.rows,
-//         config: state.config,
-//         events: state.events,
-//         computed: computed,
-//       }
-//     }),
-
-//   clearEvents: () =>
-//     // this is a helper function for dev and testing only
-//     set((state) => {
-//       state.events = []
-
-//       const computed = refreshComputed(state.config, state.rows, state.events)
-
-//       return {
-//         events: state.events,
-//         computed: computed,
-//       }
-//     }),
-
-//   addEvent: (event: Event) =>
-//     set((state) => {
-//       state.events.push(event)
-//       const computed = refreshComputed(state.config, state.rows, state.events)
-
-//       return {
-//         currentEvent: event,
-//         events: state.events,
-//         computed: computed,
-//       }
-//     }),
-
-//   removeEvent: (eventIndex: number) =>
-//     set((state) => {
-//       state.events.splice(eventIndex, 1)
-
-//       const computed = refreshComputed(state.config, state.rows, state.events)
-
-//       console.log('removeEvent', eventIndex, state.events, computed)
-
-//       return {
-//         // currentEvent: event,
-//         events: state.events,
-//         computed: computed,
-//       }
-//     }),
-
-//   updateEvent: (eventIndex: number, event: Event) =>
-//     set((state) => {
-//       console.log('updateEvent', eventIndex, event)
-
-//       state.events[eventIndex] = event
-//       const computed = refreshComputed(state.config, state.rows, state.events)
-
-//       console.log(
-//         'updateEvent finished',
-//         eventIndex,
-//         event,
-//         state.events[eventIndex],
-//         computed.geometries[eventIndex]
-//       )
-
-//       return {
-//         currentEvent: event,
-//         events: state.events,
-//         computed: computed,
-//       }
-//     }),
-// }))
-
-// const store = createSchedulerStore({
-//   rows: [],
-//   events: [],
-//   config: {},
-// })
-
 const Week = (props: {
   locationId: number;
   data: Event[];
@@ -166,26 +59,6 @@ const Week = (props: {
   config: Config;
   rows: string[];
 }) => {
-  // const [create /*{ loading, error }*/] = useMutation<
-  //   CreateEventMutation,
-  //   CreateEventMutationVariables
-  // >(CREATE_EVENT, {
-  //   // onCompleted: (a) => {
-  //   //   console.log(a)
-  //   //   toast.success('Thank you for your submission!')
-  //   // },
-  // })
-
-  // const [update] = useMutation<
-  //   UpdateEventMutation,
-  //   UpdateEventMutationVariables
-  // >(UPDATE_EVENT, {
-  //   // onCompleted: (a) => {
-  //   //   console.log(a)
-  //   //   toast.success('Thank you for your submission!')
-  //   // },
-  // })
-
   const startDate = props.dates[0];
 
   console.log("rendering Week, location", props.locationId, props.data);
@@ -213,7 +86,7 @@ const Week = (props: {
     },
 
     onChange: async function (event, _) {
-      const gql_data = eventToGql(event, startDate, props.locationId);
+      const eventInDb = eventToDbRepresentation(event, startDate, props.locationId);
 
       // update({
       //   variables: {
@@ -229,12 +102,14 @@ const Week = (props: {
     onScheduleClick: async function (colNum, rowNum) {
       console.log("onScheduleClick external method", colNum, rowNum);
 
+      debugger;
+
       const startTime = computed.tableStartTime + colNum * config.widthTime;
       const endTime = startTime + 4 * config.widthTime;
 
       // const randId = 0 + Math.floor(Math.random() * 1000)
 
-      const event = {
+      const event: Event = {
         row: rowNum,
         start: formatTime(startTime),
         end: formatTime(endTime),
@@ -243,16 +118,31 @@ const Week = (props: {
           entry: 0, // this will get reset once it makes it to db
           mode: "passenger",
           likelihood: 95,
+          date: props.dates[rowNum],
         },
       };
 
-      const gql_data = eventToGql(event, startDate, props.locationId);
-      console.log("create gql data", gql_data);
+      const eventForDb = eventToDbRepresentation(event, props.locationId);
+      console.log("create data", eventForDb);
 
-      const resp = await create({ variables: gql_data });
+      // const resp = await create({ variables: eventForDb });
 
-      console.log("new id", resp, event);
-      event.data.entry = resp.data.insert_events.returning[0].id;
+      const response = await fetch(`http://localhost:4000/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify(eventForDb),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const newEvent = await response.json();
+      console.log("new event created:", newEvent);
+      event.data.entry = newEvent[0].id; // PostgREST returns an array with the inserted row
 
       // TODO: handle db failure promise, toast. show loading?
 
