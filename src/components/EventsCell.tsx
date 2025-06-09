@@ -59,6 +59,9 @@ const EventsCell = ({
     params: {
       table: "events",
     },
+    parser: {
+      date: (date: string) => new Date(date),
+    },
   });
 
   if (isLoading) {
@@ -70,11 +73,18 @@ const EventsCell = ({
   }
 
   const events: Event[] = dbEvents
-    .filter((event) => event.active && event.location_id === locationId)
+    .filter(
+      (event) =>
+        event.active &&
+        event.location_id === locationId &&
+        event.date >= after &&
+        event.date <= before
+    )
     .map(dbToEvent);
-  const dates = rowsToDates(rows, after, before);
 
   // debugger;
+
+  const dates = rowsToDates(rows, after, before);
 
   return (
     <Row>

@@ -102,8 +102,6 @@ const Week = (props: {
     onScheduleClick: async function (colNum, rowNum) {
       console.log("onScheduleClick external method", colNum, rowNum);
 
-      debugger;
-
       const startTime = computed.tableStartTime + colNum * config.widthTime;
       const endTime = startTime + 4 * config.widthTime;
 

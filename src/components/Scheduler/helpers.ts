@@ -87,10 +87,11 @@ export function formatDateOnly(date: Date) {
   return date.toLocaleDateString("en-CA"); // Returns YYYY-MM-DD format
 }
 
-export function eventToDbRepresentation(evnt: Event, locationId: number): EventInDb {
+export function eventToDbRepresentation(
+  evnt: Event,
+  locationId: number
+): Omit<EventInDb, "id"> | EventInDb {
   const passenger = evnt.data.mode == "passenger";
-  // const date = new Date(startDate.getTime() + evnt.row * 24 * 60 * 60 * 1000);
-  // const dateStr = date.toISOString().split("T")[0]; // Get just the YYYY-MM-DD part
 
   let start = evnt.start;
   if (start.length == 4) start = "0" + start;
@@ -98,21 +99,27 @@ export function eventToDbRepresentation(evnt: Event, locationId: number): EventI
   let end = evnt.end;
   if (end.length == 4) end = "0" + end;
 
-  const result = {
-    id: Number(evnt.data.entry),
+  const baseResult = {
     label: evnt.text,
     passenger,
-    location_id: locationId, // Changed from locationId to location_id
+    location_id: locationId,
     start,
     end,
-    // date: dateStr,
     date: evnt.data.date,
     likelihood: Number(evnt.data.likelihood),
     active: true,
   };
 
-  console.log("eventToDbRepresentation", result);
-  return result;
+  // For new events (entry is 0), omit the id field
+  if (evnt.data.entry === 0) {
+    return baseResult;
+  }
+
+  // For existing events, include the id
+  return {
+    ...baseResult,
+    id: Number(evnt.data.entry),
+  };
 }
 
 export function dbToEvent(item: EventInDb): Event {

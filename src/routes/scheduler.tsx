@@ -89,7 +89,7 @@ export const Route = createFileRoute("/scheduler")({
   },
   validateSearch: (search: Record<string, unknown>) => {
     return {
-      location: search.location ? String(search.location) : "1",
+      location: search.location ? search.location : 1,
       week: search.week ? String(search.week) : undefined,
     };
   },
