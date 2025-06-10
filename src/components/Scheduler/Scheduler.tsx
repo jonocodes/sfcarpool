@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Rnd } from "react-rnd";
+import type { Event as SchedulerEvent } from "~/utils/models";
 
 function assertDefined<T>(value: T | undefined, message: string): asserts value is T {
   if (value === undefined) throw new Error(message);
@@ -18,7 +19,7 @@ function formatTimeSpan(start: number, end: number) {
 }
 
 // TODO: figure a way to move the icons out of this file since its not generic to the scheduler component
-const icons = {
+const icons: Record<"passenger" | "driver", React.ReactElement> = {
   passenger: (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +54,7 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
   const updateEvent = useStore(store, (state) => state.updateEvent);
 
   const geometries = useStore(store, (state) => state.computed.geometries);
-  const events = useStore(store, (state) => state.events);
+  const events: SchedulerEvent[] = useStore(store, (state) => state.events);
   const computed = useStore(store, (state) => state.computed);
 
   const [_, setTimeStr] = useState(
@@ -259,7 +260,7 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
         </span>
 
         <span className="text">
-          {icons[events[props.eventIndex].data.mode]}
+          {icons[events[props.eventIndex].data.mode as "passenger" | "driver"]}
           {events[props.eventIndex].text}
         </span>
         <div className="ui-resizable-handle ui-resizable-e" style={{ zIndex: "90" }}></div>

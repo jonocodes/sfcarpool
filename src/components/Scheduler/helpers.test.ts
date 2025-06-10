@@ -1,18 +1,14 @@
-
-
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import {
   getMonday,
   formatDateOnly,
   eventToDbRepresentation,
-  getWeekStart,
   dbToEvent,
   formatDateSpan,
 } from "./helpers";
 
-
 describe("eventToDbRepresentation", () => {
-  it("converts successfully", () => {
+  it("converts successfully with no ID", () => {
     const event = {
       row: 2,
       start: "09:10",
@@ -26,10 +22,40 @@ describe("eventToDbRepresentation", () => {
       },
     };
 
-    const gql_data = eventToDbRepresentation(event, 1);
+    const dbData = eventToDbRepresentation(event, 1);
 
-    expect(gql_data).toEqual({
-      id: 0,
+    expect(dbData).toEqual({
+      // id: 0,
+      label: "words",
+      active: true,
+      date: new Date("2020-02-20T00:00:00Z"),
+      start: "09:10",
+      end: "12:20",
+      likelihood: 95,
+      location_id: 1,
+      passenger: true,
+    });
+  });
+
+  it("converts successfully with ID", () => {
+    const event = {
+      id: 1,
+      row: 2,
+      start: "09:10",
+      end: "12:20",
+      text: "words",
+      data: {
+        entry: 5,
+        mode: "passenger",
+        likelihood: 95,
+        date: new Date("2020-02-20T00:00:00Z"),
+      },
+    };
+
+    const dbData = eventToDbRepresentation(event, 1);
+
+    expect(dbData).toEqual({
+      id: 5,
       label: "words",
       active: true,
       date: new Date("2020-02-20T00:00:00Z"),
@@ -120,90 +146,21 @@ describe("dbToEvent", () => {
   });
 });
 
-describe("getWeekStart", () => {
-  it("calculates successfully", () => {
-    const thisMonday = new Date("2023-01-09T00:00:00Z");
-    const nextMonday = new Date("2023-01-16T00:00:00Z");
-
-    expect(getWeekStart(new Date("2023-01-10T00:00:00Z"))).toEqual(thisMonday);
-    expect(getWeekStart(new Date("2023-01-14T00:00:00Z"))).toEqual(nextMonday);
-  });
-});
-
 describe("date helper functions", () => {
-  beforeEach(() => {
-    // Set a fixed system time
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  const testTimezones = [
-    { name: "UTC", offset: 0 },
-    { name: "America/New_York", offset: -4 },
-    { name: "Asia/Tokyo", offset: 9 },
-    { name: "Pacific/Auckland", offset: 12 },
-  ];
 
   describe("getMonday", () => {
-    testTimezones.forEach((tz) => {
-      describe(`in ${tz.name} (UTC${tz.offset >= 0 ? "+" : ""}${tz.offset})`, () => {
-        it("returns next day (Monday) when today is Sunday", () => {
-          // Set the system time to Sunday in the target timezone
-          const baseDate = new Date("2024-03-10T15:00:00Z");
-          const tzOffsetHours = tz.offset;
-          baseDate.setHours(baseDate.getHours() + tzOffsetHours);
-          vi.setSystemTime(baseDate);
+    it("calculates successfully", () => {
+      const thisMonday = new Date("2025-06-09T00:00:00Z");
+      const nextMonday = new Date("2025-06-16T00:00:00Z");
 
-          const monday = getMonday();
-          expect(formatDateOnly(monday)).toBe("2024-03-11"); // Should always be Monday
-        });
+      expect(getMonday(new Date("2025-06-10T00:00:00Z"))).toEqual(thisMonday);
+      expect(getMonday(new Date("2025-06-14T00:00:00Z"))).toEqual(nextMonday);
 
-        it("returns current day when today is Monday", () => {
-          // Set the system time to Monday in the target timezone
-          const baseDate = new Date("2024-03-11T15:00:00Z");
-          const tzOffsetHours = tz.offset;
-          baseDate.setHours(baseDate.getHours() + tzOffsetHours);
-          vi.setSystemTime(baseDate);
+      // test offsets/time zons
 
-          const monday = getMonday();
-          expect(formatDateOnly(monday)).toBe("2024-03-11"); // Should be the same Monday
-        });
+      expect(getMonday(new Date("2025-06-08T22:00:00-07:00"))).toEqual(thisMonday);
 
-        it("returns next Monday when today is mid-week", () => {
-          // Set the system time to Wednesday in the target timezone
-          const baseDate = new Date("2024-03-13T15:00:00Z");
-          const tzOffsetHours = tz.offset;
-          baseDate.setHours(baseDate.getHours() + tzOffsetHours);
-          vi.setSystemTime(baseDate);
-
-          const monday = getMonday();
-          expect(formatDateOnly(monday)).toBe("2024-03-18"); // Should be next Monday
-        });
-
-        it("handles date boundary cases correctly", () => {
-          // Test near midnight
-          const baseDate = new Date("2024-03-10T23:59:59Z");
-          const tzOffsetHours = tz.offset;
-          baseDate.setHours(baseDate.getHours() + tzOffsetHours);
-          vi.setSystemTime(baseDate);
-
-          const monday = getMonday();
-          expect(formatDateOnly(monday)).toBe("2024-03-11"); // Should be Monday
-        });
-      });
-    });
-
-    it("accepts a specific date parameter", () => {
-      const result = getMonday(new Date("2024-03-12")); // A Tuesday
-      expect(formatDateOnly(result)).toBe("2024-03-18"); // Should be next Monday
-    });
-
-    it("handles the case when passed date is a Monday", () => {
-      const result = getMonday(new Date("2024-03-11")); // A Monday
-      expect(formatDateOnly(result)).toBe("2024-03-18"); // Should be next Monday since we passed a specific date
+      expect(getMonday(new Date("2025-06-13T22:00:00-07:00"))).toEqual(nextMonday);
     });
   });
 
@@ -220,6 +177,7 @@ describe("date helper functions", () => {
   });
 });
 
+// TODO: bring these back
 describe("formatDateSpan", () => {
   it("formats dates in same month and year", () => {
     const start = new Date("2024-03-11T00:00:00Z"); // March 11

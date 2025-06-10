@@ -24,8 +24,6 @@ import {
   createSchedulerStore,
   _generateEvent,
   SchedulerContext,
-  configDefault,
-  refreshComputed,
 } from "../components/Scheduler/zstore";
 
 // import 'bootstrap/dist/css/bootstrap.min.css'
@@ -86,18 +84,23 @@ const Week = (props: {
     },
 
     onChange: async function (event, _) {
-      const eventInDb = eventToDbRepresentation(event, startDate, props.locationId);
+      const eventInDb = eventToDbRepresentation(event, props.locationId);
 
-      // update({
-      //   variables: {
-      //     ...gql_data,
-      //     ...{ id: Number(event.data.entry) },
+      const response = await fetch(`http://localhost:4000/events?id=eq.${event.data.entry}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify(eventInDb),
+      });
 
-      //     // gql_data.concat()
-      //     // id: Number(event.data.entry),
-      //     // input: gql_data,
-      //   },
-      // }); //then.error, toast error
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const updatedEvent = await response.json();
+      console.log("Event updated:", updatedEvent);
     },
     onScheduleClick: async function (colNum, rowNum) {
       console.log("onScheduleClick external method", colNum, rowNum);
@@ -167,38 +170,11 @@ const Week = (props: {
     addEvent(newEvent);
   }
 
-  // const [evnts, setEvnts] = useState(props.data)
-
-  // props.data[0].data['rand'] = Math.random().toString()
-
   const useStore = createSchedulerStore({
     rows: props.rows,
     events: props.data, // TODO: the location switch issue is probably here
     config: myConfig,
   });
-
-  // const store2 = createSchedulerStore({
-  //   rows: props.rows,
-  //   events: props.data, // TODO: the location switch issue is probably here
-  //   config: myConfig,
-  // })
-
-  // const storeRef = useRef(_store)
-
-  // const store = useRef(_store).current
-
-  // useEffect(() => _store.subscribe(
-  //   scratches => (scratchRef.current = scratches),
-  //   state => state.scratches
-  // ), [])
-
-  // console.log('store', store)
-
-  // const store = createSchedulerStore({
-  //   rows: props.rows,
-  //   events: props.data, // TODO: the location switch issue is probably here
-  //   config: myConfig,
-  // })
 
   const computed = useStore((state) => state.computed);
   const events = useStore((state) => state.events);

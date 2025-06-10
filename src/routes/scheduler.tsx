@@ -34,8 +34,8 @@ const caret_left = (
 
 export const Route = createFileRoute("/scheduler")({
   component: () => {
-    const { location = "1", week } = Route.useSearch();
-    const start = week ? new Date(week) : getMonday();
+    const { location, week } = Route.useSearch();
+    const start = week ? getMonday(new Date(week)) : getMonday(new Date());
     const end = new Date(start);
     end.setDate(start.getDate() + 4);
 
@@ -58,7 +58,7 @@ export const Route = createFileRoute("/scheduler")({
               <Link
                 to="/scheduler"
                 search={{
-                  location: String(loc),
+                  location: loc,
                   week: prevWeekStr,
                 }}
               >
@@ -70,7 +70,7 @@ export const Route = createFileRoute("/scheduler")({
               <Link
                 to="/scheduler"
                 search={{
-                  location: String(loc),
+                  location: loc,
                   week: nextWeekStr,
                 }}
               >
@@ -89,7 +89,7 @@ export const Route = createFileRoute("/scheduler")({
   },
   validateSearch: (search: Record<string, unknown>) => {
     return {
-      location: search.location ? search.location : 1,
+      location: search.location ? Number(search.location) : 1,
       week: search.week ? String(search.week) : undefined,
     };
   },

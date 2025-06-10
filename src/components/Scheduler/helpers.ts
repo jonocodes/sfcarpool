@@ -47,39 +47,30 @@ export function formatDateSpan(start: Date, end: Date) {
   return `${format(startLocal, "LLL dd")} - ${format(endLocal, "dd, yyyy")}`;
 }
 
-export function getWeekStart(today: Date) {
-  const date = new Date(today);
-  date.setUTCHours(0, 0, 0, 0); // Set to midnight UTC
-  const day = date.getUTCDay();
-
-  // Calculate days to previous Monday
-  const diff = day === 0 ? -6 : 1 - day; // If Sunday, go back 6 days, otherwise calculate days since last Monday
-  date.setUTCDate(date.getUTCDate() + diff);
-  return date;
-}
-
 export function getWeekSpan() {
   const today = new Date();
-  const start = getWeekStart(today);
+  const start = getMonday(today);
   const end = new Date(start.getTime() + 4 * 24 * 60 * 60 * 1000);
   return [start, end];
 }
 
-export function getMonday(fromDate?: Date) {
-  const today = fromDate ? new Date(fromDate) : new Date();
+export function getMonday(fromDate: Date) {
+  const today = new Date(fromDate);
   today.setUTCHours(0, 0, 0, 0); // Set to start of day in UTC
   const day = today.getUTCDay(); // 0 is Sunday, 1 is Monday, etc.
 
   const monday = new Date(today);
-  if (day === 1 && !fromDate) {
-    // If it's Monday and we're using current date (not a specific date)
-    monday.setUTCDate(monday.getUTCDate() + 1); // Add one day to account for timezone
-    return monday;
+
+  if (day === 0 || day === 6) {
+    // If it's Saturday or Sunday, get next Monday
+    const daysUntilMonday = day === 0 ? 1 : 2;
+    monday.setUTCDate(monday.getUTCDate() + daysUntilMonday);
+  } else {
+    // For weekdays, get the Monday of current week
+    const daysToSubtract = day - 1;
+    monday.setUTCDate(monday.getUTCDate() - daysToSubtract);
   }
 
-  // For specific dates or non-Mondays, calculate days until next Monday
-  const daysUntilMonday = day === 0 ? 2 : 9 - day; // Add one extra day to account for timezone
-  monday.setUTCDate(monday.getUTCDate() + daysUntilMonday);
   return monday;
 }
 

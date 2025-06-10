@@ -1,3 +1,5 @@
+import type { Event as SchedulerEvent } from "~/utils/models";
+
 export interface Geometry {
   x: number;
   y: number;
@@ -24,23 +26,23 @@ export interface ScheduleClickFunction {
 }
 
 export interface EventClickFunction {
-  (event: Event, rowNum: number, eventIndex: number): void;
+  (event: SchedulerEvent, rowNum: number, eventIndex: number): void;
 }
 
 export interface EventChangeFunction {
-  (event: Event, eventIndex: number): void;
+  (event: SchedulerEvent, eventIndex: number): void;
 }
 
 export interface Config {
   className?: string;
-  startTime?: string;
-  endTime?: string;
-  widthTimeX?: number;
-  widthTime?: number; // cell timestamp example 10 minutes
-  timeLineY?: number; // timeline height(px)
-  timeLineBorder?: number; // timeline height border
-  timeBorder?: number; // border width
-  timeLinePaddingTop?: number;
+  startTime: string;
+  endTime: string;
+  widthTimeX: number;
+  widthTime: number; // cell timestamp example 10 minutes
+  timeLineY: number; // timeline height(px)
+  timeLineBorder: number; // timeline height border
+  timeBorder: number; // border width
+  timeLinePaddingTop: number;
   timeLinePaddingBottom?: number;
   headTimeBorder?: number; // time border width
   // dataWidth?: number // data width
@@ -52,30 +54,30 @@ export interface Config {
   resizableLeft?: boolean;
   // event
   // onInitRow: null
-  onChange?: EventChangeFunction;
-  onClick?: EventClickFunction;
+  onChange: EventChangeFunction;
+  onClick: EventClickFunction;
   // onAppendRow: null
   // onAppendSchedule: null
-  onScheduleClick?: ScheduleClickFunction;
+  onScheduleClick: ScheduleClickFunction;
 }
 
 export interface SchedulerProps {
   // bears: number
   config: Config;
-  events: Event[];
+  events: SchedulerEvent[];
   rows: string[];
   computed: Computed;
-  onClickEvent: Event | null;
-  currentEvent: Event | null;
+  onClickEvent: SchedulerEvent | null;
+  currentEvent: SchedulerEvent | null;
   currentEventIndex: number | null;
 }
 
 export interface SchedulerState extends SchedulerProps {
   // addBear: () => void
-  addEvent: (event: Event) => void;
-  updateEvent: (index: number, event: Event) => void;
+  addEvent: (event: SchedulerEvent) => void;
+  updateEvent: (index: number, event: SchedulerEvent) => void;
   removeEvent: (index: number) => void;
   clearEvents: () => void;
   // mergeConfig: (config: Config) => void
-  setup: (config: Config, rows: string[], events: Event[]) => void;
+  setup: (config: Config, rows: string[], events: SchedulerEvent[]) => void;
 }

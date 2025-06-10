@@ -4,7 +4,8 @@ import { createStore, create } from "zustand";
 // import create from 'zustand/react'
 
 import { calcStringTime, formatTime } from "./helpers";
-import { Computed, Config, SchedulerProps, SchedulerState, Event } from "./types";
+import { Computed, Config, SchedulerProps, SchedulerState } from "./types";
+import type { Event as SchedulerEvent } from "~/utils/models";
 
 const modes = ["passenger", "driver"];
 
@@ -29,14 +30,14 @@ export const configDefault: Config = {
   resizableLeft: false,
   // event
   // onInitRow: null,
-  // onChange: null,
-  onClick: undefined,
+  onChange: () => {},
+  onClick: () => {},
   // onAppendRow: null,
   // onAppendSchedule: null,
-  onScheduleClick: undefined,
+  onScheduleClick: () => {},
 };
 
-function generateRowMap(rows: string[], events: Event[]) {
+function generateRowMap(rows: string[], events: SchedulerEvent[]) {
   const dataRowMap = [];
   for (let j = 0; j < rows.length; j++) {
     // doing this since Array.fill([]) causes issues
@@ -49,7 +50,7 @@ function generateRowMap(rows: string[], events: Event[]) {
   return dataRowMap;
 }
 
-function calculateGeometry(event, config, tableStartTime) {
+function calculateGeometry(event: SchedulerEvent, config: Config, tableStartTime: number) {
   const startTime = calcStringTime(event.start);
   const endTime = calcStringTime(event.end);
 
@@ -100,7 +101,13 @@ type SchedulerStore = ReturnType<typeof createSchedulerStore>;
 export const SchedulerContext = createContext<SchedulerStore | null>(null);
 
 // update row heights, and manage overlapping events in a row
-export function calculateGeometries(config, events, rows, rowMap, tableStartTime) {
+export function calculateGeometries(
+  config: Config,
+  events: SchedulerEvent[],
+  rows: string[],
+  rowMap: number[][],
+  tableStartTime: number
+) {
   let tableHeight = 0;
   const geometries = [];
   const rowHeights = [];
@@ -183,12 +190,7 @@ export function calculateGeometries(config, events, rows, rowMap, tableStartTime
 
       const eventIndex = rowMap[rowNum][c1];
 
-      // console.log('setGeometryB', eventIndex, geometry)
-
-      // setGeometry(geometry, eventIndex)
       geometries[eventIndex] = geometry;
-
-      // items[c1].geometry.y = h * config.timeLineY + config.timeLinePaddingTop
 
       check[h][check[h].length] = c1;
     }
@@ -217,7 +219,11 @@ export function calculateGeometries(config, events, rows, rowMap, tableStartTime
   };
 }
 
-export function refreshComputed(userConf, rows, events): Computed {
+export function refreshComputed(
+  userConf: Partial<Config>,
+  rows: string[],
+  events: SchedulerEvent[]
+): Computed {
   const config = { ...configDefault, ...userConf };
   let tableStartTime = calcStringTime(config.startTime);
   tableStartTime -= tableStartTime % config.widthTime;
@@ -301,15 +307,6 @@ export function refreshComputed(userConf, rows, events): Computed {
 //   }
 // }
 
-// export const useStore3 = create((set) => ({
-//   rows: [],
-//   events: [],
-//   config: {},
-//   computed: [],
-//   onClickEvent: null,
-//   currentEvent: null,
-//   currentEventIndex: null,
-// }))
 
 export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
   const config = { ...configDefault, ...initProps.config };
@@ -369,7 +366,7 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
         };
       }),
 
-    addEvent: (event: Event) =>
+    addEvent: (event: SchedulerEvent) =>
       set((state) => {
         state.events.push(event);
         const computed = refreshComputed(config, initProps.rows, state.events);
@@ -422,7 +419,7 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
         };
       }),
 
-    updateEvent: (eventIndex: number, event: Event) =>
+    updateEvent: (eventIndex: number, event: SchedulerEvent) =>
       set((state) => {
         console.log("updateEvent", eventIndex, event);
 
