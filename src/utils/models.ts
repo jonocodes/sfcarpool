@@ -20,6 +20,7 @@ export interface EventInDb extends ElectricModel {
   location_id: number;
 }
 
+// TODO: rename to SchedulerEvent perhaps so it does not clash with JS
 export interface Event {
   row: number;
   start: string;

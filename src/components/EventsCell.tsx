@@ -1,7 +1,6 @@
-// import React from "react";
-// import { useQuery } from '@tanstack/react-query'
+
 import { Row, Spinner } from "react-bootstrap";
-import { parseDateTime, rowsToDays as rowsToDates, dbToEvent } from "./Scheduler/helpers";
+import { rowsToDays as rowsToDates, dbToEvent } from "./Scheduler/helpers";
 import { Config } from "./Scheduler/types";
 import Week from "./Week";
 

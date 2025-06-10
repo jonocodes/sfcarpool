@@ -79,6 +79,8 @@ export function _generateEvent(times: number[], rowCount: number) {
 
   const randModeIndex = Math.floor(Math.random() * modes.length);
 
+  // TODO: include a generated date
+
   const event = {
     row: randInt(0, rowCount),
     start: formatTime(times[randStartIndex]),
@@ -251,75 +253,8 @@ export function refreshComputed(
   };
 }
 
-// const DELETE_EVENT = gql`
-//   mutation DeleteEventMutation($id: Int!) {
-//     deleteEvent(id: $id) {
-//       id
-//     }
-//   }
-// `
-
-// const [_delete2] = useMutation<
-//   DeleteEventMutation,
-//   DeleteEventMutationVariables
-// >(DELETE_EVENT, {
-//   // onCompleted: (a) => {
-//   //   console.log(a)
-//   //   toast.success('Thank you for your submission!')
-//   // },
-// })
-
-// async function _removeEvent(state, eventIndex, config, initProps) {
-//   const resp = _delete2({
-//     variables: { id: Number(state.events[eventIndex].data.entry) },
-//   }).then(function () {
-//     // debugger
-//     return 8
-//   })
-
-//   ;(async function () {
-//     const result = await resp
-//     console.log('Woo done!', result)
-
-//     // But the best part is, we can just keep awaiting different stuff, without ugly .then()s
-//     // const somethingElse = await getSomethingElse()
-//     // const moreThings = await getMoreThings()
-//   })()
-
-//   debugger
-
-//   // toast.success('removing event')
-
-//   // _delete({
-//   //   variables: { id: Number(state.events[eventIndex].data.entry) },
-//   // })
-
-//   state.events.splice(eventIndex, 1)
-//   // state.events.push(event)
-//   const computed = refreshComputed(config, initProps.rows, state.events)
-
-//   console.log('removeEvent', eventIndex, state.events, computed)
-
-//   return {
-//     // currentEvent: event,
-//     events: state.events,
-//     computed: computed,
-//   }
-// }
-
-
 export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
   const config = { ...configDefault, ...initProps.config };
-
-  // const [_delete] = useMutation<
-  //   DeleteEventMutation,
-  //   DeleteEventMutationVariables
-  // >(DELETE_EVENT, {
-  //   // onCompleted: (a) => {
-  //   //   console.log(a)
-  //   //   toast.success('Thank you for your submission!')
-  //   // },
-  // })
 
   console.log("createStore initProps.events", initProps.events);
 
@@ -380,32 +315,6 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
 
     removeEvent: (eventIndex: number) =>
       set((state) => {
-        // return _removeEvent(state, eventIndex, config, initProps)
-
-        // const resp = _delete({
-        //   variables: { id: Number(state.events[eventIndex].data.entry) },
-        // }).then(function () {
-        //   // debugger
-        //   return 8
-        // })
-
-        // ;(async function () {
-        //   const result = await resp
-        //   console.log('Woo done!', result)
-
-        //   // But the best part is, we can just keep awaiting different stuff, without ugly .then()s
-        //   // const somethingElse = await getSomethingElse()
-        //   // const moreThings = await getMoreThings()
-        // })()
-
-        // debugger
-
-        // toast.success('removing event')
-
-        // _delete({
-        //   variables: { id: Number(state.events[eventIndex].data.entry) },
-        // })
-
         state.events.splice(eventIndex, 1);
 
         const computed = refreshComputed(config, initProps.rows, state.events);

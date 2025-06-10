@@ -1,24 +1,12 @@
-// import { useRef, useState } from 'react'
-
 import { Button } from "react-bootstrap";
-// import {
-//   CreateEventMutation,
-//   CreateEventMutationVariables,
-//   UpdateEventMutation,
-//   UpdateEventMutationVariables,
-// } from 'types/graphql'
-// import { createStore, useStore } from 'zustand'
 import { create } from "zustand";
 
 import {
-  // CREATE_EVENT,
-  eventToDbRepresentation,
   formatTime,
   getTimeSlots,
-  // UPDATE_EVENT,
 } from "../components/Scheduler/helpers";
 import SchedulerComponent from "../components/Scheduler/Scheduler";
-import { Config, SchedulerState } from "../components/Scheduler/types";
+import { Config } from "../components/Scheduler/types";
 import { Event } from "~/utils/models";
 import {
   createSchedulerStore,
@@ -29,6 +17,7 @@ import {
 // import 'bootstrap/dist/css/bootstrap.min.css'
 import EventModal from "./EventModal";
 import { Toaster } from "react-hot-toast";
+import { createEvent, modifyEvent } from "~/utils/db";
 
 interface PageState {
   modalVisible: boolean;
@@ -84,31 +73,13 @@ const Week = (props: {
     },
 
     onChange: async function (event, _) {
-      const eventInDb = eventToDbRepresentation(event, props.locationId);
-
-      const response = await fetch(`http://localhost:4000/events?id=eq.${event.data.entry}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Prefer: "return=representation",
-        },
-        body: JSON.stringify(eventInDb),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const updatedEvent = await response.json();
-      console.log("Event updated:", updatedEvent);
+      await modifyEvent(event, props.locationId);
     },
     onScheduleClick: async function (colNum, rowNum) {
       console.log("onScheduleClick external method", colNum, rowNum);
 
       const startTime = computed.tableStartTime + colNum * config.widthTime;
       const endTime = startTime + 4 * config.widthTime;
-
-      // const randId = 0 + Math.floor(Math.random() * 1000)
 
       const event: Event = {
         row: rowNum,
@@ -123,27 +94,9 @@ const Week = (props: {
         },
       };
 
-      const eventForDb = eventToDbRepresentation(event, props.locationId);
-      console.log("create data", eventForDb);
+      const newEvent = await createEvent(event, props.locationId);
 
-      // const resp = await create({ variables: eventForDb });
-
-      const response = await fetch(`http://localhost:4000/events`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Prefer: "return=representation",
-        },
-        body: JSON.stringify(eventForDb),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const newEvent = await response.json();
-      console.log("new event created:", newEvent);
-      event.data.entry = newEvent[0].id; // PostgREST returns an array with the inserted row
+      event.data.entry = newEvent.id;
 
       // TODO: handle db failure promise, toast. show loading?
 
@@ -156,7 +109,6 @@ const Week = (props: {
         }
       }
 
-      // setEvent(i, event)
       showModal();
     },
   };
@@ -172,7 +124,7 @@ const Week = (props: {
 
   const useStore = createSchedulerStore({
     rows: props.rows,
-    events: props.data, // TODO: the location switch issue is probably here
+    events: props.data,
     config: myConfig,
   });
 
@@ -191,9 +143,6 @@ const Week = (props: {
 
   const _updateEvent = useStore((state) => state.updateEvent);
   const _removeEvent = useStore((state) => state.removeEvent);
-
-  // const setup = useStore(store, (state) => state.setup)
-  // setup(myConfig, props.rows, props.data)
 
   console.log("week store events", events);
 

@@ -30,6 +30,7 @@ import {
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import toast from "react-hot-toast";
+import { deleteEvent, modifyEvent } from "~/utils/db";
 
 const icon_passenger = (
   <svg
@@ -78,36 +79,10 @@ const EventModal = (props: {
 
   const [timespanError, setTimespanError] = useState("");
 
-  // const [update] = useMutation<UpdateEventMutation, UpdateEventMutationVariables>(UPDATE_EVENT, {
-  // onCompleted: (a) => {
-  //   console.log(a)
-  //   toast.success('Thank you for your submission!')
-  // },
-  // });
-
-  // const [_delete] = useMutation<DeleteEventMutation, DeleteEventMutationVariables>(DELETE_EVENT, {
-  // onCompleted: (a) => {
-  //   console.log(a)
-  //   toast.success('Thank you for your submission!')
-  // },
-  // });
-
   async function updateEvent() {
     console.log("update", props.eventIndex, event);
 
-    // const gql_data = eventToGql(event, props.startDate, props.locationId);
-    // console.log("gql data", gql_data);
-
-    // update({ variables: { ...gql_data, ...{ id: Number(event.data.entry) } } })
-    //   .then(function () {
-    //     props.updateEvent(props.eventIndex, event);
-    //   })
-    //   .catch(function (error) {
-    //     toast.error("there was a problem saving the event");
-    //     console.log(error);
-    //   });
-
-    // TODO: what if db update fails?
+    await modifyEvent(event, props.locationId);
 
     props.handleClose();
   }
@@ -116,22 +91,7 @@ const EventModal = (props: {
     console.log("remove", props.eventIndex, event);
 
     try {
-      const response = await fetch(`http://localhost:4000/events?id=eq.${event.data.entry}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Prefer: "return=representation",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const deletedEvents = await response.json();
-      if (!Array.isArray(deletedEvents) || deletedEvents.length === 0) {
-        throw new Error("Delete operation failed - no records were deleted");
-      }
+      await deleteEvent(event);
 
       props.removeEvent(props.eventIndex);
       props.handleClose();
@@ -286,7 +246,7 @@ const EventModal = (props: {
                   <Form.Range
                     defaultValue={likelihood}
                     onChange={(e) => {
-                      event.data.likelihood = e.target.value;
+                      event.data.likelihood = Number(e.target.value);
                       // setLikelihood(e.target.value)
                       // setLikelihood(e.target.value)
                     }}

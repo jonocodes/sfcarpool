@@ -17,8 +17,6 @@ export interface Computed {
   tableEndTime: number;
   cellsWide: number;
   scrollWidth: number;
-
-  // TODO: add time slots ?
 }
 
 export interface ScheduleClickFunction {
@@ -43,21 +41,17 @@ export interface Config {
   timeLineBorder: number; // timeline height border
   timeBorder: number; // border width
   timeLinePaddingTop: number;
-  timeLinePaddingBottom?: number;
-  headTimeBorder?: number; // time border width
+  timeLinePaddingBottom: number;
+  headTimeBorder: number; // time border width
   // dataWidth?: number // data width
-  verticalScrollbar?: number; // vertical scrollbar width
-  bundleMoveWidth?: number;
+  verticalScrollbar: number; // vertical scrollbar width
+  bundleMoveWidth: number;
   // width to move all schedules to the right of the clicked time cell
-  draggable?: boolean;
-  resizable?: boolean;
-  resizableLeft?: boolean;
-  // event
-  // onInitRow: null
+  draggable: boolean;
+  resizable: boolean;
+  resizableLeft: boolean;
   onChange: EventChangeFunction;
   onClick: EventClickFunction;
-  // onAppendRow: null
-  // onAppendSchedule: null
   onScheduleClick: ScheduleClickFunction;
 }
 

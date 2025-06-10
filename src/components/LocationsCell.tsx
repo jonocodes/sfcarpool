@@ -1,11 +1,8 @@
-// import React from 'react'
 import { Form, Placeholder } from "react-bootstrap";
-// import { useQuery } from "@tanstack/react-query";
 import { useShape } from "@electric-sql/react";
 import { Location } from "~/utils/models";
 import { useNavigate } from "@tanstack/react-router";
-// Once you run the generator, uncomment this:
-// import { Location } from '../generated/db'
+
 
 // Remove this once you import the generated type
 // interface Location {
@@ -28,24 +25,6 @@ import { useNavigate } from "@tanstack/react-router";
 // { id: 3, name: "Orinda -> SF" },
 // ];
 
-// // return new Promise((resolve) => {
-// // setTimeout(() => {
-// // resolve(mockLocations);
-// // }, 500); // Simulate network delay
-// // });
-
-// // Mock API call to fetch locations
-// const fetchLocations = async (): Promise<Location[]> => {
-// const response = await fetch("http://localhost:4000/v1/shape?table=locations&offset=-1");
-// if (!response.ok) {
-// throw new Error("Network response was not ok");
-// }
-// const data: ApiResponseItem[] = await response.json();
-// return data.map((item) => ({
-// id: parseInt(item.value.id, 10),
-// name: item.value.name,
-// }));
-// };
 
 const LocationsCell = ({ locationId, week }: { locationId: number; week: string }) => {
   const navigate = useNavigate();
