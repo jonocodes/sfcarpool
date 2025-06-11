@@ -1,13 +1,12 @@
 import { eventToDbRepresentation } from "~/components/Scheduler/helpers";
 import { Event, EventInDb } from "~/utils/models";
-
-const POSTGREST_URL = "http://localhost:4000";
+import { config } from "~/config";
 
 export async function createEvent(event: Event, locationId: number): Promise<EventInDb> {
   const eventForDb = eventToDbRepresentation(event, locationId);
   console.log("create data", eventForDb);
 
-  const response = await fetch(`${POSTGREST_URL}/events`, {
+  const response = await fetch(`${config.postgrestUrl}/events`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -27,7 +26,7 @@ export async function createEvent(event: Event, locationId: number): Promise<Eve
 export async function modifyEvent(event: Event, locationId: number): Promise<EventInDb> {
   const eventInDb = eventToDbRepresentation(event, locationId);
 
-  const response = await fetch(`${POSTGREST_URL}/events?id=eq.${event.data.entry}`, {
+  const response = await fetch(`${config.postgrestUrl}/events?id=eq.${event.data.entry}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -47,7 +46,7 @@ export async function modifyEvent(event: Event, locationId: number): Promise<Eve
 }
 
 export async function softDeleteEvent(event: Event): Promise<void> {
-  const response = await fetch(`${POSTGREST_URL}/events?id=eq.${event.data.entry}`, {
+  const response = await fetch(`${config.postgrestUrl}/events?id=eq.${event.data.entry}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -69,7 +68,7 @@ export async function softDeleteEvent(event: Event): Promise<void> {
 }
 
 export async function deleteEvent(event: Event): Promise<void> {
-  const response = await fetch(`${POSTGREST_URL}/events?id=eq.${event.data.entry}`, {
+  const response = await fetch(`${config.postgrestUrl}/events?id=eq.${event.data.entry}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

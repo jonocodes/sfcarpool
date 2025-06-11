@@ -2,29 +2,9 @@ import { Form, Placeholder } from "react-bootstrap";
 import { useShape } from "@electric-sql/react";
 import { Location } from "~/utils/models";
 import { useNavigate } from "@tanstack/react-router";
+import { config } from "~/config";
 
-
-// Remove this once you import the generated type
-// interface Location {
-//   // Keep it simple, electric-sql should map to this
-//   id: number;
-//   name: string;
-//   [key: string]: any; // Add index signature back
-// }
-
-// interface ApiResponseItem {
-// key: string;
-// value: { id: string; name: string; uuid: string };
-// headers: { operation: string; relation: string[] };
-// }
-
-// // Mock data for locations
-// const mockLocations = [
-// { id: 1, name: "Berkeley -> SF" },
-// { id: 2, name: "Oakland -> SF" },
-// { id: 3, name: "Orinda -> SF" },
-// ];
-
+const ELECTRIC_URL = import.meta.env.VITE_ELECTRIC_URL || "http://localhost:5133/v1/shape";
 
 const LocationsCell = ({ locationId, week }: { locationId: number; week: string }) => {
   const navigate = useNavigate();
@@ -36,7 +16,7 @@ const LocationsCell = ({ locationId, week }: { locationId: number; week: string 
   } = useShape<Location>({
     // TODO: centralized the db state using @tanstack/db-collection once its stable/released
 
-    url: "http://localhost:5133/v1/shape",
+    url: config.electricUrl,
     params: {
       table: "locations",
     },

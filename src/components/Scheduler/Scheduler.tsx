@@ -161,7 +161,6 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
 
           for (let i = 0; i < events[props.eventIndex].row; i++) {
             origTopY += computed.rowHeights[i];
-            // console.log(origTopY)
           }
 
           const newTopY = origTopY + data.lastY;
@@ -254,6 +253,7 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
 
         <span className="text">
           {icons[events[props.eventIndex].data.mode as "passenger" | "driver"]}
+          {"  "}
           {events[props.eventIndex].text}
         </span>
         <div className="ui-resizable-handle ui-resizable-e" style={{ zIndex: "90" }}></div>
@@ -376,7 +376,6 @@ const Main = () => {
   const scrollWidth = useStore(store, (state) => state.computed.scrollWidth);
 
   const events = useStore(store, (state) => state.events);
-  console.log("Main events", events);
 
   for (let i = 0; i < rows.length; i++) {
     timelines.push(<Row rowNum={i} key={i} />);

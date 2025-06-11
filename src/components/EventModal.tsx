@@ -95,6 +95,17 @@ const EventModal = (props: {
     }
   }
 
+  function formatTitle(date: Date) {
+    return date.toLocaleDateString(undefined, {
+      weekday: "long",
+      timeZone: "UTC",
+
+      year: "numeric", // full year (e.g., "2025")
+      month: "long", // full month name (e.g., "March")
+      day: "numeric", // day of month (e.g., "1")
+    });
+  }
+
   const timeDivs = [];
 
   for (let i = 0; i < props.timeSlots.length; i++) {
@@ -108,11 +119,9 @@ const EventModal = (props: {
 
   function validateTimespan() {
     if (calcStringTime(currentEvent.end) <= calcStringTime(currentEvent.start)) {
-      // console.log('timespan invalid')
       setTimespanError("invalid time span");
       setValidated(false);
     } else {
-      // console.log('timespan vaild')
       setTimespanError("");
       setValidated(true);
     }
@@ -124,15 +133,13 @@ const EventModal = (props: {
     props.handleClose();
   }
 
+  console.log("currentEvent", currentEvent);
+
   return (
     <Modal show={props.show} onHide={cancelAndClose} centered>
       <Form noValidate>
         <Modal.Header closeButton>
-          <Modal.Title>
-            {/* TODO: localize day of week */}
-            {currentEvent.data.date.toLocaleDateString("en-US", { weekday: "long" })}{" "}
-            {currentEvent.data.date.toLocaleDateString()}
-          </Modal.Title>
+          <Modal.Title>{formatTitle(currentEvent.data.date)}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Container className="dark-theme" fluid>

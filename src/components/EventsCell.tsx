@@ -1,7 +1,12 @@
 import { Row, Spinner } from "react-bootstrap";
-import { rowsToDays as rowsToDates, dbToEvent, formatTimeFromString } from "./Scheduler/helpers";
+import {
+  rowsToDays as rowsToDates,
+  dbToEvent,
+  formatTimeFromString,
+} from "./Scheduler/helpers";
 import { Config } from "./Scheduler/types";
 import Week from "./Week";
+import { config } from "~/config";
 
 import { Event, EventInDb } from "~/utils/models";
 import { useShape } from "@electric-sql/react";
@@ -29,6 +34,8 @@ import { useShape } from "@electric-sql/react";
 //   },
 // ];
 
+const ELECTRIC_URL = import.meta.env.VITE_ELECTRIC_URL || "http://localhost:5133/v1/shape";
+
 const myConfig: Config = { startTime: "06:00", endTime: "11:00" };
 
 const rows = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -53,7 +60,7 @@ const EventsCell = ({
     isLoading,
     error,
   } = useShape<EventInDb>({
-    url: "http://localhost:5133/v1/shape",
+    url: config.electricUrl,
     params: {
       table: "events",
     },
