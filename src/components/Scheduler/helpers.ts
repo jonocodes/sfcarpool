@@ -152,8 +152,6 @@ export function rowsToDays(rows: string[], startDate: Date, endDate: Date) {
     currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
   }
 
-  console.log("dates", dates);
-
   if (rows.length != dates.length) throw new Error("Row count and day span do not match");
 
   return dates;
