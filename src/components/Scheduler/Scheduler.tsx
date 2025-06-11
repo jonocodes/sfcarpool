@@ -72,7 +72,7 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
   // const startTime = config.startTime;
   // const timeLineY = config.timeLineY;
   // const widthTimeX = config.widthTimeX;
-  const widthTime = config.widthTime;
+  // const widthTime = config.widthTime;
 
   const tableStartTime = calcStringTime(config.startTime);
 
@@ -179,13 +179,6 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
 
           // TODO: move gql to zstore ?
           // const gql_data = eventToGql(events[props.eventIndex], startDate)
-
-          // const resp = update({
-          //   variables: {
-          //     id: Number(events[props.eventIndex].data.entry),
-          //     input: gql_data,
-          //   },
-          // }) //then.error Error saving event
 
           if (config.onChange) {
             config.onChange(events[props.eventIndex], props.eventIndex);

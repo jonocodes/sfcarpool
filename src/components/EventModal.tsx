@@ -12,25 +12,14 @@ import {
   ToggleButtonGroup,
   Tooltip,
 } from "react-bootstrap";
-// import {
-//   DeleteEventMutation,
-//   DeleteEventMutationVariables,
-//   UpdateEventMutation,
-//   UpdateEventMutationVariables,
-// } from 'types/graphql'
 
 import { Event } from "~/utils/models";
 
-import {
-  calcStringTime,
-  // DELETE_EVENT,
-  formatTime,
-  // UPDATE_EVENT,
-} from "../components/Scheduler/helpers";
+import { calcStringTime, formatTime } from "../components/Scheduler/helpers";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import toast from "react-hot-toast";
-import { deleteEvent, modifyEvent } from "~/utils/db";
+import { modifyEvent, softDeleteEvent } from "~/utils/db";
 
 const icon_passenger = (
   <svg
@@ -69,29 +58,33 @@ const EventModal = (props: {
   eventIndex: number;
   timeSlots: number[];
 }) => {
-  const [event] = useState(props.currentEvent);
+  const [currentEvent] = useState(props.currentEvent);
 
-  const origEvent = structuredClone(event);
+  const origEvent = structuredClone(currentEvent);
 
-  const [likelihood] = useState(event.data.likelihood);
+  const [likelihood] = useState(currentEvent.data.likelihood);
 
   const [validated, setValidated] = useState(true);
 
   const [timespanError, setTimespanError] = useState("");
 
-  async function updateEvent() {
-    console.log("update", props.eventIndex, event);
+  async function updateEvent(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
 
-    await modifyEvent(event, props.locationId);
+    console.log("update", props.eventIndex, currentEvent);
+
+    await modifyEvent(currentEvent, props.locationId);
 
     props.handleClose();
+
+    return false;
   }
 
   async function removeEvent() {
-    console.log("remove", props.eventIndex, event);
+    console.log("remove", props.eventIndex, currentEvent);
 
     try {
-      await deleteEvent(event);
+      await softDeleteEvent(currentEvent);
 
       props.removeEvent(props.eventIndex);
       props.handleClose();
@@ -114,7 +107,7 @@ const EventModal = (props: {
   }
 
   function validateTimespan() {
-    if (calcStringTime(event.end) <= calcStringTime(event.start)) {
+    if (calcStringTime(currentEvent.end) <= calcStringTime(currentEvent.start)) {
       // console.log('timespan invalid')
       setTimespanError("invalid time span");
       setValidated(false);
@@ -135,7 +128,11 @@ const EventModal = (props: {
     <Modal show={props.show} onHide={cancelAndClose} centered>
       <Form noValidate>
         <Modal.Header closeButton>
-          <Modal.Title>??? {props.startDate.toLocaleDateString()} ???</Modal.Title>
+          <Modal.Title>
+            {/* TODO: localize day of week */}
+            {currentEvent.data.date.toLocaleDateString("en-US", { weekday: "long" })}{" "}
+            {currentEvent.data.date.toLocaleDateString()}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Container className="dark-theme" fluid>
@@ -173,8 +170,8 @@ const EventModal = (props: {
                   <Form.Control
                     size="sm"
                     type="text"
-                    defaultValue={event.text}
-                    onChange={(e) => (event.text = e.target.value)}
+                    defaultValue={currentEvent.text}
+                    onChange={(e) => (currentEvent.text = e.target.value)}
                     // eslint-disable-next-line jsx-a11y/no-autofocus
                     autoFocus
                   />
@@ -182,13 +179,17 @@ const EventModal = (props: {
               </Col>
 
               <Col md={6} className="h-25">
-                <ToggleButtonGroup type="radio" name="options" defaultValue={event.data.mode}>
+                <ToggleButtonGroup
+                  type="radio"
+                  name="options"
+                  defaultValue={currentEvent.data.mode}
+                >
                   <ToggleButton
                     id="tbg-radio-1"
                     value={"passenger"}
                     // variant={'outline-primary'}
                     variant={"outline-success"}
-                    onChange={(e) => (event.data.mode = e.target.value)}
+                    onChange={(e) => (currentEvent.data.mode = e.target.value)}
                   >
                     {icon_passenger} Passenger
                   </ToggleButton>
@@ -197,7 +198,7 @@ const EventModal = (props: {
                     value={"driver"}
                     // variant={'outline-danger'}
                     variant={"outline-warning"}
-                    onChange={(e) => (event.data.mode = e.target.value)}
+                    onChange={(e) => (currentEvent.data.mode = e.target.value)}
                   >
                     {icon_driver} Driver
                   </ToggleButton>
@@ -213,9 +214,9 @@ const EventModal = (props: {
                   <Form.Select
                     size="sm"
                     aria-label="choose start time"
-                    defaultValue={event.start}
+                    defaultValue={currentEvent.start}
                     onChange={(e) => {
-                      event.start = e.target.value;
+                      currentEvent.start = e.target.value;
                       validateTimespan();
                     }}
                   >
@@ -230,9 +231,9 @@ const EventModal = (props: {
                   <Form.Select
                     size="sm"
                     aria-label="choose end time"
-                    defaultValue={event.end}
+                    defaultValue={currentEvent.end}
                     onChange={(e) => {
-                      event.end = e.target.value;
+                      currentEvent.end = e.target.value;
                       validateTimespan();
                     }}
                   >
@@ -246,9 +247,7 @@ const EventModal = (props: {
                   <Form.Range
                     defaultValue={likelihood}
                     onChange={(e) => {
-                      event.data.likelihood = Number(e.target.value);
-                      // setLikelihood(e.target.value)
-                      // setLikelihood(e.target.value)
+                      currentEvent.data.likelihood = Number(e.target.value);
                     }}
                   />
                 </Form.Group>

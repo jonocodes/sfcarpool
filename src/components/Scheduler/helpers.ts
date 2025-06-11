@@ -1,12 +1,16 @@
 import { Event, EventInDb } from "~/utils/models";
 import { format, getYear, getMonth } from "date-fns";
 
-export function formatTime(val: number) {
+export function formatTime(val: number): string {
   const i1 = val % 3600;
 
   const h = "" + (Math.floor(val / 36000) || "") + Math.floor((val / 3600) % 10);
   const i = "" + Math.floor(i1 / 600) + Math.floor((i1 / 60) % 10);
   return h + ":" + i;
+}
+
+export function formatTimeFromString(val: string): string {
+  return val.replace(/^0/, "").replace(/:\d{2}$/, "");
 }
 
 export function calcStringTime(str: string) {
@@ -123,7 +127,7 @@ export function dbToEvent(item: EventInDb): Event {
 
   return {
     row,
-    text: item.label || "Untitled Event",
+    text: item.label,
     start: item.start,
     end: item.end,
     data: {
@@ -154,78 +158,3 @@ export function rowsToDays(rows: string[], startDate: Date, endDate: Date) {
 
   return dates;
 }
-
-// export const CREATE_EVENT = gql`
-//   mutation CreateEventMutation(
-//     $locationId: Int!
-//     $date: date!
-//     $start: time!
-//     $end: time!
-//     $likelihood: Int!
-//     $passenger: Boolean!
-//   ) {
-//     insert_events(
-//       objects: {
-//         date: $date
-//         end: $end
-//         likelihood: $likelihood
-//         start: $start
-//         passenger: $passenger
-//         location_id: $locationId
-//       }
-//     ) {
-//       returning {
-//         id
-//       }
-//     }
-//   }
-// `
-
-// export const UPDATE_EVENT = gql`
-//   mutation UpdateEventMutation(
-//     $id: Int!
-//     $locationId: Int
-//     $date: date
-//     $start: time!
-//     $end: time!
-//     $likelihood: Int!
-//     $passenger: Boolean!
-//     $label: String
-//   ) {
-//     # updateEvent(id: $id, input: $input) {
-//     #   id
-//     # }
-
-//     update_events(
-//       where: { id: { _eq: $id } }
-//       _set: {
-//         date: $date
-//         end: $end
-//         likelihood: $likelihood
-//         start: $start
-//         passenger: $passenger
-//         location_id: $locationId
-//         label: $label
-//       }
-//     ) {
-//       returning {
-//         id
-//       }
-//     }
-//   }
-// `
-
-// // soft delete
-// export const DELETE_EVENT = gql`
-//   mutation DeleteEventMutation($id: Int!) {
-//     update_events(where: { id: { _eq: $id } }, _set: { active: false }) {
-//       returning {
-//         id
-//       }
-//     }
-
-//     # delete_events_by_pk(id: $id) {
-//     #   id
-//     # }
-//   }
-// `

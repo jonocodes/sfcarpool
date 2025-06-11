@@ -1,6 +1,5 @@
-
 import { Row, Spinner } from "react-bootstrap";
-import { rowsToDays as rowsToDates, dbToEvent } from "./Scheduler/helpers";
+import { rowsToDays as rowsToDates, dbToEvent, formatTimeFromString } from "./Scheduler/helpers";
 import { Config } from "./Scheduler/types";
 import Week from "./Week";
 
@@ -79,9 +78,12 @@ const EventsCell = ({
         event.date >= after &&
         event.date <= before
     )
+    .map((event) => ({
+      ...event,
+      start: formatTimeFromString(event.start),
+      end: formatTimeFromString(event.end),
+    }))
     .map(dbToEvent);
-
-  // debugger;
 
   const dates = rowsToDates(rows, after, before);
 
