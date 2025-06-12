@@ -15,7 +15,7 @@ export default defineConfig({
         theme_color: "#ffffff",
         background_color: "#ffffff",
         display: "standalone",
-        start_url: "/about",
+        start_url: "/scheduler",
         icons: [
           {
             src: "/android-chrome-192x192.png",

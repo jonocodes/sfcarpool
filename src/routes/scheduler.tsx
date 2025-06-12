@@ -1,10 +1,30 @@
 import { Col, Row } from "react-bootstrap";
+import React from "react";
 
 import EventsCell from "../components/EventsCell";
 import LocationsCell from "../components/LocationsCell";
 import { formatDateSpan, getMonday, formatDateOnly } from "../components/Scheduler/helpers";
-// import { routes } from 'vinxi/dist/types/lib/plugins/routes'
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+
+const LOCATION_STORAGE_KEY = "sfcarpool-last-location";
+
+const getStoredLocation = (): number => {
+  try {
+    const stored = localStorage.getItem(LOCATION_STORAGE_KEY);
+    return stored ? Number(stored) : 1;
+  } catch {
+    return 1;
+  }
+};
+
+const setStoredLocation = (locationId: number) => {
+  try {
+    localStorage.setItem(LOCATION_STORAGE_KEY, locationId.toString());
+  } catch {
+    console.error("Error setting stored location", locationId);
+    // Silently fail if localStorage is not available
+  }
+};
 
 const caret_right = (
   <svg
@@ -35,6 +55,13 @@ const caret_left = (
 export const Route = createFileRoute("/scheduler")({
   component: () => {
     const { location, week } = Route.useSearch();
+    const loc = Number(location);
+
+    // Save location to localStorage whenever it changes
+    React.useEffect(() => {
+      setStoredLocation(loc);
+    }, [loc]);
+
     const start = week ? getMonday(new Date(week)) : getMonday(new Date());
     const end = new Date(start);
     end.setDate(start.getDate() + 4);
@@ -46,7 +73,10 @@ export const Route = createFileRoute("/scheduler")({
 
     const prevWeekStr = formatDateOnly(prevWeek);
     const nextWeekStr = formatDateOnly(nextWeek);
-    const loc = Number(location);
+
+    // Check if we're using defaults
+    const isCurrentWeek = !week;
+    const defaultLocation = getStoredLocation();
 
     const dateSpanStr = formatDateSpan(start, end);
 
@@ -79,7 +109,7 @@ export const Route = createFileRoute("/scheduler")({
             </span>
           </Col>
           <Col xs="auto">
-            <LocationsCell locationId={loc} week={week || formatDateOnly(start)} />
+            <LocationsCell locationId={loc} week={isCurrentWeek ? formatDateOnly(start) : week} />
           </Col>
         </Row>
 
@@ -88,9 +118,12 @@ export const Route = createFileRoute("/scheduler")({
     );
   },
   validateSearch: (search: Record<string, unknown>) => {
+    const defaultLocation = getStoredLocation();
+    const currentWeekStr = formatDateOnly(getMonday(new Date()));
+
     return {
-      location: search.location ? Number(search.location) : 1,
-      week: search.week ? String(search.week) : undefined,
+      location: search.location ? Number(search.location) : defaultLocation,
+      week: search.week && String(search.week) !== currentWeekStr ? String(search.week) : undefined,
     };
   },
 });

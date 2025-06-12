@@ -21,7 +21,10 @@ be:
 storybook:
 	npm run storybook
 
-
+# Build and locally run PWA in production mode
+pwa:
+	npm run build
+	node .output/server/index.mjs
 
 # deploy:	## Deploy to prod
 # 	fly deploy

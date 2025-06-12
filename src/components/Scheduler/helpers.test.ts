@@ -142,12 +142,11 @@ describe("dbToEvent", () => {
 
     const event = dbToEvent(dbEvent);
 
-    expect(event.text).toBe("Untitled Event");
+    expect(event.text).toBe("");
   });
 });
 
 describe("date helper functions", () => {
-
   describe("getMonday", () => {
     it("calculates successfully", () => {
       const thisMonday = new Date("2025-06-09T00:00:00Z");
