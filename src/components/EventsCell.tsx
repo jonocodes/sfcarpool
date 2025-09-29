@@ -8,6 +8,9 @@ import Week from "./Week";
 import { Event, EventInDb } from "~/utils/models";
 import { useShape } from "@electric-sql/react";
 
+import { triplit } from "../../triplit/client";
+import { useEffect, useState } from "react";
+
 // Mock data for events
 // const mockEvents = [
 //   {
@@ -80,24 +83,38 @@ const EventsCell = ({
   after: Date;
   locationId: number;
 }) => {
-  const {
-    data: dbEvents,
-    isLoading,
-    error,
-  } = useShape<EventInDb>({
-    url: "http://localhost:5133/v1/shape",
-    params: {
-      table: "events",
-    },
-  });
+  const [dbEvents, setDbEvents] = useState<EventInDb[]>([]);
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  useEffect(() => {
+    const query = triplit.query("events");
+    const unsubscribe = triplit.subscribe(query, (data) => {
+      console.log("fetching events");
+      console.log(data);
+      setDbEvents(data);
+      // setLocations(data.map((item) => ({ ...item, id: parseInt(item.id) })));
+    });
 
-  if (error) {
-    return <Failure error={error} />;
-  }
+    return () => unsubscribe();
+  }, []);
+
+  // const {
+  //   data: dbEvents,
+  //   isLoading,
+  //   error,
+  // } = useShape<EventInDb>({
+  //   url: "http://localhost:5133/v1/shape",
+  //   params: {
+  //     table: "events",
+  //   },
+  // });
+
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
+
+  // if (error) {
+  //   return <Failure error={error} />;
+  // }
 
   const events: Event[] = dbEvents
     .filter((event) => event.active && event.location_id === locationId)

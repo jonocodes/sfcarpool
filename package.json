@@ -38,6 +38,8 @@
     "@storybook/react": "^8.6.13",
     "@storybook/react-vite": "^8.6.13",
     "@storybook/test": "^8.6.13",
+    "@triplit/cli": "^1.0.61",
+    "@triplit/client": "^1.0.50",
     "@types/node": "^22.5.4",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",

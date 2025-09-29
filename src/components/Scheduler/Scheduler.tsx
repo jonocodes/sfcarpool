@@ -11,7 +11,7 @@ import { formatTime, calcStringTime } from "./helpers";
 import { SchedulerContext } from "./zstore";
 import { _generateEvent } from "./zstore";
 
-import "./Scheduler.css";
+import "./scheduler.css";
 
 function formatTimeSpan(start: number, end: number) {
   return formatTime(start) + "-" + formatTime(end);

@@ -4,6 +4,10 @@ import { Form, Placeholder } from "react-bootstrap";
 import { useShape } from "@electric-sql/react";
 import { Location } from "~/utils/models";
 import { useNavigate } from "@tanstack/react-router";
+
+import { triplit } from "../../triplit/client";
+import { useState, useEffect } from "react";
+
 // Once you run the generator, uncomment this:
 // import { Location } from '../generated/db'
 
@@ -50,27 +54,40 @@ import { useNavigate } from "@tanstack/react-router";
 const LocationsCell = ({ locationId, week }: { locationId: number; week: string }) => {
   const navigate = useNavigate();
 
-  const {
-    data: locations,
-    isLoading,
-    error,
-  } = useShape<Location>({
-    // TODO: centralized the db state using @tanstack/db-collection once its stable/released
+  const [locations, setLocations] = useState<Location[]>([]);
 
-    url: "http://localhost:5133/v1/shape",
-    params: {
-      table: "locations",
-    },
-  });
+  useEffect(() => {
+    const query = triplit.query("locations");
+    const unsubscribe = triplit.subscribe(query, (data) => {
+      console.log(data);
+      setLocations(data);
+      // setLocations(data.map((item) => ({ ...item, id: parseInt(item.id) })));
+    });
 
-  // TODO: use "suspense" to show loading state?
-  if (isLoading) {
-    return <Placeholder />;
-  }
+    return () => unsubscribe();
+  }, []);
 
-  if (error) {
-    return <div style={{ color: "red" }}>Error: {error.message}</div>;
-  }
+  // const {
+  //   data: locations,
+  //   isLoading,
+  //   error,
+  // } = useShape<Location>({
+  //   // TODO: centralized the db state using @tanstack/db-collection once its stable/released
+
+  //   url: "http://localhost:5133/v1/shape",
+  //   params: {
+  //     table: "locations",
+  //   },
+  // });
+
+  // // TODO: use "suspense" to show loading state?
+  // if (isLoading) {
+  //   return <Placeholder />;
+  // }
+
+  // if (error) {
+  //   return <div style={{ color: "red" }}>Error: {error.message}</div>;
+  // }
 
   if (!locations || locations.length === 0) {
     return <div>Empty</div>;
