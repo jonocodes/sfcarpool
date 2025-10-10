@@ -51,7 +51,7 @@ import { useState, useEffect } from "react";
 // }));
 // };
 
-const LocationsCell = ({ locationId, week }: { locationId: number; week: string }) => {
+const LocationsCell = ({ locationId, week }: { locationId: string; week: string }) => {
   const navigate = useNavigate();
 
   const [locations, setLocations] = useState<Location[]>([]);
@@ -105,7 +105,7 @@ const LocationsCell = ({ locationId, week }: { locationId: number; week: string 
         navigate({
           to: "/scheduler",
           search: {
-            location: Number(selectedLocation),
+            location: selectedLocation,
             week: week,
           },
         });

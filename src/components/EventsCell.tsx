@@ -6,7 +6,7 @@ import { Config } from "./Scheduler/types";
 import Week from "./Week";
 
 import { Event, EventInDb } from "~/utils/models";
-import { useShape } from "@electric-sql/react";
+// import { useShape } from "@electric-sql/react";
 
 import { triplit } from "../../triplit/client";
 import { useEffect, useState } from "react";
@@ -81,7 +81,7 @@ const EventsCell = ({
 }: {
   before: Date;
   after: Date;
-  locationId: number;
+  locationId: string;
 }) => {
   const [dbEvents, setDbEvents] = useState<EventInDb[]>([]);
 
@@ -90,8 +90,13 @@ const EventsCell = ({
     const unsubscribe = triplit.subscribe(query, (data) => {
       console.log("fetching events");
       console.log(data);
-      setDbEvents(data);
-      // setLocations(data.map((item) => ({ ...item, id: parseInt(item.id) })));
+      // Handle null/undefined label to match EventInDb interface
+      const convertedData = data.map((item) => ({
+        ...item,
+        label: item.label || "", // Convert null/undefined to empty string
+      }));
+      setDbEvents(convertedData);
+      console.log("convertedData", convertedData);
     });
 
     return () => unsubscribe();

@@ -15,7 +15,10 @@ fe:
 
 # Run local backend (Postgres and Electric)
 be:
-	cd db && docker compose up --force-recreate
+	cd triplit && npx triplit dev
+
+seed:
+	npx triplit seed run the-seed
 
 # Run local storybook for component development
 storybook:

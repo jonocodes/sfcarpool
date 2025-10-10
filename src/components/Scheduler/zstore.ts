@@ -42,6 +42,9 @@ function generateRowMap(rows: string[], events: Event[]) {
     // doing this since Array.fill([]) causes issues
     dataRowMap.push([]);
   }
+
+  console.log("generateRowMap", dataRowMap);
+
   for (let i = 0; i < events.length; i++) {
     dataRowMap[events[i].row].push(i);
   }

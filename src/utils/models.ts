@@ -9,7 +9,7 @@ export interface ElectricModel {
 }
 
 export interface EventInDb extends ElectricModel {
-  id: number;
+  id: string;
   label: string;
   date: Date;
   start: string;
@@ -17,7 +17,7 @@ export interface EventInDb extends ElectricModel {
   active: boolean;
   passenger: boolean;
   likelihood: number;
-  location_id: number;
+  location_id: string;
 }
 
 export interface Event {
@@ -29,6 +29,6 @@ export interface Event {
 }
 
 export interface Location extends ElectricModel {
-  id: number;
+  id: string;
   name: string;
 }

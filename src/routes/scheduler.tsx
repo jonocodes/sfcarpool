@@ -2,12 +2,9 @@ import { Col, Form, Row } from "react-bootstrap";
 
 import EventsCell from "../components/EventsCell";
 import LocationsCell from "../components/LocationsCell";
-import {
-  formatDateSpan,
-} from "../components/Scheduler/helpers";
+import { formatDateSpan } from "../components/Scheduler/helpers";
 // import { routes } from 'vinxi/dist/types/lib/plugins/routes'
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
-
 
 const caret_right = (
   <svg
@@ -50,7 +47,7 @@ const SchedulerPage = () => {
   const end = new Date(start.getTime() + 4 * 24 * 60 * 60 * 1000);
   const prevWeekStr = new Date(start.getTime() - 7 * 24 * 60 * 60 * 1000);
   const nextWeekStr = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
-  const loc = location ?? 1;
+  const loc = location ?? "zzxdc";
 
   const dateSpanStr = formatDateSpan(start, end);
 
@@ -93,7 +90,7 @@ const SchedulerPage = () => {
 };
 export const Route = createFileRoute("/scheduler")({
   validateSearch: (search: Record<string, unknown>) => ({
-    location: search.location ? Number(search.location) : 1,
+    location: search.location ? String(search.location) : "rstarst",
     week: search.week ? String(search.week) : new Date().toISOString(),
   }),
   component: SchedulerPage,

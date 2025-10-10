@@ -52,7 +52,7 @@ export function getWeekSpan() {
   return [start, end];
 }
 
-export function eventToGql(evnt: Event, startDate: Date, locationId: number) {
+export function eventToGql(evnt: Event, startDate: Date, locationId: string) {
   const passenger = evnt.data.mode == "passenger";
   const date = new Date(startDate.getTime() + evnt.row * 24 * 60 * 60 * 1000);
   const dateStr = date.toISOString();

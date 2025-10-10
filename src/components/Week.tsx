@@ -158,7 +158,7 @@ const usePageStore = create<PageState>()((set) => ({
 // })
 
 const Week = (props: {
-  locationId: number;
+  locationId: string;
   data: Event[];
   dates: Date[];
   children: React.ReactNode;

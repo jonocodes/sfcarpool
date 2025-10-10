@@ -92,7 +92,7 @@ export default function seed(): BulkInsert<typeof schema> {
 
     events: [
       {
-        date: new Date("2025-09-28"),
+        date: new Date("2025-09-26"), // Friday
         passenger: true,
         likelihood: 50,
         created_at: new Date("2025-01-01"),
@@ -100,7 +100,7 @@ export default function seed(): BulkInsert<typeof schema> {
         active: true,
         start: "08:00",
         end: "08:15",
-        location_id: "l5PQRRCiuSah4NFM_r6Ln",
+        location_id: "l5PQRRCiuSah4NFM_r6Ln", // North Berkeley BART
         label: "Morning Carpool",
       },
     ],
