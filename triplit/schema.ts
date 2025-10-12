@@ -39,7 +39,6 @@ export const schema = S.Collections({
   events: {
     schema: S.Schema({
       id: S.Id(),
-      // ... other fields
       created_at: S.Date({}),
       updated_at: S.Date({}),
       date: S.Date({}),
@@ -50,6 +49,8 @@ export const schema = S.Collections({
       label: S.Optional(S.String()),
       start: S.String(),
       end: S.String(),
+
+      // S.RelationById("locations", "location_id"),
 
       // CREATE TABLE events (
       //     id serial4 NOT NULL,

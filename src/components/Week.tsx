@@ -21,7 +21,8 @@ import {
   // UPDATE_EVENT,
 } from "../components/Scheduler/helpers";
 import SchedulerComponent from "../components/Scheduler/Scheduler";
-import { Config, Event, SchedulerState } from "../components/Scheduler/types";
+import { Config as SchedulerConfig, SchedulerState } from "../components/Scheduler/types";
+import { Event as EventModel } from "~/utils/models";
 import {
   createSchedulerStore,
   _generateEvent,
@@ -33,14 +34,15 @@ import {
 // import 'bootstrap/dist/css/bootstrap.min.css'
 import EventModal from "./EventModal";
 import { Toaster } from "react-hot-toast";
+import { triplit } from "triplit/client";
 
 interface PageState {
   modalVisible: boolean;
-  currentEvent: Event;
-  currentEventIndex: number;
+  currentEvent: EventModel | null;
+  currentEventIndex: number | null;
   showModal: () => void;
   hideModal: () => void;
-  setEvent: (index: number, event: Event) => void;
+  setEvent: (index: number, event: EventModel) => void;
 }
 
 const usePageStore = create<PageState>()((set) => ({
@@ -159,11 +161,11 @@ const usePageStore = create<PageState>()((set) => ({
 
 const Week = (props: {
   locationId: string;
-  data: Event[];
+  data: EventModel[];
   dates: Date[];
   children: React.ReactNode;
   provideCreateRandom: boolean;
-  config: Config;
+  config: SchedulerConfig;
   rows: string[];
 }) => {
   // const [create /*{ loading, error }*/] = useMutation<
@@ -190,7 +192,7 @@ const Week = (props: {
 
   console.log("rendering Week, location", props.locationId, props.data);
 
-  const pageConfig: Config = {
+  const pageConfig: SchedulerConfig = {
     startTime: "06:00", // schedule start time(HH:ii)
     endTime: "10:00", // schedule end time(HH:ii)
     widthTime: 60 * 5, // 300 seconds per cell (5 minutes) ?
@@ -205,23 +207,23 @@ const Week = (props: {
     // resizable: isResizable,
     resizableLeft: true,
     widthTimeX: 20, // 20 pixels per cell?
-    onClick: function (event, rowNum, eventIndex) {
-      console.log("onClick external method", event, rowNum, eventIndex);
+    onClick: function (eventModel, rowNum, eventIndex) {
+      console.log("onClick external method", eventModel, rowNum, eventIndex);
 
-      setEvent(eventIndex, event);
+      setEvent(eventIndex, eventModel);
       showModal();
     },
 
-    onChange: async function (event, _) {
-      const gql_data = eventToGql(event, startDate, props.locationId);
+    onChange: async function (eventModel, _) {
+      const gql_data = eventToGql(eventModel, startDate, props.locationId);
 
       // update({
       //   variables: {
       //     ...gql_data,
-      //     ...{ id: Number(event.data.entry) },
+      //     ...{ id: Number(eventModel.data.entry) },
 
       //     // gql_data.concat()
-      //     // id: Number(event.data.entry),
+      //     // id: Number(eventModel.data.entry),
       //     // input: gql_data,
       //   },
       // }); //then.error, toast error
@@ -229,18 +231,22 @@ const Week = (props: {
     onScheduleClick: async function (colNum, rowNum) {
       console.log("onScheduleClick external method", colNum, rowNum);
 
-      const startTime = computed.tableStartTime + colNum * config.widthTime;
-      const endTime = startTime + 4 * config.widthTime;
+      const startTimeValue = computed.tableStartTime + colNum * (config?.widthTime || 300);
+      const endTimeValue = startTimeValue + 4 * (config?.widthTime || 300);
+
+      // Create Date objects from the time values
+      const startTimeDate = new Date(startDate.getTime() + startTimeValue * 1000);
+      const endTimeDate = new Date(startDate.getTime() + endTimeValue * 1000);
 
       // const randId = 0 + Math.floor(Math.random() * 1000)
 
       const event = {
         row: rowNum,
-        start: formatTime(startTime),
-        end: formatTime(endTime),
+        start: formatTime(startTimeDate),
+        end: formatTime(endTimeDate),
         text: "",
         data: {
-          entry: 0, // this will get reset once it makes it to db
+          entry: "", // this will get reset once it makes it to db
           mode: "passenger",
           likelihood: 95,
         },
@@ -249,10 +255,13 @@ const Week = (props: {
       const gql_data = eventToGql(event, startDate, props.locationId);
       console.log("create gql data", gql_data);
 
-      const resp = await create({ variables: gql_data });
-
-      console.log("new id", resp, event);
-      event.data.entry = resp.data.insert_events.returning[0].id;
+      const insertedEntity = await triplit.insert("events", {
+        ...gql_data,
+        created_at: new Date(),
+        updated_at: new Date(),
+      });
+      console.log("new id", insertedEntity, event);
+      event.data.entry = insertedEntity.id;
 
       // TODO: handle db failure promise, toast. show loading?
 
@@ -273,7 +282,7 @@ const Week = (props: {
   const myConfig = { ...pageConfig, ...props.config };
 
   function addRandomEvent() {
-    const times = getTimeSlots(computed.tableStartTime, computed.tableEndTime, config.widthTime);
+    const times = getTimeSlots(computed.tableStartTime, computed.tableEndTime, config?.widthTime || 300);
 
     const newEvent = _generateEvent(times, props.rows.length);
     addEvent(newEvent);
@@ -334,10 +343,10 @@ const Week = (props: {
   console.log("week store events", events);
 
   // TODO: maybe move this to computed? so it does not regen with every change to the Week
-  const timeSlots = getTimeSlots(computed.tableStartTime, computed.tableEndTime, config.widthTime);
+  const timeSlots = getTimeSlots(computed.tableStartTime, computed.tableEndTime, config?.widthTime || 300);
 
   let modal = <></>;
-  if (modalVisible === true) {
+  if (modalVisible === true && currentEvent && eventIndex !== null) {
     modal = (
       <EventModal
         show={modalVisible}

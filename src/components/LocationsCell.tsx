@@ -1,7 +1,7 @@
 // import React from 'react'
 import { Form, Placeholder } from "react-bootstrap";
 // import { useQuery } from "@tanstack/react-query";
-import { useShape } from "@electric-sql/react";
+// import { useShape } from "@electric-sql/react";
 import { Location } from "~/utils/models";
 import { useNavigate } from "@tanstack/react-router";
 

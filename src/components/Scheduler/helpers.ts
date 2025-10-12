@@ -1,12 +1,21 @@
 import { Event } from "~/utils/models";
 import { format, getYear, getMonth } from "date-fns";
 
-export function formatTime(val: number) {
-  const i1 = val % 3600;
+export function formatTime(val: number | Date) {
+  let seconds;
 
-  const h = "" + (Math.floor(val / 36000) || "") + Math.floor((val / 3600) % 10);
-  const i = "" + Math.floor(i1 / 600) + Math.floor((i1 / 60) % 10);
-  return h + ":" + i;
+  if (val instanceof Date) {
+    // If it's a Date object, extract hours and minutes
+    const hours = val.getUTCHours();
+    const minutes = val.getUTCMinutes();
+    return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+  } else {
+    // Original logic for number values
+    const i1 = val % 3600;
+    const h = "" + (Math.floor(val / 36000) || "") + Math.floor((val / 3600) % 10);
+    const i = "" + Math.floor(i1 / 600) + Math.floor((i1 / 60) % 10);
+    return h + ":" + i;
+  }
 }
 
 export function calcStringTime(str: string) {
@@ -41,21 +50,30 @@ export function formatDateSpan(start: Date, end: Date) {
 
 export function getWeekStart(today: Date) {
   const day = today.getDay();
+  today.setHours(0, 0, 0, 0);
   const diff = day === 0 ? -6 : 1 - day; // Adjust Sunday to be 6 days back
+  debugger;
   return new Date(today.getTime() + diff * 24 * 60 * 60 * 1000);
 }
 
 export function getWeekSpan() {
   const today = new Date();
+  // Set to the first second of the day (00:00:00)
+  today.setHours(0, 0, 0, 0);
   const start = getWeekStart(today);
   const end = new Date(start.getTime() + 4 * 24 * 60 * 60 * 1000);
+  debugger;
+  console.log("getWeekSpan", start, end);
   return [start, end];
 }
 
 export function eventToGql(evnt: Event, startDate: Date, locationId: string) {
   const passenger = evnt.data.mode == "passenger";
-  const date = new Date(startDate.getTime() + evnt.row * 24 * 60 * 60 * 1000);
-  const dateStr = date.toISOString();
+  const _date = new Date(startDate.getTime() + evnt.row * 24 * 60 * 60 * 1000);
+  // Format date as YYYY-MM-DD string for database storage
+  const dateStr = format(_date, "yyyy-MM-dd");
+
+  debugger;
 
   let start = evnt.start;
   if (start.length == 4) start = "0" + start;
@@ -66,7 +84,7 @@ export function eventToGql(evnt: Event, startDate: Date, locationId: string) {
   const result = {
     label: evnt.text,
     passenger,
-    locationId,
+    location_id: locationId,
     start, // TODO: chop off the :00 ?
     end,
     date: dateStr,

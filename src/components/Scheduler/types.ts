@@ -1,3 +1,5 @@
+import { Event } from "~/utils/models";
+
 export interface Geometry {
   x: number;
   y: number;
