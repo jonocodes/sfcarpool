@@ -1,5 +1,7 @@
 // This is for storing the database mapped models. In the future maybe prisma will manage this.
 
+import { LocalTime } from "@js-joda/core";
+
 export interface Dictionary<T> {
   [Key: string | number]: T;
 }
@@ -22,8 +24,8 @@ export interface EventInDb extends ElectricModel {
 
 export interface Event {
   row: number;
-  start: string;
-  end: string;
+  start: LocalTime;
+  end: LocalTime;
   text: string;
   data: Dictionary<string | number>;
 }

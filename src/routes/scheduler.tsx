@@ -2,9 +2,10 @@ import { Col, Form, Row } from "react-bootstrap";
 
 import EventsCell from "../components/EventsCell";
 import LocationsCell from "../components/LocationsCell";
-import { formatDateSpan } from "../components/Scheduler/helpers";
+import { formatDateSpan, getWeekStartStr } from "../components/Scheduler/helpers";
 // import { routes } from 'vinxi/dist/types/lib/plugins/routes'
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
+import { LocalDate, DateTimeFormatter } from "@js-joda/core";
 
 const caret_right = (
   <svg
@@ -32,10 +33,6 @@ const caret_left = (
   </svg>
 );
 
-// function formatDate2(date) {
-//   return date.toFormat('LLL dd, yyyy')
-// }
-
 // interface SchedulerSearchParams {
 //   location?: number;
 //   week?: string;
@@ -43,24 +40,30 @@ const caret_left = (
 
 const SchedulerPage = () => {
   const { location, week } = Route.useSearch();
-  const start = new Date(week);
-  const end = new Date(start.getTime() + 4 * 24 * 60 * 60 * 1000);
-  const prevWeekStr = new Date(start.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const nextWeekStr = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
+  // 'week' is a string for the first day of the week. no time. starting sunday
+  // Parse the date string using js-joda to avoid timezone issues
+  const weekStart = LocalDate.parse(week);
+  const start = weekStart.plusDays(1); // Move to Monday
+  const end = start.plusDays(4);
+  const prevWeekStr = weekStart.minusDays(7);
+  const nextWeekStr = weekStart.plusDays(7);
   const loc = location ?? "zzxdc";
 
-  const dateSpanStr = formatDateSpan(start, end);
+  // Convert LocalDate to Date for compatibility with existing functions
+  const startDate = new Date(start.toString());
+  const endDate = new Date(end.toString());
+  const dateSpanStr = formatDateSpan(startDate, endDate);
 
   return (
     <>
       <Row style={{ paddingTop: "30px" }}>
-        <Col xm={7}>
+        <Col xs={7}>
           <span className="nav-week">
             <Link
               to="/scheduler"
               search={{
                 location: loc,
-                week: prevWeekStr.toISOString(),
+                week: prevWeekStr.format(DateTimeFormatter.ISO_LOCAL_DATE),
               }}
             >
               {caret_left}
@@ -72,7 +75,7 @@ const SchedulerPage = () => {
               to="/scheduler"
               search={{
                 location: loc,
-                week: nextWeekStr.toISOString(),
+                week: nextWeekStr.format(DateTimeFormatter.ISO_LOCAL_DATE),
               }}
             >
               {caret_right}
@@ -91,7 +94,8 @@ const SchedulerPage = () => {
 export const Route = createFileRoute("/scheduler")({
   validateSearch: (search: Record<string, unknown>) => ({
     location: search.location ? String(search.location) : "rstarst",
-    week: search.week ? String(search.week) : new Date().toISOString(),
+    // TODO: validate week input
+    week: search.week ? String(search.week) : getWeekStartStr(),
   }),
   component: SchedulerPage,
   ssr: false,

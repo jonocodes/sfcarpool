@@ -34,6 +34,7 @@ import {
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import toast from "react-hot-toast";
+import { triplit } from "triplit/client";
 
 const icon_passenger = (
   <svg
@@ -120,22 +121,26 @@ const EventModal = (props: {
     console.log("remove", props.eventIndex, event);
 
     try {
-      const response = await fetch(`http://localhost:4000/events?id=eq.${event.data.entry}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Prefer: "return=representation",
-        },
-      });
+      const deletedItem = await triplit.delete("events", event.data.entry);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      console.log("deletedItem", deletedItem);
 
-      const deletedEvents = await response.json();
-      if (!Array.isArray(deletedEvents) || deletedEvents.length === 0) {
-        throw new Error("Delete operation failed - no records were deleted");
-      }
+      // const response = await fetch(`http://localhost:4000/events?id=eq.${event.data.entry}`, {
+      //   method: "DELETE",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Prefer: "return=representation",
+      //   },
+      // });
+
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! status: ${response.status}`);
+      // }
+
+      // const deletedEvents = await response.json();
+      // if (!Array.isArray(deletedEvents) || deletedEvents.length === 0) {
+      //   throw new Error("Delete operation failed - no records were deleted");
+      // }
 
       props.removeEvent(props.eventIndex);
       props.handleClose();

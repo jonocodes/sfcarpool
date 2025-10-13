@@ -15,7 +15,7 @@ import { create } from "zustand";
 
 import {
   // CREATE_EVENT,
-  eventToGql,
+  eventToDb,
   formatTime,
   getTimeSlots,
   // UPDATE_EVENT,
@@ -35,6 +35,7 @@ import {
 import EventModal from "./EventModal";
 import { Toaster } from "react-hot-toast";
 import { triplit } from "triplit/client";
+import { LocalDate, LocalTime } from "@js-joda/core";
 
 interface PageState {
   modalVisible: boolean;
@@ -162,7 +163,7 @@ const usePageStore = create<PageState>()((set) => ({
 const Week = (props: {
   locationId: string;
   data: EventModel[];
-  dates: Date[];
+  dates: LocalDate[];
   children: React.ReactNode;
   provideCreateRandom: boolean;
   config: SchedulerConfig;
@@ -215,7 +216,7 @@ const Week = (props: {
     },
 
     onChange: async function (eventModel, _) {
-      const gql_data = eventToGql(eventModel, startDate, props.locationId);
+      const gql_data = eventToDb(eventModel, startDate, props.locationId);
 
       // update({
       //   variables: {
@@ -231,19 +232,23 @@ const Week = (props: {
     onScheduleClick: async function (colNum, rowNum) {
       console.log("onScheduleClick external method", colNum, rowNum);
 
+      // seconds since midnight?
       const startTimeValue = computed.tableStartTime + colNum * (config?.widthTime || 300);
       const endTimeValue = startTimeValue + 4 * (config?.widthTime || 300);
 
+      const startTimeLocal = LocalTime.ofSecondOfDay(startTimeValue);
+      const endTimeLocal = LocalTime.ofSecondOfDay(endTimeValue);
+
       // Create Date objects from the time values
-      const startTimeDate = new Date(startDate.getTime() + startTimeValue * 1000);
-      const endTimeDate = new Date(startDate.getTime() + endTimeValue * 1000);
+      // const startTimeDate = new Date(startDate.getTime() + startTimeValue * 1000);
+      // const endTimeDate = new Date(startDate.getTime() + endTimeValue * 1000);
 
       // const randId = 0 + Math.floor(Math.random() * 1000)
 
       const event = {
         row: rowNum,
-        start: formatTime(startTimeDate),
-        end: formatTime(endTimeDate),
+        start: startTimeLocal, //formatTime(startTimeDate),
+        end: endTimeLocal, //formatTime(endTimeDate),
         text: "",
         data: {
           entry: "", // this will get reset once it makes it to db
@@ -252,11 +257,11 @@ const Week = (props: {
         },
       };
 
-      const gql_data = eventToGql(event, startDate, props.locationId);
-      console.log("create gql data", gql_data);
+      const db_data = eventToDb(event, startDate, props.locationId);
+      console.log("create gql data", db_data);
 
       const insertedEntity = await triplit.insert("events", {
-        ...gql_data,
+        ...db_data,
         created_at: new Date(),
         updated_at: new Date(),
       });
@@ -282,7 +287,11 @@ const Week = (props: {
   const myConfig = { ...pageConfig, ...props.config };
 
   function addRandomEvent() {
-    const times = getTimeSlots(computed.tableStartTime, computed.tableEndTime, config?.widthTime || 300);
+    const times = getTimeSlots(
+      computed.tableStartTime,
+      computed.tableEndTime,
+      config?.widthTime || 300
+    );
 
     const newEvent = _generateEvent(times, props.rows.length);
     addEvent(newEvent);
@@ -343,7 +352,11 @@ const Week = (props: {
   console.log("week store events", events);
 
   // TODO: maybe move this to computed? so it does not regen with every change to the Week
-  const timeSlots = getTimeSlots(computed.tableStartTime, computed.tableEndTime, config?.widthTime || 300);
+  const timeSlots = getTimeSlots(
+    computed.tableStartTime,
+    computed.tableEndTime,
+    config?.widthTime || 300
+  );
 
   let modal = <></>;
   if (modalVisible === true && currentEvent && eventIndex !== null) {

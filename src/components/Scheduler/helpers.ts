@@ -1,4 +1,5 @@
 import { Event } from "~/utils/models";
+import { LocalDate, DayOfWeek, TemporalAdjusters, DateTimeFormatter } from "@js-joda/core";
 import { format, getYear, getMonth } from "date-fns";
 
 export function formatTime(val: number | Date) {
@@ -19,6 +20,7 @@ export function formatTime(val: number | Date) {
 }
 
 export function calcStringTime(str: string) {
+  // get the seconds from the start of the day
   const slice = str.split(":");
   const h = Number(slice[0]) * 60 * 60;
   const i = Number(slice[1]) * 60;
@@ -48,65 +50,92 @@ export function formatDateSpan(start: Date, end: Date) {
   return `${format(start, "LLL dd")} - ${format(end, "dd, yyyy")}`;
 }
 
-export function getWeekStart(today: Date) {
-  const day = today.getDay();
-  today.setHours(0, 0, 0, 0);
-  const diff = day === 0 ? -6 : 1 - day; // Adjust Sunday to be 6 days back
-  debugger;
-  return new Date(today.getTime() + diff * 24 * 60 * 60 * 1000);
+// export function getWeekStart(today: Date) {
+//   // Convert Date to LocalDate and get the start of the week (Sunday)
+//   debugger;
+//   const localDate = LocalDate.parse(today.toISOString().split("T")[0]);
+//   // js-joda's dayOfWeek: Monday=1, Sunday=7
+//   const dayOfWeek = localDate.dayOfWeek().value();
+//   const daysToSubtract = dayOfWeek === 7 ? 0 : dayOfWeek; // If Sunday (7), subtract 0; otherwise subtract day number
+//   return localDate.minusDays(daysToSubtract);
+// }
+
+export function getWeekStartStr() {
+  // // Use date-fns to get the start of the week (Sunday)
+  // const now = new Date();
+  // // Get the start of the week (Sunday) and format as YYYY-MM-DD
+  // const weekStart = dateFnsStartOfWeek(now, { weekStartsOn: 0 });
+  // return format(weekStart, 'yyyy-MM-dd');
+
+  const today = LocalDate.now();
+  const firstDayOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+
+  // console.log(firstDayOfWeek.toString());
+
+  // debugger;
+  return firstDayOfWeek.toString();
 }
 
-export function getWeekSpan() {
-  const today = new Date();
-  // Set to the first second of the day (00:00:00)
-  today.setHours(0, 0, 0, 0);
-  const start = getWeekStart(today);
-  const end = new Date(start.getTime() + 4 * 24 * 60 * 60 * 1000);
-  debugger;
-  console.log("getWeekSpan", start, end);
-  return [start, end];
-}
+// export function getWeekSpan() {
+//   const today = new Date();
+//   const startLocal = getWeekStart(today);
+//   const endLocal = startLocal.plusDays(4);
+//   debugger;
+//   console.log("getWeekSpan", startLocal, endLocal);
+//   // Convert LocalDate back to Date for compatibility
+//   return [new Date(startLocal.toString()), new Date(endLocal.toString())];
+// }
 
-export function eventToGql(evnt: Event, startDate: Date, locationId: string) {
+export function eventToDb(evnt: Event, startDate: LocalDate, locationId: string) {
   const passenger = evnt.data.mode == "passenger";
-  const _date = new Date(startDate.getTime() + evnt.row * 24 * 60 * 60 * 1000);
+  // Use js-joda to avoid timezone issues
+  const startLocal = startDate; //LocalDate.parse(startDate.toISOString().split("T")[0]);
+  const _dateLocal = startLocal.plusDays(evnt.row);
   // Format date as YYYY-MM-DD string for database storage
-  const dateStr = format(_date, "yyyy-MM-dd");
+  const dateStr = _dateLocal.toString();
 
-  debugger;
+  // let start = evnt.start;
+  // if (start.length == 4) start = "0" + start;
 
-  let start = evnt.start;
-  if (start.length == 4) start = "0" + start;
+  // let end = evnt.end;
+  // if (end.length == 4) end = "0" + end;
 
-  let end = evnt.end;
-  if (end.length == 4) end = "0" + end;
+  let startLocalStr = evnt.start.toString();
+  let endLocalStr = evnt.end.toString();
 
   const result = {
     label: evnt.text,
     passenger,
     location_id: locationId,
-    start, // TODO: chop off the :00 ?
-    end,
+    start: startLocalStr,
+    end: endLocalStr,
+    // start, // TODO: chop off the :00 ?
+    // end,
     date: dateStr,
     likelihood: Number(evnt.data.likelihood),
     active: true,
   };
 
-  console.log("eventToGql", result);
+  console.log("eventToDb", result);
   return result;
 }
 
 export function parseDateTime(dateStr: string) {
-  return new Date(dateStr);
+  const localDate = LocalDate.parse(dateStr);
+  return new Date(localDate.toString());
 }
 
-export function rowsToDays(rows: string[], startDate: Date, endDate: Date) {
-  let currentDate = new Date(startDate);
-  const dates = [];
+export function rowsToDays(rows: string[], startDate: LocalDate, endDate: LocalDate) {
+  // Use js-joda to handle dates without timezone issues
+  const startLocal = startDate; // LocalDate.parse(startDate.toISOString().split("T")[0]);
+  const endLocal = endDate; //LocalDate.parse(endDate.toISOString().split("T")[0]);
+  let currentDate = startLocal;
+  const dates: LocalDate[] = [];
 
-  while (currentDate <= endDate) {
+  while (!currentDate.isAfter(endLocal)) {
+    // Convert LocalDate back to Date for compatibility
     dates.push(currentDate);
-    currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+    currentDate = currentDate.plusDays(1);
   }
 
   console.log("dates", dates);

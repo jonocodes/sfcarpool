@@ -2,6 +2,7 @@ import { createContext } from "react";
 
 import { createStore, create } from "zustand";
 // import create from 'zustand/react'
+import { LocalDate, LocalTime } from "@js-joda/core";
 
 import { calcStringTime, formatTime } from "./helpers";
 import { Computed, Config, SchedulerProps, SchedulerState, Event } from "./types";
@@ -10,7 +11,7 @@ const modes = ["passenger", "driver"];
 
 export const configDefault: Config = {
   className: "r-schedule",
-  startTime: "07:00",
+  startTime: "07:00", // TODO: LocalTime.parse("07:00"),
   endTime: "19:30",
   widthTimeX: 25,
   widthTime: 600, // cell timestamp example 10 minutes

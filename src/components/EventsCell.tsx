@@ -10,6 +10,7 @@ import { Event, EventInDb } from "~/utils/models";
 
 import { triplit } from "../../triplit/client";
 import { useEffect, useState } from "react";
+import { LocalDate } from "@js-joda/core";
 
 // Mock data for events
 // const mockEvents = [
@@ -79,8 +80,8 @@ const EventsCell = ({
   after,
   locationId,
 }: {
-  before: Date;
-  after: Date;
+  before: LocalDate;
+  after: LocalDate;
   locationId: string;
 }) => {
   const [dbEvents, setDbEvents] = useState<EventInDb[]>([]);
@@ -93,6 +94,8 @@ const EventsCell = ({
       // Handle null/undefined label to match EventInDb interface
       const convertedData = data.map((item) => ({
         ...item,
+        date: LocalDate.of(item.date.getFullYear(), item.date.getMonth() + 1, item.date.getDate()),
+        // date: parseDateTime(item.date as string), // Ensure date is a Date object
         label: item.label || "", // Convert null/undefined to empty string
       }));
       setDbEvents(convertedData);
