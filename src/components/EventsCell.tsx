@@ -10,7 +10,7 @@ import { Event, EventInDb } from "~/utils/models";
 
 import { triplit } from "../../triplit/client";
 import { useEffect, useState } from "react";
-import { LocalDate } from "@js-joda/core";
+import { LocalDate, LocalTime } from "@js-joda/core";
 
 // Mock data for events
 // const mockEvents = [
@@ -35,7 +35,7 @@ import { LocalDate } from "@js-joda/core";
 //   },
 // ];
 
-const myConfig: Config = { startTime: "06:00", endTime: "11:00" };
+const myConfig: Config = { startTime: LocalTime.parse("06:00"), endTime: LocalTime.parse("11:00") };
 
 const rows = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -95,6 +95,8 @@ const EventsCell = ({
       const convertedData = data.map((item) => ({
         ...item,
         date: LocalDate.of(item.date.getFullYear(), item.date.getMonth() + 1, item.date.getDate()),
+        start: LocalTime.parse(item.start), // Ensure start is a string
+        end: LocalTime.parse(item.end), // Ensure end is a string
         // date: parseDateTime(item.date as string), // Ensure date is a Date object
         label: item.label || "", // Convert null/undefined to empty string
       }));
@@ -128,8 +130,6 @@ const EventsCell = ({
     .filter((event) => event.active && event.location_id === locationId)
     .map(dbToEvent);
   const dates = rowsToDates(rows, after, before);
-
-  // debugger;
 
   return (
     <Row>

@@ -29,6 +29,7 @@ import {
   // DELETE_EVENT,
   // eventToGql,
   formatTime,
+  timeToSeconds,
   // UPDATE_EVENT,
 } from "../components/Scheduler/helpers";
 
@@ -163,7 +164,7 @@ const EventModal = (props: {
   }
 
   function validateTimespan() {
-    if (calcStringTime(event.end) <= calcStringTime(event.start)) {
+    if (timeToSeconds(event.end) <= timeToSeconds(event.start)) {
       // console.log('timespan invalid')
       setTimespanError("invalid time span");
       setValidated(false);

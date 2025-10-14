@@ -1,3 +1,4 @@
+import { LocalTime } from "@js-joda/core";
 import { Event } from "~/utils/models";
 
 export interface Geometry {
@@ -13,8 +14,8 @@ export interface Computed {
   rowHeights: number[];
   tableHeight: number;
 
-  tableStartTime: number;
-  tableEndTime: number;
+  tableStartTime: LocalTime;
+  tableEndTime: LocalTime;
   cellsWide: number;
   scrollWidth: number;
 
@@ -35,8 +36,8 @@ export interface EventChangeFunction {
 
 export interface Config {
   className?: string;
-  startTime?: string;
-  endTime?: string;
+  startTime?: LocalTime;
+  endTime?: LocalTime;
   widthTimeX?: number;
   widthTime?: number; // cell timestamp example 10 minutes
   timeLineY?: number; // timeline height(px)

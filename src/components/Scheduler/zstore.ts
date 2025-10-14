@@ -4,15 +4,16 @@ import { createStore, create } from "zustand";
 // import create from 'zustand/react'
 import { LocalDate, LocalTime } from "@js-joda/core";
 
-import { calcStringTime, formatTime } from "./helpers";
-import { Computed, Config, SchedulerProps, SchedulerState, Event } from "./types";
+import { calcStringTime, formatTime, timeToSeconds } from "./helpers";
+import { Computed, Config, SchedulerProps, SchedulerState } from "./types";
+import { Event } from "~/utils/models";
 
 const modes = ["passenger", "driver"];
 
 export const configDefault: Config = {
   className: "r-schedule",
-  startTime: "07:00", // TODO: LocalTime.parse("07:00"),
-  endTime: "19:30",
+  startTime: LocalTime.parse("07:00"), // TODO: LocalTime.parse("07:00"),
+  endTime: LocalTime.parse("19:30"),
   widthTimeX: 25,
   widthTime: 600, // cell timestamp example 10 minutes
   timeLineY: 50, // timeline height(px)
@@ -53,9 +54,9 @@ function generateRowMap(rows: string[], events: Event[]) {
   return dataRowMap;
 }
 
-function calculateGeometry(event, config, tableStartTime) {
-  const startTime = calcStringTime(event.start);
-  const endTime = calcStringTime(event.end);
+function calculateGeometry(event: Event, config, tableStartTime) {
+  const startTime = timeToSeconds(event.start);
+  const endTime = timeToSeconds(event.end);
 
   // const tableStartTime = computed.tableStartTime
 
@@ -221,13 +222,14 @@ export function calculateGeometries(config, events, rows, rowMap, tableStartTime
   };
 }
 
-export function refreshComputed(userConf, rows, events): Computed {
+export function refreshComputed(userConf, rows, events: Event[]): Computed {
   const config = { ...configDefault, ...userConf };
-  let tableStartTime = calcStringTime(config.startTime);
+
+  let tableStartTime = timeToSeconds(config.startTime);
   tableStartTime -= tableStartTime % config.widthTime;
   // tableStartTime = 0
 
-  let tableEndTime = calcStringTime(config.endTime);
+  let tableEndTime = timeToSeconds(config.endTime);
   tableEndTime -= tableEndTime % config.widthTime;
   // tableEndTime = 0
 
@@ -238,8 +240,9 @@ export function refreshComputed(userConf, rows, events): Computed {
   const geos = calculateGeometries(config, events, rows, rowMap, tableStartTime);
 
   return {
-    tableEndTime: tableEndTime,
-    tableStartTime: tableStartTime,
+    tableEndTime: config.endTime,
+    tableStartTime: config.startTime,
+
     cellsWide,
     rowMap: rowMap,
     geometries: geos.geometries,

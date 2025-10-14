@@ -7,13 +7,14 @@ function assertDefined<T>(value: T | undefined, message: string): asserts value 
 
 import { useStore } from "zustand";
 
-import { formatTime, calcStringTime } from "./helpers";
+import { formatTime, calcStringTime, timeToSeconds } from "./helpers";
 import { SchedulerContext } from "./zstore";
 import { _generateEvent } from "./zstore";
 
 import "./scheduler.css";
+import { LocalDate, LocalTime } from "@js-joda/core";
 
-function formatTimeSpan(start: number, end: number) {
+function formatTimeSpan(start: LocalTime, end: LocalTime) {
   return formatTime(start) + "-" + formatTime(end);
 }
 
@@ -57,10 +58,7 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
   const computed = useStore(store, (state) => state.computed);
 
   const [_, setTimeStr] = useState(
-    formatTimeSpan(
-      calcStringTime(events[props.eventIndex].start),
-      calcStringTime(events[props.eventIndex].end)
-    )
+    formatTimeSpan(events[props.eventIndex].start, events[props.eventIndex].end)
   );
 
   assertDefined(config.startTime, "config.startTime is required");
@@ -71,9 +69,9 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
   // const startTime = config.startTime;
   // const timeLineY = config.timeLineY;
   // const widthTimeX = config.widthTimeX;
-  const widthTime = config.widthTime;
+  // const widthTime = config.widthTime;
 
-  const tableStartTime = calcStringTime(config.startTime);
+  const tableStartTime = timeToSeconds(config.startTime);
 
   const opacity = 0.5 + Number(events[props.eventIndex].data.likelihood) / 100 / 2;
 
@@ -123,20 +121,23 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
         const offset = (Math.round(data.x) / config.widthTimeX) * config.widthTime;
 
         const lengthTime =
-          calcStringTime(events[props.eventIndex].end) -
-          calcStringTime(events[props.eventIndex].start);
+          timeToSeconds(events[props.eventIndex].end) -
+          timeToSeconds(events[props.eventIndex].start);
 
         const startT = tableStartTime + offset;
         const endT = tableStartTime + offset + lengthTime;
 
-        console.log("onDrag", data, offset, formatTime(startT));
+        console.log("onDrag", data, offset, startT);
         // setStartTime(startT)
         // setEndTime(endT)
 
-        events[props.eventIndex].start = formatTime(startT);
-        events[props.eventIndex].end = formatTime(endT);
+        events[props.eventIndex].start = LocalTime.ofSecondOfDay(startT);
+        events[props.eventIndex].end = LocalTime.ofSecondOfDay(endT);
 
-        const newTime = formatTimeSpan(startT, endT);
+        const newTime = formatTimeSpan(
+          events[props.eventIndex].start,
+          events[props.eventIndex].end
+        );
         setTimeStr(newTime);
       }}
       onDragStart={(e, data) => {
@@ -207,17 +208,17 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
 
         if (dir === "right") {
           events[props.eventIndex].end = formatTime(
-            calcStringTime(events[props.eventIndex].start) + widthTime
+            timeToSeconds(events[props.eventIndex].start) + widthTime
           );
         } else {
           events[props.eventIndex].start = formatTime(
-            calcStringTime(events[props.eventIndex].end) - widthTime
+            timeToSeconds(events[props.eventIndex].end) - widthTime
           );
         }
 
         const newTime = formatTimeSpan(
-          calcStringTime(events[props.eventIndex].start),
-          calcStringTime(events[props.eventIndex].end)
+          timeToSeconds(events[props.eventIndex].start),
+          timeToSeconds(events[props.eventIndex].end)
         );
         // not sure why setting this unused var causes update to events, but its needed to show resize times live
         setTimeStr(newTime);
@@ -254,7 +255,7 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
       >
         <span className="head">
           <span className="time">
-            {events[props.eventIndex].start} - {events[props.eventIndex].end}
+            {events[props.eventIndex].start.toString()} - {events[props.eventIndex].end.toString()}
           </span>
         </span>
 
@@ -330,17 +331,20 @@ const Menu = () => {
   const tableEndTime = useStore(store, (state) => state.computed.tableEndTime);
   const scrollWidth = useStore(store, (state) => state.computed.scrollWidth);
 
-  for (let t = tableStartTime; t < tableEndTime; t += config.widthTime) {
+  const startTimeSecs = timeToSeconds(tableStartTime);
+  const endTimeSecs = timeToSeconds(tableEndTime);
+
+  for (let t = startTimeSecs; t < endTimeSecs; t += config.widthTime) {
     if (beforeTime < 0 || Math.floor(beforeTime / 3600) !== Math.floor(t / 3600)) {
-      const cn = Number(
-        Math.min(Math.ceil((t + config.widthTime) / 3600) * 3600, tableEndTime) - t
-      );
+      const cn = Number(Math.min(Math.ceil((t + config.widthTime) / 3600) * 3600, endTimeSecs) - t);
       const cellNum = Math.floor(cn / config.widthTime);
       const width = cellNum * config.widthTimeX;
 
+      const timeStr = formatTime(LocalTime.ofSecondOfDay(t));
+
       final.push(
         <div className="sc_time" style={{ width: width + "px" }} key={t}>
-          {formatTime(t)}
+          {timeStr}
         </div>
       );
 

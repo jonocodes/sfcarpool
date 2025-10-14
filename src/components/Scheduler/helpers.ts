@@ -1,22 +1,47 @@
 import { Event } from "~/utils/models";
-import { LocalDate, DayOfWeek, TemporalAdjusters, DateTimeFormatter } from "@js-joda/core";
+import {
+  LocalDate,
+  DayOfWeek,
+  TemporalAdjusters,
+  DateTimeFormatter,
+  LocalTime,
+} from "@js-joda/core";
 import { format, getYear, getMonth } from "date-fns";
 
-export function formatTime(val: number | Date) {
-  let seconds;
+// export function formatTime(val: number | Date) {
+//   let seconds;
 
-  if (val instanceof Date) {
-    // If it's a Date object, extract hours and minutes
-    const hours = val.getUTCHours();
-    const minutes = val.getUTCMinutes();
-    return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
-  } else {
-    // Original logic for number values
-    const i1 = val % 3600;
-    const h = "" + (Math.floor(val / 36000) || "") + Math.floor((val / 3600) % 10);
-    const i = "" + Math.floor(i1 / 600) + Math.floor((i1 / 60) % 10);
-    return h + ":" + i;
-  }
+//   if (val instanceof Date) {
+//     // If it's a Date object, extract hours and minutes
+//     const hours = val.getUTCHours();
+//     const minutes = val.getUTCMinutes();
+//     return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+//   } else {
+//     // Original logic for number values
+//     const i1 = val % 3600;
+//     const h = "" + (Math.floor(val / 36000) || "") + Math.floor((val / 3600) % 10);
+//     const i = "" + Math.floor(i1 / 600) + Math.floor((i1 / 60) % 10);
+//     return h + ":" + i;
+//   }
+// }
+
+export function formatTime(time: LocalTime) {
+  const formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+  const formatted = time.format(formatter);
+  return formatted;
+}
+
+export function timeToSeconds(time: LocalTime) {
+  // get the seconds from the start of the day
+
+  const secondsSinceMidnight = time.toSecondOfDay();
+  return secondsSinceMidnight;
+
+  // const slice = str.split(":");
+  // const h = Number(slice[0]) * 60 * 60;
+  // const i = Number(slice[1]) * 60;
+  // return h + i;
 }
 
 export function calcStringTime(str: string) {
@@ -27,10 +52,18 @@ export function calcStringTime(str: string) {
   return h + i;
 }
 
-export function getTimeSlots(tableStartTime: number, tableEndTime: number, widthTime: number) {
-  let time = tableStartTime;
+export function getTimeSlots(
+  tableStartTime: LocalTime,
+  tableEndTime: LocalTime,
+  widthTime: number
+) {
+  let endTimeSeconds = tableEndTime.toSecondOfDay();
+  let startTimeSeconds = tableStartTime.toSecondOfDay();
+
+  let time = startTimeSeconds;
+
   const times = [time];
-  while (time < tableEndTime) {
+  while (time < endTimeSeconds) {
     time = time + widthTime;
     times.push(time);
   }

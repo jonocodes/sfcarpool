@@ -194,8 +194,8 @@ const Week = (props: {
   console.log("rendering Week, location", props.locationId, props.data);
 
   const pageConfig: SchedulerConfig = {
-    startTime: "06:00", // schedule start time(HH:ii)
-    endTime: "10:00", // schedule end time(HH:ii)
+    startTime: LocalTime.parse("06:00"), // schedule start time(HH:ii)
+    endTime: LocalTime.parse("10:00"), // schedule end time(HH:ii)
     widthTime: 60 * 5, // 300 seconds per cell (5 minutes) ?
     timeLineY: 60, // height(px)
     // dataWidth: 120,
