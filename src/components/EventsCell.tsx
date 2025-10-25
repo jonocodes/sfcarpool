@@ -10,7 +10,7 @@ import { Event, EventInDb } from "~/utils/models";
 
 import { triplit } from "../../triplit/client";
 import { useEffect, useState } from "react";
-import { LocalDate, LocalTime } from "@js-joda/core";
+import { LocalDate, LocalTime, nativeJs, ZoneId } from "@js-joda/core";
 
 // Mock data for events
 // const mockEvents = [
@@ -40,21 +40,14 @@ const myConfig: Config = { startTime: LocalTime.parse("06:00"), endTime: LocalTi
 const rows = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 function dbToEvent(item: EventInDb): Event {
-  const date = new Date(item.date);
-  // const startTime = new Date(item.start);
-  // const endTime = new Date(item.end);
+  const utcZoned = nativeJs(item.date, ZoneId.UTC); // assumes stored in DB in UTC timezone
+  const localDate = utcZoned.toLocalDate();
 
   return {
-    row: date.getDay() - 1,
+    row: localDate.dayOfWeek().value() - 1,
     text: item.label || "Untitled Event",
-    // start: startTime.toLocaleTimeString("en-US", {
-    //   hour: "numeric",
-    //   minute: "2-digit",
-    //   hour12: false,
-    // }),
-    // end: endTime.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: false }),
-    start: item.start,
-    end: item.end,
+    start: LocalTime.parse(item.start),
+    end: LocalTime.parse(item.end),
     data: {
       entry: item.id,
       likelihood: item.likelihood,
@@ -94,10 +87,8 @@ const EventsCell = ({
       // Handle null/undefined label to match EventInDb interface
       const convertedData = data.map((item) => ({
         ...item,
-        date: LocalDate.of(item.date.getFullYear(), item.date.getMonth() + 1, item.date.getDate()),
-        start: LocalTime.parse(item.start), // Ensure start is a string
-        end: LocalTime.parse(item.end), // Ensure end is a string
-        // date: parseDateTime(item.date as string), // Ensure date is a Date object
+        start: item.start, // Keep as string for EventInDb
+        end: item.end, // Keep as string for EventInDb
         label: item.label || "", // Convert null/undefined to empty string
       }));
       setDbEvents(convertedData);

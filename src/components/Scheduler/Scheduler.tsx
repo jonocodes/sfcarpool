@@ -1,13 +1,16 @@
 import React, { useContext, useState } from "react";
 import { Rnd } from "react-rnd";
 
-function assertDefined<T>(value: T | undefined, message: string): asserts value is T {
-  if (value === undefined) throw new Error(message);
-}
-
 import { useStore } from "zustand";
 
-import { formatTime, calcStringTime, timeToSeconds } from "./helpers";
+import {
+  formatTime,
+  calcStringTime,
+  timeToSeconds,
+  eventToDb,
+  getWeekStartStr,
+  assertDefined,
+} from "./helpers";
 import { SchedulerContext } from "./zstore";
 import { _generateEvent } from "./zstore";
 
@@ -68,11 +71,6 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
   assertDefined(config.widthTimeX, "config.widthTimeX is required");
   assertDefined(config.widthTime, "config.widthTime is required");
 
-  // const startTime = config.startTime;
-  // const timeLineY = config.timeLineY;
-  // const widthTimeX = config.widthTimeX;
-  // const widthTime = config.widthTime;
-
   const tableStartTimeSeconds = timeToSeconds(config.startTime);
 
   const opacity = 0.5 + Number(events[props.eventIndex].data.likelihood) / 100 / 2;
@@ -130,8 +128,6 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
         const endT = tableStartTimeSeconds + offset + lengthTime;
 
         console.log("onDrag", data, offset, startT);
-        // setStartTime(startT)
-        // setEndTime(endT)
 
         events[props.eventIndex].start = LocalTime.ofSecondOfDay(startT);
         events[props.eventIndex].end = LocalTime.ofSecondOfDay(endT);
@@ -169,30 +165,24 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
           const newTopY = origTopY + data.lastY;
 
           let newRow = 0;
+          let currentY = 0;
 
-          let currentY = computed.rowHeights[newRow];
-
-          while (currentY <= newTopY + config.timeLineY / 2) {
-            newRow += 1;
+          while (
+            newRow < computed.rowHeights.length &&
+            currentY + computed.rowHeights[newRow] <= newTopY + config.timeLineY / 2
+          ) {
             currentY += computed.rowHeights[newRow];
+            newRow += 1;
           }
 
           events[props.eventIndex].row = newRow;
 
-          // TODO: move gql to zstore ?
-          // const gql_data = eventToGql(events[props.eventIndex], startDate)
-
-          // const resp = update({
-          //   variables: {
-          //     id: Number(events[props.eventIndex].data.entry),
-          //     input: gql_data,
-          //   },
-          // }) //then.error Error saving event
-
+          // update db
           if (config.onChange) {
             config.onChange(events[props.eventIndex], props.eventIndex);
           }
 
+          // update zstore
           updateEvent(props.eventIndex, events[props.eventIndex]);
         }
 
@@ -226,19 +216,7 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
         setTimeStr(newTime);
       }}
       onResizeStop={(e, dir, ref, delta, pos) => {
-        // const deltaTime = (delta.width / config.widthTimeX) * config.widthTime
-
         console.log("onResizeStop", dir, delta, pos);
-
-        // TODO: move gql to zstore ? or perhaps Week.tsx
-        // const gql_data = eventToGql(events[props.eventIndex], startDate)
-
-        // const resp = update({
-        //   variables: {
-        //     id: Number(events[props.eventIndex].data.entry),
-        //     input: gql_data,
-        //   },
-        // }) //then.error Error saving event
 
         if (config.onChange) {
           config.onChange(events[props.eventIndex], props.eventIndex);
@@ -304,7 +282,7 @@ const Row = (props: { rowNum: number }) => {
     );
   }
 
-  const events = useStore((state) => state.events);
+  // const events = useStore((state) => state.events);
 
   const eventBlocks = [];
   for (let i = 0; i < items_map.length; i++) {

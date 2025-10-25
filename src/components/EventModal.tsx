@@ -12,31 +12,20 @@ import {
   ToggleButtonGroup,
   Tooltip,
 } from "react-bootstrap";
-// import {
-//   DeleteEventMutation,
-//   DeleteEventMutationVariables,
-//   UpdateEventMutation,
-//   UpdateEventMutationVariables,
-// } from 'types/graphql'
-
-// import { useMutation } from '@redwoodjs/web'
-// import { toast } from '@redwoodjs/web/toast'
 
 import { Event } from "~/utils/models";
 
 import {
   calcStringTime,
-  // DELETE_EVENT,
-  // eventToGql,
+  eventToDb,
   formatTime,
   timeToSeconds,
-  // UPDATE_EVENT,
 } from "../components/Scheduler/helpers";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import toast from "react-hot-toast";
 import { triplit } from "triplit/client";
-import { LocalTime } from "@js-joda/core";
+import { LocalDate, LocalTime } from "@js-joda/core";
 
 const icon_passenger = (
   <svg
@@ -70,7 +59,7 @@ const EventModal = (props: {
   handleClose: () => void;
   removeEvent: (index: number) => void;
   updateEvent: (index: number, event: Event) => void;
-  startDate: Date;
+  startDate: LocalDate;
   locationId: string;
   eventIndex: number;
   timeSlots: LocalTime[];
@@ -85,34 +74,18 @@ const EventModal = (props: {
 
   const [timespanError, setTimespanError] = useState("");
 
-  // const [update] = useMutation<UpdateEventMutation, UpdateEventMutationVariables>(UPDATE_EVENT, {
-  // onCompleted: (a) => {
-  //   console.log(a)
-  //   toast.success('Thank you for your submission!')
-  // },
-  // });
-
-  // const [_delete] = useMutation<DeleteEventMutation, DeleteEventMutationVariables>(DELETE_EVENT, {
-  // onCompleted: (a) => {
-  //   console.log(a)
-  //   toast.success('Thank you for your submission!')
-  // },
-  // });
-
   async function updateEvent() {
     console.log("update", props.eventIndex, event);
 
-    // const gql_data = eventToGql(event, props.startDate, props.locationId);
-    // console.log("gql data", gql_data);
+    const db_data = eventToDb(event, props.startDate, props.locationId);
+    const eventId = String(event.data.entry);
 
-    // update({ variables: { ...gql_data, ...{ id: Number(event.data.entry) } } })
-    //   .then(function () {
-    //     props.updateEvent(props.eventIndex, event);
-    //   })
-    //   .catch(function (error) {
-    //     toast.error("there was a problem saving the event");
-    //     console.log(error);
-    //   });
+    const updatedEvent = await triplit.update("events", eventId, {
+      ...db_data,
+      updated_at: new Date(),
+    });
+
+    console.log("updatedEvent", updatedEvent);
 
     // TODO: what if db update fails?
 
@@ -127,22 +100,7 @@ const EventModal = (props: {
 
       console.log("deletedItem", deletedItem);
 
-      // const response = await fetch(`http://localhost:4000/events?id=eq.${event.data.entry}`, {
-      //   method: "DELETE",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Prefer: "return=representation",
-      //   },
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error(`HTTP error! status: ${response.status}`);
-      // }
-
-      // const deletedEvents = await response.json();
-      // if (!Array.isArray(deletedEvents) || deletedEvents.length === 0) {
-      //   throw new Error("Delete operation failed - no records were deleted");
-      // }
+      // TODO: handle error case
 
       props.removeEvent(props.eventIndex);
       props.handleClose();

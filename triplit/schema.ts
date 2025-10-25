@@ -2,25 +2,25 @@ import { Schema as S } from "@triplit/client";
 
 // Using different ID formats
 export const schema = S.Collections({
-  todos: {
-    schema: S.Schema({
-      id: S.Id({ format: "nanoid" }), // default
-      text: S.String({}),
-      // ... other fields
-    }),
-  },
-  users: {
-    schema: S.Schema({
-      id: S.Id({ format: "uuidv4" }),
-      // ... other fields
-    }),
-  },
-  posts: {
-    schema: S.Schema({
-      id: S.Id({ format: "uuidv7" }),
-      // ... other fields
-    }),
-  },
+  // todos: {
+  //   schema: S.Schema({
+  //     id: S.Id({ format: "nanoid" }), // default
+  //     text: S.String({}),
+  //     // ... other fields
+  //   }),
+  // },
+  // users: {
+  //   schema: S.Schema({
+  //     id: S.Id({ format: "uuidv4" }),
+  //     // ... other fields
+  //   }),
+  // },
+  // posts: {
+  //   schema: S.Schema({
+  //     id: S.Id({ format: "uuidv7" }),
+  //     // ... other fields
+  //   }),
+  // },
   locations: {
     schema: S.Schema({
       id: S.Id(),

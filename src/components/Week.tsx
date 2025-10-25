@@ -169,29 +169,7 @@ const Week = (props: {
   config: SchedulerConfig;
   rows: string[];
 }) => {
-  // const [create /*{ loading, error }*/] = useMutation<
-  //   CreateEventMutation,
-  //   CreateEventMutationVariables
-  // >(CREATE_EVENT, {
-  //   // onCompleted: (a) => {
-  //   //   console.log(a)
-  //   //   toast.success('Thank you for your submission!')
-  //   // },
-  // })
-
-  // const [update] = useMutation<
-  //   UpdateEventMutation,
-  //   UpdateEventMutationVariables
-  // >(UPDATE_EVENT, {
-  //   // onCompleted: (a) => {
-  //   //   console.log(a)
-  //   //   toast.success('Thank you for your submission!')
-  //   // },
-  // })
-
   const startDate = props.dates[0];
-
-  console.log("rendering Week, location", props.locationId, props.data);
 
   const pageConfig: SchedulerConfig = {
     startTime: LocalTime.parse("06:00"), // schedule start time(HH:ii)
@@ -217,19 +195,18 @@ const Week = (props: {
       showModal();
     },
 
-    onChange: async function (eventModel, _) {
-      const gql_data = eventToDb(eventModel, startDate, props.locationId);
+    onChange: async function (eventModel: EventModel, eventIndex: number) {
+      const db_data = eventToDb(eventModel, startDate, props.locationId);
+      console.log("update db data", db_data);
 
-      // update({
-      //   variables: {
-      //     ...gql_data,
-      //     ...{ id: Number(eventModel.data.entry) },
+      const eventId = String(eventModel.data.entry);
 
-      //     // gql_data.concat()
-      //     // id: Number(eventModel.data.entry),
-      //     // input: gql_data,
-      //   },
-      // }); //then.error, toast error
+      const updatedEvent = await triplit.update("events", eventId, {
+        ...db_data,
+        updated_at: new Date(),
+      });
+
+      // TODO: handle error case
     },
     onScheduleClick: async function (colNum, rowNum) {
       if (rowNum < 0) throw new Error("rowNum must be >= 0");
@@ -263,7 +240,7 @@ const Week = (props: {
       };
 
       const db_data = eventToDb(event, startDate, props.locationId);
-      console.log("create gql data", db_data);
+      console.log("create db data", db_data);
 
       const insertedEntity = await triplit.insert("events", {
         ...db_data,
@@ -369,7 +346,7 @@ const Week = (props: {
       <EventModal
         show={modalVisible}
         handleClose={hideModal}
-        startDate={new Date(startDate.toString())}
+        startDate={startDate}
         currentEvent={currentEvent}
         eventIndex={eventIndex}
         timeSlots={timeSlots}

@@ -11,7 +11,7 @@ export interface ElectricModel {
 }
 
 export interface EventInDb extends ElectricModel {
-  id: string;
+  // id: string; // triplit keeps its ids outside the model kinda
   label: string;
   date: Date;
   start: string;

@@ -1,29 +1,17 @@
-import { Event } from "~/utils/models";
+import { Event, EventInDb } from "~/utils/models";
 import {
   LocalDate,
   DayOfWeek,
   TemporalAdjusters,
   DateTimeFormatter,
   LocalTime,
+  convert,
 } from "@js-joda/core";
 import { format, getYear, getMonth } from "date-fns";
 
-// export function formatTime(val: number | Date) {
-//   let seconds;
-
-//   if (val instanceof Date) {
-//     // If it's a Date object, extract hours and minutes
-//     const hours = val.getUTCHours();
-//     const minutes = val.getUTCMinutes();
-//     return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
-//   } else {
-//     // Original logic for number values
-//     const i1 = val % 3600;
-//     const h = "" + (Math.floor(val / 36000) || "") + Math.floor((val / 3600) % 10);
-//     const i = "" + Math.floor(i1 / 600) + Math.floor((i1 / 60) % 10);
-//     return h + ":" + i;
-//   }
-// }
+export function assertDefined<T>(value: T | undefined, message: string): asserts value is T {
+  if (value === undefined) throw new Error(message);
+}
 
 export function formatTime(time: LocalTime) {
   const formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -33,15 +21,7 @@ export function formatTime(time: LocalTime) {
 }
 
 export function timeToSeconds(time: LocalTime) {
-  // get the seconds from the start of the day
-
-  const secondsSinceMidnight = time.toSecondOfDay();
-  return secondsSinceMidnight;
-
-  // const slice = str.split(":");
-  // const h = Number(slice[0]) * 60 * 60;
-  // const i = Number(slice[1]) * 60;
-  // return h + i;
+  return time.toSecondOfDay();
 }
 
 export function calcStringTime(str: string) {
@@ -119,7 +99,7 @@ export function getWeekStartStr() {
 //   return [new Date(startLocal.toString()), new Date(endLocal.toString())];
 // }
 
-export function eventToDb(evnt: Event, startDate: LocalDate, locationId: string) {
+export function eventToDb(evnt: Event, startDate: LocalDate, locationId: string): EventInDb {
   const passenger = evnt.data.mode == "passenger";
   // Use js-joda to avoid timezone issues
   const startLocal = startDate; //LocalDate.parse(startDate.toISOString().split("T")[0]);
@@ -137,6 +117,9 @@ export function eventToDb(evnt: Event, startDate: LocalDate, locationId: string)
   let endLocalStr = evnt.end.toString();
 
   const result = {
+    // id: null,
+    // created_at: new Date(),
+    // updated_at: new Date(),
     label: evnt.text,
     passenger,
     location_id: locationId,
@@ -144,7 +127,8 @@ export function eventToDb(evnt: Event, startDate: LocalDate, locationId: string)
     end: endLocalStr,
     // start, // TODO: chop off the :00 ?
     // end,
-    date: dateStr,
+    date: convert(LocalDate.parse(dateStr)).toDate(),
+
     likelihood: Number(evnt.data.likelihood),
     active: true,
   };
@@ -177,78 +161,3 @@ export function rowsToDays(rows: string[], startDate: LocalDate, endDate: LocalD
 
   return dates;
 }
-
-// export const CREATE_EVENT = gql`
-//   mutation CreateEventMutation(
-//     $locationId: Int!
-//     $date: date!
-//     $start: time!
-//     $end: time!
-//     $likelihood: Int!
-//     $passenger: Boolean!
-//   ) {
-//     insert_events(
-//       objects: {
-//         date: $date
-//         end: $end
-//         likelihood: $likelihood
-//         start: $start
-//         passenger: $passenger
-//         location_id: $locationId
-//       }
-//     ) {
-//       returning {
-//         id
-//       }
-//     }
-//   }
-// `
-
-// export const UPDATE_EVENT = gql`
-//   mutation UpdateEventMutation(
-//     $id: Int!
-//     $locationId: Int
-//     $date: date
-//     $start: time!
-//     $end: time!
-//     $likelihood: Int!
-//     $passenger: Boolean!
-//     $label: String
-//   ) {
-//     # updateEvent(id: $id, input: $input) {
-//     #   id
-//     # }
-
-//     update_events(
-//       where: { id: { _eq: $id } }
-//       _set: {
-//         date: $date
-//         end: $end
-//         likelihood: $likelihood
-//         start: $start
-//         passenger: $passenger
-//         location_id: $locationId
-//         label: $label
-//       }
-//     ) {
-//       returning {
-//         id
-//       }
-//     }
-//   }
-// `
-
-// // soft delete
-// export const DELETE_EVENT = gql`
-//   mutation DeleteEventMutation($id: Int!) {
-//     update_events(where: { id: { _eq: $id } }, _set: { active: false }) {
-//       returning {
-//         id
-//       }
-//     }
-
-//     # delete_events_by_pk(id: $id) {
-//     #   id
-//     # }
-//   }
-// `
