@@ -77,44 +77,21 @@ export default function seed(): BulkInsert<typeof schema> {
   ];
 
   return {
-    // todos: [
-    //   {
-    //     text: "Buy milk",
-    //   },
-    //   {
-    //     text: "Buy eggs",
-    //   },
-    //   {
-    //     text: "Buy bread",
-    //   },
-    // ],
     locations: locations,
 
     events: [
-      {
-        date: new Date("2025-10-10"), // Friday
-        passenger: true,
-        likelihood: 50,
-        created_at: new Date("2025-01-01"),
-        updated_at: new Date("2025-01-01"),
-        active: true,
-        start: "08:00",
-        end: "09:00",
-        location_id: "l5PQRRCiuSah4NFM_r6Ln", // North Berkeley BART
-        label: "Friday Carpool",
-      },
-      {
-        date: new Date("2025-10-08"), // Wednesday
-        passenger: true,
-        likelihood: 90,
-        created_at: new Date("2025-01-01"),
-        updated_at: new Date("2025-01-01"),
-        active: true,
-        start: "08:30",
-        end: "09:45",
-        location_id: "l5PQRRCiuSah4NFM_r6Ln", // North Berkeley BART
-        label: "Wednesday Carpool",
-      },
+      // {
+      //   date: new Date("2025-10-08"), // Wednesday
+      //   passenger: true,
+      //   likelihood: 90,
+      //   created_at: new Date("2025-01-01"),
+      //   updated_at: new Date("2025-01-01"),
+      //   active: true,
+      //   start: "08:30",
+      //   end: "09:45",
+      //   location_id: "l5PQRRCiuSah4NFM_r6Ln", // North Berkeley BART
+      //   label: "Wednesday Carpool",
+      // },
     ],
   };
 }

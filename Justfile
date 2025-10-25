@@ -13,12 +13,9 @@ fe:
 # test: ## Run tests
 # 	yarn rw test
 
-# Run local backend (Postgres and Electric)
+# Run local backend
 be:
-	cd triplit && npx triplit dev
-
-seed:
-	npx triplit seed run the-seed
+	npx triplit dev --storage=sqlite --initWithSchema --schemaPath=schema.ts --seed=the-seed.ts
 
 # Run local storybook for component development
 storybook:
