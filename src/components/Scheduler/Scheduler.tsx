@@ -47,6 +47,8 @@ const icons = {
 };
 
 const Event = (props: { eventIndex: number; rowNum: number }) => {
+  if (props.rowNum < 0) throw new Error("rowNum must be >= 0");
+
   const store = useContext(SchedulerContext);
   if (!store) throw new Error("Missing SchedulerContext.Provider in the tree");
 
@@ -71,7 +73,7 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
   // const widthTimeX = config.widthTimeX;
   // const widthTime = config.widthTime;
 
-  const tableStartTime = timeToSeconds(config.startTime);
+  const tableStartTimeSeconds = timeToSeconds(config.startTime);
 
   const opacity = 0.5 + Number(events[props.eventIndex].data.likelihood) / 100 / 2;
 
@@ -124,8 +126,8 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
           timeToSeconds(events[props.eventIndex].end) -
           timeToSeconds(events[props.eventIndex].start);
 
-        const startT = tableStartTime + offset;
-        const endT = tableStartTime + offset + lengthTime;
+        const startT = tableStartTimeSeconds + offset;
+        const endT = tableStartTimeSeconds + offset + lengthTime;
 
         console.log("onDrag", data, offset, startT);
         // setStartTime(startT)
@@ -207,18 +209,18 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
         const widthTime = (ref.offsetWidth / config.widthTimeX) * config.widthTime;
 
         if (dir === "right") {
-          events[props.eventIndex].end = formatTime(
+          events[props.eventIndex].end = LocalTime.ofSecondOfDay(
             timeToSeconds(events[props.eventIndex].start) + widthTime
           );
         } else {
-          events[props.eventIndex].start = formatTime(
+          events[props.eventIndex].start = LocalTime.ofSecondOfDay(
             timeToSeconds(events[props.eventIndex].end) - widthTime
           );
         }
 
         const newTime = formatTimeSpan(
-          timeToSeconds(events[props.eventIndex].start),
-          timeToSeconds(events[props.eventIndex].end)
+          events[props.eventIndex].start,
+          events[props.eventIndex].end
         );
         // not sure why setting this unused var causes update to events, but its needed to show resize times live
         setTimeStr(newTime);
@@ -260,7 +262,7 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
         </span>
 
         <span className="text">
-          {icons[events[props.eventIndex].data.mode]}
+          {icons[events[props.eventIndex].data.mode as keyof typeof icons]}
           {events[props.eventIndex].text}
         </span>
         <div className="ui-resizable-handle ui-resizable-e" style={{ zIndex: "90" }}></div>
@@ -271,6 +273,8 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
 };
 
 const Row = (props: { rowNum: number }) => {
+  if (props.rowNum < 0) throw new Error("rowNum must be >= 0");
+
   const useStore = useContext(SchedulerContext);
   if (!useStore) throw new Error("Missing SchedulerContext.Provider in the tree");
 

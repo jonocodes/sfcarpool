@@ -56,16 +56,16 @@ export function getTimeSlots(
   tableStartTime: LocalTime,
   tableEndTime: LocalTime,
   widthTime: number
-) {
+): LocalTime[] {
   let endTimeSeconds = tableEndTime.toSecondOfDay();
   let startTimeSeconds = tableStartTime.toSecondOfDay();
 
-  let time = startTimeSeconds;
+  let timeSeconds = startTimeSeconds;
 
-  const times = [time];
-  while (time < endTimeSeconds) {
-    time = time + widthTime;
-    times.push(time);
+  const times: LocalTime[] = [LocalTime.ofSecondOfDay(timeSeconds)];
+  while (timeSeconds < endTimeSeconds) {
+    timeSeconds = timeSeconds + widthTime;
+    times.push(LocalTime.ofSecondOfDay(timeSeconds));
   }
 
   return times;

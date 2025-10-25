@@ -9,7 +9,7 @@ export const Route = createFileRoute("/")({
 function Home() {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate({ to: "/scheduler", search: { location: 1, week: new Date().toISOString() } });
+    navigate({ to: "/scheduler", search: { location: "1", week: new Date().toISOString() } });
   }, [navigate]);
 
   return null;

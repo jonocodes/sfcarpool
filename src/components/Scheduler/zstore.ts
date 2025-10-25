@@ -39,13 +39,15 @@ export const configDefault: Config = {
 };
 
 function generateRowMap(rows: string[], events: Event[]) {
-  const dataRowMap = [];
+  const dataRowMap: number[][] = [];
   for (let j = 0; j < rows.length; j++) {
     // doing this since Array.fill([]) causes issues
     dataRowMap.push([]);
   }
 
   console.log("generateRowMap", dataRowMap);
+
+  // if (events.length == 0) return dataRowMap;
 
   for (let i = 0; i < events.length; i++) {
     dataRowMap[events[i].row].push(i);
@@ -54,14 +56,14 @@ function generateRowMap(rows: string[], events: Event[]) {
   return dataRowMap;
 }
 
-function calculateGeometry(event: Event, config, tableStartTime) {
-  const startTime = timeToSeconds(event.start);
-  const endTime = timeToSeconds(event.end);
+function calculateGeometry(event: Event, config: Config, tableStartTimeSeconds: number) {
+  const startTimeSeconds = timeToSeconds(event.start);
+  const endTimeSeconds = timeToSeconds(event.end);
 
   // const tableStartTime = computed.tableStartTime
 
-  const st = Math.ceil((startTime - tableStartTime) / config.widthTime);
-  const et = Math.floor((endTime - tableStartTime) / config.widthTime);
+  const st = Math.ceil((startTimeSeconds - tableStartTimeSeconds) / config.widthTime);
+  const et = Math.floor((endTimeSeconds - tableStartTimeSeconds) / config.widthTime);
 
   return {
     x: config.widthTimeX * st,
@@ -75,7 +77,7 @@ function randInt(x: number, y: number) {
   return x + Math.floor(Math.random() * y);
 }
 
-export function _generateEvent(times: number[], rowCount: number) {
+export function _generateEvent(times: LocalTime[], rowCount: number) {
   const randStartIndex = Math.floor(Math.random() * (times.length - 8));
   const randEndIndex = randStartIndex + 2 + Math.floor(Math.random() * 8);
 
@@ -85,8 +87,8 @@ export function _generateEvent(times: number[], rowCount: number) {
 
   const event = {
     row: randInt(0, rowCount),
-    start: formatTime(times[randStartIndex]),
-    end: formatTime(times[randEndIndex]),
+    start: times[randStartIndex],
+    end: times[randEndIndex],
     text: "random " + modes[randModeIndex],
     data: {
       entry: randInt(0, 1000),
@@ -105,7 +107,13 @@ type SchedulerStore = ReturnType<typeof createSchedulerStore>;
 export const SchedulerContext = createContext<SchedulerStore | null>(null);
 
 // update row heights, and manage overlapping events in a row
-export function calculateGeometries(config, events, rows, rowMap, tableStartTime) {
+export function calculateGeometries(
+  config: Config,
+  events: Event[],
+  rows: string[],
+  rowMap: number[][],
+  tableStartTimeSeconds: number
+) {
   let tableHeight = 0;
   const geometries = [];
   const rowHeights = [];
@@ -118,8 +126,8 @@ export function calculateGeometries(config, events, rows, rowMap, tableStartTime
       items.push(events[items_map[i]]);
     }
 
-    const codes = [],
-      check = [];
+    const codes: Array<{ code: number; x: number }> = [],
+      check: number[][] = [];
     let h = 0;
     let c1, c2, s1, s2, e1, e2;
     let i;
@@ -127,12 +135,12 @@ export function calculateGeometries(config, events, rows, rowMap, tableStartTime
     for (i = 0; i < items.length; i++) {
       const eventIndex = rowMap[rowNum][i];
 
-      const geometry = calculateGeometry(items[i], config, tableStartTime); // TODO: cache this for later use, or precompute
+      const geometry = calculateGeometry(items[i], config, tableStartTimeSeconds); // TODO: cache this for later use, or precompute
 
       // const geometry = getOrSetGeometry(eventIndex, config)
 
       // setGeometry(geometry, eventIndex)
-      geometries[eventIndex] = items[i];
+      geometries[eventIndex] = geometry;
 
       codes[i] = {
         code: i,
@@ -155,14 +163,14 @@ export function calculateGeometries(config, events, rows, rowMap, tableStartTime
     for (i = 0; i < codes.length; i++) {
       c1 = codes[i].code;
 
-      const geometry1 = calculateGeometry(items[c1], config, tableStartTime); // items[c1].geometry
+      const geometry1 = calculateGeometry(items[c1], config, tableStartTimeSeconds); // items[c1].geometry
 
       for (h = 0; h < check.length; h++) {
         let next = false;
 
         for (let j = 0; j < check[h].length; j++) {
           c2 = check[h][j];
-          const geometry2 = calculateGeometry(items[c2], config, tableStartTime);
+          const geometry2 = calculateGeometry(items[c2], config, tableStartTimeSeconds);
           s1 = geometry1.x;
           e1 = geometry1.x + geometry1.width;
           s2 = geometry2.x;
@@ -183,7 +191,7 @@ export function calculateGeometries(config, events, rows, rowMap, tableStartTime
         check[h] = [];
       }
 
-      const geometry = calculateGeometry(items[c1], config, tableStartTime);
+      const geometry = calculateGeometry(items[c1], config, tableStartTimeSeconds);
       geometry.y = h * config.timeLineY + config.timeLinePaddingTop;
 
       const eventIndex = rowMap[rowNum][c1];
@@ -222,22 +230,22 @@ export function calculateGeometries(config, events, rows, rowMap, tableStartTime
   };
 }
 
-export function refreshComputed(userConf, rows, events: Event[]): Computed {
+export function refreshComputed(userConf: Config, rows: string[], events: Event[]): Computed {
   const config = { ...configDefault, ...userConf };
 
-  let tableStartTime = timeToSeconds(config.startTime);
-  tableStartTime -= tableStartTime % config.widthTime;
+  let tableStartTimeSeconds = timeToSeconds(config.startTime);
+  tableStartTimeSeconds -= tableStartTimeSeconds % config.widthTime;
   // tableStartTime = 0
 
-  let tableEndTime = timeToSeconds(config.endTime);
-  tableEndTime -= tableEndTime % config.widthTime;
+  let tableEndTimeSeconds = timeToSeconds(config.endTime);
+  tableEndTimeSeconds -= tableEndTimeSeconds % config.widthTime;
   // tableEndTime = 0
 
-  const cellsWide = Math.floor((tableEndTime - tableStartTime) / config.widthTime);
+  const cellsWide = Math.floor((tableEndTimeSeconds - tableStartTimeSeconds) / config.widthTime);
 
   const rowMap = generateRowMap(rows, events);
 
-  const geos = calculateGeometries(config, events, rows, rowMap, tableStartTime);
+  const geos = calculateGeometries(config, events, rows, rowMap, tableStartTimeSeconds);
 
   return {
     tableEndTime: config.endTime,
@@ -319,7 +327,7 @@ export function refreshComputed(userConf, rows, events: Event[]): Computed {
 // }))
 
 export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
-  const config = { ...configDefault, ...initProps.config };
+  const config = { ...configDefault, ...initProps?.config };
 
   // const [_delete] = useMutation<
   //   DeleteEventMutation,
@@ -331,14 +339,14 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
   //   // },
   // })
 
-  console.log("createStore initProps.events", initProps.events);
+  console.log("createStore initProps.events", initProps?.events);
 
   // return createStore<SchedulerState>()((set) => ({
   return create<SchedulerState>()((set) => ({
-    events: initProps.events,
-    rows: initProps.rows,
+    events: initProps?.events || [],
+    rows: initProps?.rows || [],
     config: config,
-    computed: refreshComputed(config, initProps.rows, initProps.events),
+    computed: refreshComputed(config, initProps?.rows || [], initProps?.events || []),
     onClickEvent: null,
     currentEvent: null,
     currentEventIndex: null,
@@ -368,7 +376,7 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
 
         console.log("clearing events");
 
-        const computed = refreshComputed(config, initProps.rows, []);
+        const computed = refreshComputed(config, initProps?.rows || [], []);
 
         return {
           events: [],
@@ -379,7 +387,7 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
     addEvent: (event: Event) =>
       set((state) => {
         state.events.push(event);
-        const computed = refreshComputed(config, initProps.rows, state.events);
+        const computed = refreshComputed(config, initProps?.rows || [], state.events);
 
         return {
           currentEvent: event,
@@ -418,7 +426,7 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
 
         state.events.splice(eventIndex, 1);
 
-        const computed = refreshComputed(config, initProps.rows, state.events);
+        const computed = refreshComputed(config, initProps?.rows || [], state.events);
 
         console.log("removeEvent", eventIndex, state.events, computed);
 
@@ -434,7 +442,7 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
         console.log("updateEvent", eventIndex, event);
 
         state.events[eventIndex] = event;
-        const computed = refreshComputed(config, initProps.rows, state.events);
+        const computed = refreshComputed(config, initProps?.rows || [], state.events);
 
         console.log(
           "updateEvent finished",

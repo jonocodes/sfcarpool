@@ -36,15 +36,15 @@ export interface EventChangeFunction {
 
 export interface Config {
   className?: string;
-  startTime?: LocalTime;
-  endTime?: LocalTime;
-  widthTimeX?: number;
-  widthTime?: number; // cell timestamp example 10 minutes
-  timeLineY?: number; // timeline height(px)
-  timeLineBorder?: number; // timeline height border
+  startTime: LocalTime;
+  endTime: LocalTime;
+  widthTimeX: number;
+  widthTime: number; // cell timestamp example 10 minutes
+  timeLineY: number; // timeline height(px)
+  timeLineBorder: number; // timeline height border
   timeBorder?: number; // border width
-  timeLinePaddingTop?: number;
-  timeLinePaddingBottom?: number;
+  timeLinePaddingTop: number;
+  timeLinePaddingBottom: number;
   headTimeBorder?: number; // time border width
   // dataWidth?: number // data width
   verticalScrollbar?: number; // vertical scrollbar width

@@ -209,6 +209,8 @@ const Week = (props: {
     resizableLeft: true,
     widthTimeX: 20, // 20 pixels per cell?
     onClick: function (eventModel, rowNum, eventIndex) {
+      if (rowNum < 0) throw new Error("rowNum must be >= 0");
+
       console.log("onClick external method", eventModel, rowNum, eventIndex);
 
       setEvent(eventIndex, eventModel);
@@ -230,10 +232,13 @@ const Week = (props: {
       // }); //then.error, toast error
     },
     onScheduleClick: async function (colNum, rowNum) {
+      if (rowNum < 0) throw new Error("rowNum must be >= 0");
+
       console.log("onScheduleClick external method", colNum, rowNum);
 
       // seconds since midnight?
-      const startTimeValue = computed.tableStartTime + colNum * (config?.widthTime || 300);
+      const startTimeValue =
+        computed.tableStartTime.toSecondOfDay() + colNum * (config?.widthTime || 300);
       const endTimeValue = startTimeValue + 4 * (config?.widthTime || 300);
 
       const startTimeLocal = LocalTime.ofSecondOfDay(startTimeValue);
@@ -245,10 +250,10 @@ const Week = (props: {
 
       // const randId = 0 + Math.floor(Math.random() * 1000)
 
-      const event = {
+      const event: EventModel = {
         row: rowNum,
-        start: startTimeLocal, //formatTime(startTimeDate),
-        end: endTimeLocal, //formatTime(endTimeDate),
+        start: startTimeLocal,
+        end: endTimeLocal,
         text: "",
         data: {
           entry: "", // this will get reset once it makes it to db
@@ -364,7 +369,7 @@ const Week = (props: {
       <EventModal
         show={modalVisible}
         handleClose={hideModal}
-        startDate={startDate}
+        startDate={new Date(startDate.toString())}
         currentEvent={currentEvent}
         eventIndex={eventIndex}
         timeSlots={timeSlots}

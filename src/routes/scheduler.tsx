@@ -93,7 +93,7 @@ const SchedulerPage = () => {
 };
 export const Route = createFileRoute("/scheduler")({
   validateSearch: (search: Record<string, unknown>) => ({
-    location: search.location ? String(search.location) : "rstarst",
+    location: search.location ? String(search.location) : "l5PQRRCiuSah4NFM_r6Ln",
     // TODO: validate week input
     week: search.week ? String(search.week) : getWeekStartStr(),
   }),

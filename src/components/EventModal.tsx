@@ -36,6 +36,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import toast from "react-hot-toast";
 import { triplit } from "triplit/client";
+import { LocalTime } from "@js-joda/core";
 
 const icon_passenger = (
   <svg
@@ -72,7 +73,7 @@ const EventModal = (props: {
   startDate: Date;
   locationId: string;
   eventIndex: number;
-  timeSlots: number[];
+  timeSlots: LocalTime[];
 }) => {
   const [event] = useState(props.currentEvent);
 
@@ -122,7 +123,7 @@ const EventModal = (props: {
     console.log("remove", props.eventIndex, event);
 
     try {
-      const deletedItem = await triplit.delete("events", event.data.entry);
+      const deletedItem = await triplit.delete("events", String(event.data.entry));
 
       console.log("deletedItem", deletedItem);
 
@@ -263,9 +264,9 @@ const EventModal = (props: {
                   <Form.Select
                     size="sm"
                     aria-label="choose start time"
-                    defaultValue={event.start}
+                    defaultValue={formatTime(event.start)}
                     onChange={(e) => {
-                      event.start = e.target.value;
+                      event.start = LocalTime.parse(e.target.value);
                       validateTimespan();
                     }}
                   >
@@ -280,9 +281,9 @@ const EventModal = (props: {
                   <Form.Select
                     size="sm"
                     aria-label="choose end time"
-                    defaultValue={event.end}
+                    defaultValue={formatTime(event.end)}
                     onChange={(e) => {
-                      event.end = e.target.value;
+                      event.end = LocalTime.parse(e.target.value);
                       validateTimespan();
                     }}
                   >
