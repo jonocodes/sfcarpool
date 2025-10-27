@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-import type { Meta } from "@storybook/react";
+import type { Meta } from "@storybook/react-vite";
 
 import SchedulerComponent from "../components/Scheduler/Scheduler";
 import { Config } from "../components/Scheduler/types";

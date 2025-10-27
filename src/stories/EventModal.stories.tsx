@@ -2,6 +2,7 @@ import type { Meta } from "@storybook/react";
 // import { DateTime } from 'luxon'
 import { calcStringTime, getTimeSlots } from "../components/Scheduler/helpers";
 import EventModal from "../components/EventModal";
+import { LocalDate, LocalTime } from "@js-joda/core";
 
 // import { calcStringTime, getTimeSlots } from '../Scheduler/helpers'
 
@@ -12,13 +13,13 @@ export const updateEvent = () => {
 
   // const
 
-  const startDate = new Date(2022, 9, 20);
+  const startDate = LocalDate.parse("2022-09-20");
 
   const events = [
     {
       row: 0, // monday
-      start: "8:00",
-      end: "8:10",
+      start: LocalTime.parse("8:00"),
+      end: LocalTime.parse("8:10"),
       text: "JK",
       data: {
         entry: 8,
@@ -49,7 +50,7 @@ export const updateEvent = () => {
       handleClose={hideModal}
       removeEvent={() => {}}
       updateEvent={() => {}}
-      locationId={1}
+      locationId={"1"}
       startDate={startDate}
       currentEvent={events[0]}
       eventIndex={0}

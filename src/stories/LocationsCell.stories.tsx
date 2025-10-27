@@ -1,5 +1,5 @@
 import React from "react";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import LocationsCell from "../components/LocationsCell";
 // Import the mocked useShape directly from our mock file
 import { useShape } from "../../src/electric-sql-react.mock";
@@ -35,7 +35,7 @@ const mockLocationsData = [
 const mockedUseShape = useShape as any; // Cast to any to access .mock property
 
 export const Default: Story = {
-  args: { locationId: 1, week: "2024-W28" },
+  args: { locationId: "1", week: "2024-W28" },
   beforeEach: async () => {
     // Ensure this is called before the story renders
     mockedUseShape.mockReturnValue({ data: mockLocationsData, isLoading: false, error: null });
@@ -46,14 +46,14 @@ export const Default: Story = {
 };
 
 export const Loading: Story = {
-  args: { locationId: 1, week: "2024-W28" },
+  args: { locationId: "1", week: "2024-W28" },
   beforeEach: async () => {
     mockedUseShape.mockReturnValue({ data: [], isLoading: true, error: null });
   },
 };
 
 export const ErrorState: Story = {
-  args: { locationId: 1, week: "2024-W28" },
+  args: { locationId: "1", week: "2024-W28" },
   beforeEach: async () => {
     mockedUseShape.mockReturnValue({
       data: [],
@@ -64,7 +64,7 @@ export const ErrorState: Story = {
 };
 
 export const Empty: Story = {
-  args: { locationId: 1, week: "2024-W28" },
+  args: { locationId: "1", week: "2024-W28" },
   beforeEach: async () => {
     mockedUseShape.mockReturnValue({ data: [], isLoading: false, error: null });
   },

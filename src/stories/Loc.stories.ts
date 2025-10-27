@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { expect, userEvent, within } from "@storybook/test";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+// import { expect, userEvent, within } from "storybook/test";
 import LocationsCell from "../components/LocationsCell";
 // import { NotFound } from "../components/NotFound";
 
@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 
 // More on component testing: https://storybook.js.org/docs/writing-tests/component-testing
 export const Orinda: Story = {
-  args: { locationId: 3, week: "2025-05-15" },
+  args: { locationId: "3", week: "2025-05-15" },
   // play: async ({ canvasElement }) => {
   //   const canvas = within(canvasElement);
   //   const loginButton = canvas.getByRole("button", { name: /Log in/i });

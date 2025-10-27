@@ -1,18 +1,19 @@
-import type { Meta } from "@storybook/react";
+import type { Meta } from "@storybook/react-vite";
 
 import { Config } from "src/components/Scheduler/types";
 
 import { parseDateTime, rowsToDays as rowsToDates } from "../components/Scheduler/helpers";
 
 import Week from "../components/Week";
+import { LocalDate, LocalTime } from "@js-joda/core";
 
 export const carpool = () => {
-  const after = parseDateTime("2023-01-09");
-  const before = parseDateTime("2023-01-13");
+  const after = LocalDate.parse("2023-01-09");
+  const before = LocalDate.parse("2023-01-13");
 
   const myConfig: Config = {
-    startTime: "06:00",
-    endTime: "9:00",
+    startTime: LocalTime.parse("6:00"),
+    endTime: LocalTime.parse("9:00"),
   };
 
   const rows = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];

@@ -11,6 +11,7 @@ yarn.lock
 .data
 
 /build/
+/dist/
 /api/
 /server/build
 /public/build

@@ -1,10 +1,11 @@
-// import type { ComponentStory } from "@storybook/react";
+// import type { ComponentStory } from "@storybook/react-vite";
 
 // import { Loading, Empty, Failure, Success } from '../components/EventsCell'
 // import { standard } from "./EventsCell.mock";
 import EventsCell from "../components/EventsCell";
 import { Config } from "../components/Scheduler/types";
-import { parseDateTime } from "../components/Scheduler/helpers";
+// import { parseDateTime } from "../components/Scheduler/helpers";
+import { LocalDate, LocalTime } from "@js-joda/core";
 
 // export const loading = () => {
 //   return Loading ? <Loading /> : <></>
@@ -23,15 +24,15 @@ import { parseDateTime } from "../components/Scheduler/helpers";
 // };
 
 export const events = () => {
-  const after = parseDateTime("2023-01-09");
-  const before = parseDateTime("2023-01-13");
+  const after = LocalDate.parse("2023-01-09");
+  const before = LocalDate.parse("2023-01-13");
 
   const myConfig: Config = {
-    startTime: "06:00",
-    endTime: "9:00",
+    startTime: LocalTime.parse("6:00"),
+    endTime: LocalTime.parse("9:00"),
   };
 
-  return <EventsCell before={before} after={after} locationId={2} />;
+  return <EventsCell before={before} after={after} locationId={"2"} />;
 };
 
 export default { title: "Cells/EventsCell" };
