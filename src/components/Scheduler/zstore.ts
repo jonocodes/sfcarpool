@@ -327,7 +327,6 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
         // const resp = _delete({
         //   variables: { id: Number(state.events[eventIndex].data.entry) },
         // }).then(function () {
-        //   // debugger
         //   return 8
         // })
 
@@ -339,8 +338,6 @@ export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
         //   // const somethingElse = await getSomethingElse()
         //   // const moreThings = await getMoreThings()
         // })()
-
-        // debugger
 
         // toast.success('removing event')
 

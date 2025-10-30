@@ -285,7 +285,7 @@ const EventModal = (props: {
                 <Button
                   className="float-end"
                   variant="primary"
-                  type="submit"
+                  // type="submit"
                   onClick={updateEvent}
                   disabled={!validated}
                 >
