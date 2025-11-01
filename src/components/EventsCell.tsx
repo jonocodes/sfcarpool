@@ -6,7 +6,6 @@ import { Config } from "./Scheduler/types";
 import Week from "./Week";
 
 import { Event, EventInDb } from "~/utils/models";
-// import { useShape } from "@electric-sql/react";
 
 import { triplit } from "../../triplit/client";
 import { useEffect, useState } from "react";
@@ -80,9 +79,14 @@ const EventsCell = ({
   const [dbEvents, setDbEvents] = useState<EventInDb[]>([]);
 
   useEffect(() => {
-    const query = triplit.query("events");
+    const query = triplit.query("events").Where([
+      ["location_id", "=", locationId],
+      ["date", "<=", before.toString()],
+      ["date", ">=", after.toString()],
+    ]);
+
     const unsubscribe = triplit.subscribe(query, (data) => {
-      console.log("fetching events");
+      console.log("live query fetching events");
       console.log(data);
       // Handle null/undefined label to match EventInDb interface
       const convertedData = data.map((item) => ({
@@ -96,7 +100,7 @@ const EventsCell = ({
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [before, after, locationId]);
 
   // const {
   //   data: dbEvents,

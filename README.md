@@ -2,7 +2,7 @@
 
 This is an experimental web app to help initiate carpools to San Francisco during the morning commute.
 
-REWRITE IN PROGRESS: moving from redwood/hasura to tanstack/electric
+REWRITE IN PROGRESS: moving from redwood/hasura to tanstack/triplit
 
 ## Screenshot
 

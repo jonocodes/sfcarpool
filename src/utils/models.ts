@@ -6,12 +6,12 @@ export interface Dictionary<T> {
   [Key: string | number]: T;
 }
 
-export interface ElectricModel {
+export interface DbModel {
   [key: string]: any;
 }
 
-export interface EventInDb extends ElectricModel {
-  // id: string; // triplit keeps its ids outside the model kinda
+export interface EventInDb extends DbModel {
+  // id: string; // triplit keeps its ids outside the model, kinda
   label: string;
   date: Date;
   start: string;
@@ -30,7 +30,7 @@ export interface Event {
   data: Dictionary<string | number>;
 }
 
-export interface Location extends ElectricModel {
+export interface Location extends DbModel {
   id: string;
   name: string;
 }

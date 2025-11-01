@@ -17,6 +17,7 @@ version = 1
 [install]
 nodejs.pkg-path = "nodejs"
 just.pkg-path = "just"
+openssl.pkg-path = "openssl"
 
 
 ## Environment Variables ---------------------------------------------

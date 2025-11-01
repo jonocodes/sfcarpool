@@ -65,7 +65,6 @@ export function formatDateSpan(start: Date, end: Date) {
 
 // export function getWeekStart(today: Date) {
 //   // Convert Date to LocalDate and get the start of the week (Sunday)
-//   debugger;
 //   const localDate = LocalDate.parse(today.toISOString().split("T")[0]);
 //   // js-joda's dayOfWeek: Monday=1, Sunday=7
 //   const dayOfWeek = localDate.dayOfWeek().value();
@@ -83,9 +82,6 @@ export function getWeekStartStr() {
   const today = LocalDate.now();
   const firstDayOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
 
-  // console.log(firstDayOfWeek.toString());
-
-  // debugger;
   return firstDayOfWeek.toString();
 }
 
@@ -93,7 +89,6 @@ export function getWeekStartStr() {
 //   const today = new Date();
 //   const startLocal = getWeekStart(today);
 //   const endLocal = startLocal.plusDays(4);
-//   debugger;
 //   console.log("getWeekSpan", startLocal, endLocal);
 //   // Convert LocalDate back to Date for compatibility
 //   return [new Date(startLocal.toString()), new Date(endLocal.toString())];

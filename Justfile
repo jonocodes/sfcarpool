@@ -15,7 +15,10 @@ fe:
 
 # Run local backend
 be:
-	npx triplit dev --storage=sqlite --initWithSchema --schemaPath=schema.ts --seed=the-seed.ts
+	VERBOSE_LOGS=true npx triplit dev --storage=sqlite --initWithSchema --schemaPath=schema.ts --seed=the-seed.ts
+
+seed:
+	VERBOSE_LOGS=true npx triplit seed run --all
 
 # Run local storybook for component development
 storybook:

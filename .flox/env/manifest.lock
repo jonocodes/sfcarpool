@@ -8,6 +8,9 @@
       },
       "nodejs": {
         "pkg-path": "nodejs"
+      },
+      "openssl": {
+        "pkg-path": "openssl"
       }
     },
     "hook": {
@@ -271,6 +274,144 @@
         "dev": "/nix/store/xw8c1c0inxq3xl1d7axz19vq8c05kjk5-nodejs-22.14.0-dev",
         "libv8": "/nix/store/s8gnrgh9hgnbkrc1wrn21d6zvkbvm9vi-nodejs-22.14.0-libv8",
         "out": "/nix/store/c8jxsih8yy2rnncdmx2hyraizf689nvp-nodejs-22.14.0"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "openssl",
+      "broken": false,
+      "derivation": "/nix/store/4cfr6k8d6a4njryd7y0xjl91wswxw6zh-openssl-3.4.1.drv",
+      "description": "Cryptographic library that implements the SSL and TLS protocols",
+      "install_id": "openssl",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
+      "name": "openssl-3.4.1",
+      "pname": "openssl",
+      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
+      "rev_count": 807377,
+      "rev_date": "2025-05-28T19:24:49Z",
+      "scrape_date": "2025-05-31T04:22:58.556494Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.4.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/bx0b6gvphv01s2px3j1h1ajy036h8bgb-openssl-3.4.1-bin",
+        "dev": "/nix/store/kbs1gz7p2j7qd1lixqzkladkjdxs8nj7-openssl-3.4.1-dev",
+        "doc": "/nix/store/sjmrjajggy3648nkn0ipz8axhj34qqn5-openssl-3.4.1-doc",
+        "man": "/nix/store/pwwqlk8zacsz87xz0gbic7zvhvjid232-openssl-3.4.1-man",
+        "out": "/nix/store/z2js30ib9b11hhcy1zy6x4nzdg75bpxf-openssl-3.4.1"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "openssl",
+      "broken": false,
+      "derivation": "/nix/store/a7bp9sy7hyjm64bqshmw6fz66ah9580z-openssl-3.4.1.drv",
+      "description": "Cryptographic library that implements the SSL and TLS protocols",
+      "install_id": "openssl",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
+      "name": "openssl-3.4.1",
+      "pname": "openssl",
+      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
+      "rev_count": 807377,
+      "rev_date": "2025-05-28T19:24:49Z",
+      "scrape_date": "2025-05-31T04:41:14.399091Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.4.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/x89xyla4b5vdl5i7a417vbnrbhnyv2a9-openssl-3.4.1-bin",
+        "debug": "/nix/store/m9cm6npjkgc7yl008nlfdbqz1gnw1n3n-openssl-3.4.1-debug",
+        "dev": "/nix/store/snmsdv923yl1biv1lfg1as31smff1j7s-openssl-3.4.1-dev",
+        "doc": "/nix/store/ybjya4sv3m3cjm5s3v1gp527lcbavsc5-openssl-3.4.1-doc",
+        "man": "/nix/store/qqrcl2hqav9wrqj887zvsf4ywck4d4pq-openssl-3.4.1-man",
+        "out": "/nix/store/ffdmy5fhjr6m1gkb8mycyf3swakvygd1-openssl-3.4.1"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "openssl",
+      "broken": false,
+      "derivation": "/nix/store/d42msvraw944hvpy73ayka75f0bxlcm3-openssl-3.4.1.drv",
+      "description": "Cryptographic library that implements the SSL and TLS protocols",
+      "install_id": "openssl",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
+      "name": "openssl-3.4.1",
+      "pname": "openssl",
+      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
+      "rev_count": 807377,
+      "rev_date": "2025-05-28T19:24:49Z",
+      "scrape_date": "2025-05-31T04:57:03.151617Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.4.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/liqdyh2xc61v6g9lhhydijsd79p0ghgq-openssl-3.4.1-bin",
+        "dev": "/nix/store/58m9pn9yksg7xjl6kl7qmmp2dwj9gjg2-openssl-3.4.1-dev",
+        "doc": "/nix/store/iskcy65i66j6x2b8q1y40x0qlmppnk48-openssl-3.4.1-doc",
+        "man": "/nix/store/6vyh0kmpyyaliqrxa01iw56x50c8jrf3-openssl-3.4.1-man",
+        "out": "/nix/store/gf7l76id9931pnshsvvv8izg00hbgaxw-openssl-3.4.1"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "openssl",
+      "broken": false,
+      "derivation": "/nix/store/rw3y8k94ib37dc86n0wivr551wyzxgsk-openssl-3.4.1.drv",
+      "description": "Cryptographic library that implements the SSL and TLS protocols",
+      "install_id": "openssl",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
+      "name": "openssl-3.4.1",
+      "pname": "openssl",
+      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
+      "rev_count": 807377,
+      "rev_date": "2025-05-28T19:24:49Z",
+      "scrape_date": "2025-05-31T05:16:10.859061Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.4.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/rjzx8v679rwd6dsb6s08iy3j2rrax72s-openssl-3.4.1-bin",
+        "debug": "/nix/store/yk2g2gfcj2fy1ffyi1g91q7jmp4h8pxa-openssl-3.4.1-debug",
+        "dev": "/nix/store/kcgqglb4iax0zh5jlrxmjdik93wlgsrq-openssl-3.4.1-dev",
+        "doc": "/nix/store/9fz5qmj0z70cbzy7mapml0sbi8z6ap0a-openssl-3.4.1-doc",
+        "man": "/nix/store/1l5b31cnswnbcdcac9rzs9xixnc2n9r5-openssl-3.4.1-man",
+        "out": "/nix/store/8pviily4fgsl02ijm65binz236717wfs-openssl-3.4.1"
       },
       "system": "x86_64-linux",
       "group": "toplevel",
