@@ -21,6 +21,7 @@ http://localhost:3000/scheduler?location={location_id}&week={date}
 ```
 
 **Parameters:**
+
 - `location`: String ID of the carpool route (e.g., "l5PQRRCiuSah4NFM_r6Ln")
 - `week`: ISO date string for the start of the week (e.g., "2025-10-26")
 - `options`: Optional, can be "passenger" or "driver"
@@ -32,6 +33,7 @@ http://localhost:3000/scheduler?location={location_id}&week={date}
 The DOM contains **10 `.timeline` elements**, split into two groups:
 
 1. **Title Rows (indices 0-4)**: Display day names
+
    - Index 0: Monday title
    - Index 1: Tuesday title
    - Index 2: Wednesday title
@@ -46,19 +48,22 @@ The DOM contains **10 `.timeline` elements**, split into two groups:
    - Index 9: Friday's interactive cells
 
 **Formula to find interactive timeline:**
+
 ```javascript
-interactiveTimelineIndex = 5 + dayIndex
+interactiveTimelineIndex = 5 + dayIndex;
 // where dayIndex: Mon=0, Tue=1, Wed=2, Thu=3, Fri=4
 ```
 
 ### Cell Structure
 
 Each interactive timeline contains **60 `.tl` cells** (for ~4 hours):
+
 - 60 cells / 4 hours = **15 cells per hour**
 - Each cell represents **4 minutes** (300 seconds)
 - Cell clicks trigger event creation at that time slot
 
 **Formula to find cell for specific time:**
+
 ```javascript
 // If schedule starts at 6am and you want 8am:
 hoursFromStart = 8 - 6 = 2
@@ -68,6 +73,7 @@ cellIndex = hoursFromStart * 15 = 30
 ### Event Elements
 
 Events are rendered as draggable/resizable blocks with:
+
 - Class: `.sc_bar` (with additional class for mode: `passenger` or `driver`)
 - Contained in: `react-rnd` wrapper (from react-rnd library)
 - Clickable to edit/delete
@@ -96,8 +102,8 @@ routes/scheduler.tsx
 1. **User clicks a cell** → triggers `onScheduleClick(colNum, rowNum)`
 2. **Week.tsx calculates time:**
    ```javascript
-   startTime = tableStartTime + (colNum * widthTime)
-   endTime = startTime + (4 * widthTime)
+   startTime = tableStartTime + colNum * widthTime;
+   endTime = startTime + 4 * widthTime;
    ```
 3. **EventModal opens** with pre-filled time
 4. **User configures** label, mode (passenger/driver), times, likelihood
@@ -121,7 +127,7 @@ routes/scheduler.tsx
 2. **User clicks Delete button**
 3. **Week.tsx calls:**
    ```javascript
-   await triplit.delete("events", eventId)
+   await triplit.delete("events", eventId);
    ```
 4. **Success message** displays: "Event deleted successfully"
 5. **Event removed** from UI immediately
@@ -167,6 +173,7 @@ routes/scheduler.tsx
 ### Time Calculations
 
 The scheduler uses **seconds since midnight** internally:
+
 - `LocalTime.ofSecondOfDay(seconds)` creates time objects
 - `localTime.toSecondOfDay()` gets seconds
 - Default cell width: 300 seconds (5 minutes)
@@ -174,6 +181,7 @@ The scheduler uses **seconds since midnight** internally:
 ### Event Positioning
 
 Events are positioned using:
+
 - **X position**: Calculated from start time relative to table start
 - **Y position**: Based on row (day)
 - **Width**: Duration in cells
@@ -182,14 +190,15 @@ Events are positioned using:
 ### Row Mapping
 
 The `rowMap` structure organizes events by day:
+
 ```javascript
 rowMap = [
-  [eventIndex1, eventIndex2],  // Monday events
-  [eventIndex3],               // Tuesday events
-  [],                          // Wednesday (empty)
-  [eventIndex4],               // Thursday events
-  []                           // Friday (empty)
-]
+  [eventIndex1, eventIndex2], // Monday events
+  [eventIndex3], // Tuesday events
+  [], // Wednesday (empty)
+  [eventIndex4], // Thursday events
+  [], // Friday (empty)
+];
 ```
 
 ## Browser Automation Tips
@@ -198,11 +207,11 @@ rowMap = [
 
 ```javascript
 // Get Thursday's interactive timeline (index 8)
-const timelines = document.querySelectorAll('.timeline');
+const timelines = document.querySelectorAll(".timeline");
 const thursdayTimeline = timelines[8];
 
 // Get cells in Thursday's row
-const cells = thursdayTimeline.querySelectorAll('.tl');
+const cells = thursdayTimeline.querySelectorAll(".tl");
 
 // Click cell for 8am (30 cells from start if starting at 6am)
 const cellIndex = 30;
@@ -213,11 +222,12 @@ cells[cellIndex].click();
 
 ```javascript
 // Events have cursor:pointer and contain time text
-const events = document.querySelectorAll('.sc_bar');
+const events = document.querySelectorAll(".sc_bar");
 
 // Or find by time
-const thursdayEvent = Array.from(document.querySelectorAll('[cursor=pointer]'))
-  .find(el => el.textContent.includes('08:00 - 08:20'));
+const thursdayEvent = Array.from(document.querySelectorAll("[cursor=pointer]")).find((el) =>
+  el.textContent.includes("08:00 - 08:20")
+);
 
 // Click to open modal
 thursdayEvent.click();
@@ -230,7 +240,7 @@ thursdayEvent.click();
 event.click();
 
 // 2. Wait for modal
-await page.waitForSelector('dialog');
+await page.waitForSelector("dialog");
 
 // 3. Click Delete button
 const deleteButton = document.querySelector('button:has-text("Delete")');
@@ -259,6 +269,7 @@ deleteButton.click();
 ## Console Logs to Watch
 
 Useful console patterns for debugging:
+
 ```
 onScheduleClick external method {colNum} {rowNum}  // Cell clicked
 update {index} {...event}                          // Event updated
@@ -270,11 +281,13 @@ Main events [Object, Object, ...]                  // Events rendered
 ## Error Handling
 
 The app shows errors via:
+
 - Error boundaries (React)
 - Success/error toast messages
 - Console logs (check for ERROR level)
 
 Currently, only non-critical error:
+
 - `icons8-carpool-ios-16-filled-96.png` 404 (missing favicon)
 
 ## Testing Workflow
@@ -296,4 +309,3 @@ Currently, only non-critical error:
 - Mobile touch support
 - Offline sync conflict resolution
 - Event color coding beyond passenger/driver
-
