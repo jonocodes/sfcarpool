@@ -7,7 +7,7 @@ export const triplit = new TriplitClient({
     type: "indexeddb",
     name: "carpool",
   },
-  serverUrl: "http://localhost:6543",
+  serverUrl: "http://localhost:6544",
   token:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdG9rZW4tdHlwZSI6InNlY3JldCIsIngtdHJpcGxpdC1wcm9qZWN0LWlkIjoibG9jYWwtcHJvamVjdC1pZCJ9.8Z76XXPc9esdlZb2b7NDC7IVajNXKc4eVcPsO7Ve0ug",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdG9rZW4tdHlwZSI6InNlY3JldCIsImlhdCI6MTc2MjU2MzA0NH0.g2mADRJY9-hH-kImzDFAbsLatX6cEuptdEg4KCFrVT0",
 });
