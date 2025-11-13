@@ -2,7 +2,7 @@
 
 import { createServer, createTriplitStorageProvider } from '@triplit/server';
  
-const port = +(process.env.PORT || 8085);
+const port = +(process.env.PORT || 6544);
  
 const startServer = await createServer({
   storage: await createTriplitStorageProvider('sqlite'),
