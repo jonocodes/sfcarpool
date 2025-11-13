@@ -6,6 +6,8 @@ import { useNavigate } from "@tanstack/react-router";
 
 import { triplit } from "../../triplit/client";
 import { useState, useEffect } from "react";
+import { CarpoolAccount } from "~/jazzSchema";
+import { useAccount } from "jazz-tools/react-core";
 
 // Once you run the generator, uncomment this:
 // import { Location } from '../generated/db'
@@ -58,6 +60,20 @@ const LocationsCell = ({ locationId, week }: { locationId: string; week: string 
     return () => unsubscribe();
   }, []);
 
+  const me = useAccount(CarpoolAccount, {
+    resolve: {
+      root: {
+        locations: {
+          $each: true,
+        },
+      },
+    },
+  });
+
+  if (!me.$isLoaded) return null;
+
+  // console.log("me", me);
+
   // const {
   //   data: locations,
   //   isLoading,
@@ -80,11 +96,17 @@ const LocationsCell = ({ locationId, week }: { locationId: string; week: string 
   //   return <div style={{ color: "red" }}>Error: {error.message}</div>;
   // }
 
-  if (!locations || locations.length === 0) {
-    return <div>Empty</div>;
-  }
+  // if (!locations || locations.length === 0) {
+  //   return <div>Empty</div>;
+  // }
 
   return (
+    // <ul>
+    //   {me.root.locations.map(
+    //     (location) => location && <li key={location.$jazz.id}>{location.name}</li>
+    //   )}
+    // </ul>
+
     <Form.Select
       className="select"
       aria-label="choose location"
@@ -103,12 +125,23 @@ const LocationsCell = ({ locationId, week }: { locationId: string; week: string 
       }}
       // variant="dark"
     >
+      {me.root.locations &&
+        me.root.locations.map(
+          (location) =>
+            location && (
+              <option key={location.$jazz.id} aria-label="location">
+                {location.name}
+              </option>
+            )
+        )}
+
+      {/* 
       {locations &&
         locations.map((item: Location) => (
           <option key={item.id} aria-label="location" value={item.id}>
             {item.name}
           </option>
-        ))}
+        ))} */}
     </Form.Select>
   );
 };

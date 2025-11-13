@@ -5,9 +5,15 @@ import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
 import { NotFound } from "~/components/NotFound";
 // import appCss from "~/styles/app.css?url";
 // import indexCss from "~/styles/index.css?url";
-import { seo } from "~/utils/seo";
+// import { seo } from "~/utils/seo";
+
+// import { JazzReactProvider } from "jazz-tools/react";
+// import { CarpoolAccount } from "~/jazzSchema";
+
+// const apiKey = process.env.NEXT_PUBLIC_JAZZ_API_KEY;
 
 import { Container, Form, Nav, Navbar, ToggleButton } from "react-bootstrap";
+import { JazzWrapper } from "~/components/JazzWrapper";
 
 const isDark = false;
 
@@ -51,6 +57,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 activeProps={{
                   className: "font-bold",
                 }}
+                // activeClassName="active nav-link"
                 to={"/scheduler"}
               >
                 View Schedule
@@ -61,6 +68,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 activeProps={{
                   className: "font-bold",
                 }}
+                // activeClassName="active nav-link"
                 to={"/about"}
               >
                 About
@@ -70,7 +78,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         </Container>
       </Navbar>
       <main className={isDark ? "dark-theme" : "light-theme"}>
-        <Container>{children}</Container>
+        <JazzWrapper>
+          <Container>{children}</Container>
+        </JazzWrapper>
+        <TanStackRouterDevtools position="bottom-right" />
+        {/* <Scripts /> */}
       </main>
     </>
   );
