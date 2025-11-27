@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 // import { DateTime } from 'luxon'
 import { calcStringTime, getTimeSlots } from "../components/Scheduler/helpers";
 import EventModal from "../components/EventModal";
@@ -8,11 +8,14 @@ import { LocalDate, LocalTime } from "@js-joda/core";
 
 // import EventModal from './EventModal'
 
-export const updateEvent = () => {
-  // const [modalVisible, setModalVisible] = useState(true)
+const meta = {
+  title: "Components/EventModal",
+  component: EventModal,
+} satisfies Meta<typeof EventModal>;
 
-  // const
+export default meta;
 
+const UpdateEventComponent = () => {
   const startDate = LocalDate.parse("2022-09-20");
 
   const events = [
@@ -37,7 +40,6 @@ export const updateEvent = () => {
 
   let tableStartTime = calcStringTime("7:00");
   tableStartTime -= tableStartTime % widthTime;
-  // tableStartTime = 0
 
   let tableEndTime = calcStringTime("12:30");
   tableEndTime -= tableEndTime % widthTime;
@@ -59,7 +61,6 @@ export const updateEvent = () => {
   );
 };
 
-export default {
-  title: "Components/EventModal",
-  component: EventModal,
-} as Meta<typeof EventModal>;
+export const UpdateEvent: StoryObj = {
+  render: () => <UpdateEventComponent />,
+};

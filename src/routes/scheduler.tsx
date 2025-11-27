@@ -2,6 +2,7 @@ import { Col, Form, Row } from "react-bootstrap";
 
 import EventsCell from "../components/EventsCell";
 import LocationsCell from "../components/LocationsCell";
+import ConnectionStatus from "../components/ConnectionStatus";
 import { formatDateSpan, getWeekStartStr } from "../components/Scheduler/helpers";
 // import { routes } from 'vinxi/dist/types/lib/plugins/routes'
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
@@ -56,6 +57,7 @@ const SchedulerPage = () => {
 
   return (
     <>
+      <ConnectionStatus />
       <Row style={{ paddingTop: "30px" }}>
         <Col xs={7}>
           <span className="nav-week">

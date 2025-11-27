@@ -5,13 +5,6 @@ export const schema = S.Collections({
     schema: S.Schema({
       id: S.Id(), // nanoid
       name: S.String({}),
-
-      //   CREATE TABLE locations (
-      //     id serial4 NOT NULL,
-      //     "uuid" uuid DEFAULT gen_random_uuid() NOT NULL,
-      //     "name" text NOT NULL,
-      //     constraint locations_pkey primary key (id)
-      // );
     }),
     permissions: {
       anonymous: {

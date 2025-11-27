@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Config } from "src/components/Scheduler/types";
 
@@ -7,7 +7,14 @@ import { parseDateTime, rowsToDays as rowsToDates } from "../components/Schedule
 import Week from "../components/Week";
 import { LocalDate, LocalTime } from "@js-joda/core";
 
-export const carpool = () => {
+const meta = {
+  title: "Components/Week",
+  component: Week,
+} satisfies Meta<typeof Week>;
+
+export default meta;
+
+const CarpoolComponent = () => {
   const after = LocalDate.parse("2023-01-09");
   const before = LocalDate.parse("2023-01-13");
 
@@ -91,7 +98,6 @@ export const carpool = () => {
   );
 };
 
-export default {
-  title: "Components/Week",
-  component: Week,
-} as Meta<typeof Week>;
+export const Carpool: StoryObj = {
+  render: () => <CarpoolComponent />,
+};

@@ -2,7 +2,7 @@ import React from "react";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import LocationsCell from "../components/LocationsCell";
 // Import the mocked useShape directly from our mock file
-import { useShape } from "../../src/electric-sql-react.mock";
+// import { useShape } from "../../src/electric-sql-react.mock";
 // We don't need createMock, getMock, or renderWithMock from the addon anymore
 
 // TODO: get these mocks to work here since "storybook-addon-vite-mock" does not work

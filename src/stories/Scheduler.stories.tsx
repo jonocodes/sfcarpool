@@ -1,12 +1,19 @@
 import { useRef } from "react";
 
-import type { Meta } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import SchedulerComponent from "../components/Scheduler/Scheduler";
 import { Config } from "../components/Scheduler/types";
 import { createSchedulerStore, SchedulerContext } from "../components/Scheduler/zstore";
 
-export const basicWeek = () => {
+const meta = {
+  title: "Components/Scheduler",
+  component: SchedulerComponent,
+} satisfies Meta<typeof SchedulerComponent>;
+
+export default meta;
+
+const BasicWeekComponent = () => {
   const config = {
     startTime: "06:00", // schedule start time(HH:ii)
     endTime: "10:00", // schedule end time(HH:ii)
@@ -77,7 +84,11 @@ export const basicWeek = () => {
   );
 };
 
-export const demo = () => {
+export const BasicWeek: StoryObj = {
+  render: () => <BasicWeekComponent />,
+};
+
+const DemoComponent = () => {
   const data = [
     {
       row: 0,
@@ -139,9 +150,6 @@ export const demo = () => {
   );
 };
 
-// const Template = (args) => <Scheduler {...args} />;
-
-export default {
-  title: "Components/Scheduler",
-  component: SchedulerComponent,
-} as Meta<typeof SchedulerComponent>;
+export const Demo: StoryObj = {
+  render: () => <DemoComponent />,
+};
