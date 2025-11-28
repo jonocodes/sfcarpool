@@ -288,9 +288,13 @@ const Row = (props: { rowNum: number }) => {
   }
 
   const height = rowHeights[props.rowNum];
+  const isCurrentDay = config.currentDayIndex === props.rowNum;
 
   return (
-    <div className="timeline" style={{ height: height + "px" }}>
+    <div
+      className={`timeline ${isCurrentDay ? 'current-day' : ''}`}
+      style={{ height: height + "px" }}
+    >
       {blankCells}
       {eventBlocks}
     </div>
@@ -367,10 +371,17 @@ const Main = () => {
   const events = useStore(store, (state) => state.events);
   console.log("Main events", events);
 
+  const config = useStore(store, (state) => state.config);
+
   for (let i = 0; i < rows.length; i++) {
+    const isCurrentDay = config.currentDayIndex === i;
     timelines.push(<Row rowNum={i} key={i} />);
     titles.push(
-      <div className="timeline" style={{ height: rowHeights[i] + "px" }} key={i}>
+      <div
+        className={`timeline ${isCurrentDay ? 'current-day' : ''}`}
+        style={{ height: rowHeights[i] + "px" }}
+        key={i}
+      >
         <span className="timeline-title">{rows[i]}</span>
       </div>
     );

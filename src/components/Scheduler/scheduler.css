@@ -312,3 +312,18 @@ input.error, textarea.error {
   padding: 10px;
   color: inherit;
 }
+
+/* Highlight current day */
+.r-schedule .timeline.current-day {
+  background-color: rgba(0, 123, 255, 0.08);
+}
+
+.r-schedule .sc_data .timeline.current-day {
+  background-color: rgba(0, 123, 255, 0.05);
+  border-left: 3px solid rgba(0, 123, 255, 0.4);
+}
+
+.r-schedule .timeline.current-day .timeline-title {
+  font-weight: 600;
+  color: rgba(0, 123, 255, 0.9);
+}

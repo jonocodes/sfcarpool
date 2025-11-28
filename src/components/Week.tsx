@@ -171,6 +171,10 @@ const Week = (props: {
 }) => {
   const startDate = props.dates[0];
 
+  // Find which row index corresponds to today
+  const today = LocalDate.now();
+  const currentDayIndex = props.dates.findIndex(date => date.equals(today));
+
   const pageConfig: SchedulerConfig = {
     startTime: LocalTime.parse("06:00"), // schedule start time(HH:ii)
     endTime: LocalTime.parse("10:00"), // schedule end time(HH:ii)
@@ -186,6 +190,7 @@ const Week = (props: {
     // resizable: isResizable,
     resizableLeft: true,
     widthTimeX: 20, // 20 pixels per cell?
+    currentDayIndex: currentDayIndex, // index of current day (-1 if not in this week)
     onClick: function (eventModel, rowNum, eventIndex) {
       if (rowNum < 0) throw new Error("rowNum must be >= 0");
 

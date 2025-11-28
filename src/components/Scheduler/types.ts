@@ -53,6 +53,7 @@ export interface Config {
   draggable?: boolean;
   resizable?: boolean;
   resizableLeft?: boolean;
+  currentDayIndex?: number; // index of current day row (-1 if not in current week)
   // event
   // onInitRow: null
   onChange?: EventChangeFunction;

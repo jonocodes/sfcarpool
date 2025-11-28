@@ -76,10 +76,15 @@ const EventsCell = ({
   const [dbEvents, setDbEvents] = useState<EventInDb[]>([]);
 
   useEffect(() => {
+    // Convert LocalDate to Date objects for proper comparison
+    // Add one day to 'before' and set to end of day to include all of Friday
+    const beforeDate = new Date(before.year(), before.monthValue() - 1, before.dayOfMonth(), 23, 59, 59);
+    const afterDate = new Date(after.year(), after.monthValue() - 1, after.dayOfMonth(), 0, 0, 0);
+
     const query = triplit.query("events").Where([
       ["location_id", "=", locationId],
-      ["date", "<=", before.toString()],
-      ["date", ">=", after.toString()],
+      ["date", "<=", beforeDate],
+      ["date", ">=", afterDate],
     ]);
 
     const unsubscribe = triplit.subscribe(query, (data) => {
