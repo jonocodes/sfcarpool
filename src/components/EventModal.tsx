@@ -68,8 +68,6 @@ const EventModal = (props: {
 
   const origEvent = structuredClone(event);
 
-  const [likelihood] = useState(event.data.likelihood);
-
   const [validated, setValidated] = useState(true);
 
   const [timespanError, setTimespanError] = useState("");
@@ -141,15 +139,15 @@ const EventModal = (props: {
   }
 
   return (
-    <Modal show={props.show} onHide={cancelAndClose} centered>
+    <Modal show={props.show} onHide={cancelAndClose} centered size="sm">
       <Form noValidate>
         {/* <Modal.Header closeButton>
           <Modal.Title>Update Event</Modal.Title>
         </Modal.Header> */}
         <Modal.Body>
           <Container className="dark-theme" fluid>
-            <Row className="align-items-end pb-1">
-              <Col md={6}>
+            <Row className="mb-3">
+              <Col md={12}>
                 <Form.Group>
                   <Form.Label
                     style={{
@@ -189,36 +187,45 @@ const EventModal = (props: {
                   />
                 </Form.Group>
               </Col>
+            </Row>
 
-              <Col md={6} className="h-25">
-                <ToggleButtonGroup type="radio" name="options" defaultValue={event.data.mode}>
-                  <ToggleButton
-                    id="tbg-radio-1"
-                    value={"passenger"}
-                    // variant={'outline-primary'}
-                    variant={"outline-success"}
-                    onChange={(e) => (event.data.mode = e.target.value)}
-                  >
-                    {icon_passenger} Passenger
-                  </ToggleButton>
-                  <ToggleButton
-                    id="tbg-radio-2"
-                    value={"driver"}
-                    // variant={'outline-danger'}
-                    variant={"outline-warning"}
-                    onChange={(e) => (event.data.mode = e.target.value)}
-                  >
-                    {icon_driver} Driver
-                  </ToggleButton>
-                </ToggleButtonGroup>
+            <Row className="mb-3">
+              <Col md={12}>
+                <Form.Group>
+                  <Form.Label>Type</Form.Label>
+                  <div>
+                    <ToggleButtonGroup
+                      type="radio"
+                      name="options"
+                      defaultValue={event.data.mode}
+                      className="w-100"
+                    >
+                      <ToggleButton
+                        id="tbg-radio-1"
+                        value={"passenger"}
+                        variant={"outline-success"}
+                        onChange={(e) => (event.data.mode = e.target.value)}
+                      >
+                        {icon_passenger} Passenger
+                      </ToggleButton>
+                      <ToggleButton
+                        id="tbg-radio-2"
+                        value={"driver"}
+                        variant={"outline-warning"}
+                        onChange={(e) => (event.data.mode = e.target.value)}
+                      >
+                        {icon_driver} Driver
+                      </ToggleButton>
+                    </ToggleButtonGroup>
+                  </div>
+                </Form.Group>
               </Col>
             </Row>
 
-            <Row>
-              <Col md={3}>
+            <Row className="mb-2">
+              <Col md={6}>
                 <Form.Group>
                   <Form.Label>From</Form.Label>
-
                   <Form.Select
                     size="sm"
                     aria-label="choose start time"
@@ -232,10 +239,9 @@ const EventModal = (props: {
                   </Form.Select>
                 </Form.Group>
               </Col>
-              <Col md={3}>
+              <Col md={6}>
                 <Form.Group>
                   <Form.Label>To</Form.Label>
-
                   <Form.Select
                     size="sm"
                     aria-label="choose end time"
@@ -249,22 +255,14 @@ const EventModal = (props: {
                   </Form.Select>
                 </Form.Group>
               </Col>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label>Likelihood {likelihood}%</Form.Label>
-                  <Form.Range
-                    defaultValue={likelihood}
-                    onChange={(e) => {
-                      event.data.likelihood = e.target.value;
-                      // setLikelihood(e.target.value)
-                      // setLikelihood(e.target.value)
-                    }}
-                  />
-                </Form.Group>
-              </Col>
-              <Col className="error">{timespanError}</Col>
             </Row>
-            {/* </Row> */}
+            {timespanError && (
+              <Row>
+                <Col>
+                  <div className="text-danger small">{timespanError}</div>
+                </Col>
+              </Row>
+            )}
           </Container>
         </Modal.Body>
         <Modal.Footer>
@@ -278,7 +276,7 @@ const EventModal = (props: {
 
               <Col xs={3} md={2}>
                 <Button className="float-end" variant="secondary" onClick={cancelAndClose}>
-                  Close
+                  Cancel
                 </Button>
               </Col>
               <Col xs={3} md={2}>

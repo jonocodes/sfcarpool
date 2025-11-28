@@ -235,7 +235,6 @@ const Week = (props: {
         data: {
           entry: "", // this will get reset once it makes it to db
           mode: "passenger",
-          likelihood: 95,
         },
       };
 

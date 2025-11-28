@@ -11,7 +11,6 @@ describe("eventToDb", () => {
       data: {
         entry: 0,
         mode: "passenger",
-        likelihood: 95,
       },
     };
 
@@ -25,7 +24,6 @@ describe("eventToDb", () => {
       active: true,
       start: "09:10",
       end: "12:20",
-      likelihood: 95,
       location_id: "1",
       passenger: true,
     });

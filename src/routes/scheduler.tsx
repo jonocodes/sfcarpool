@@ -7,6 +7,20 @@ import { formatDateSpan, getWeekStartStr } from "../components/Scheduler/helpers
 // import { routes } from 'vinxi/dist/types/lib/plugins/routes'
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { LocalDate, DateTimeFormatter } from "@js-joda/core";
+import { useEffect } from "react";
+
+const LOCATION_STORAGE_KEY = "scheduler_selected_location";
+
+// Helper functions for localStorage
+const getStoredLocation = (): string | null => {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(LOCATION_STORAGE_KEY);
+};
+
+const setStoredLocation = (locationId: string): void => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(LOCATION_STORAGE_KEY, locationId);
+};
 
 const caret_right = (
   <svg
@@ -49,6 +63,11 @@ const SchedulerPage = () => {
   const prevWeekStr = weekStart.minusDays(7);
   const nextWeekStr = weekStart.plusDays(7);
   const loc = location ?? "zzxdc";
+
+  // Save location to localStorage whenever it changes
+  useEffect(() => {
+    setStoredLocation(loc);
+  }, [loc]);
 
   // Convert LocalDate to Date for compatibility with existing functions
   const startDate = new Date(start.toString());
@@ -95,7 +114,9 @@ const SchedulerPage = () => {
 };
 export const Route = createFileRoute("/scheduler")({
   validateSearch: (search: Record<string, unknown>) => ({
-    location: search.location ? String(search.location) : "l5PQRRCiuSah4NFM_r6Ln",
+    location: search.location
+      ? String(search.location)
+      : getStoredLocation() ?? "l5PQRRCiuSah4NFM_r6Ln",
     // TODO: validate week input
     week: search.week ? String(search.week) : getWeekStartStr(),
   }),

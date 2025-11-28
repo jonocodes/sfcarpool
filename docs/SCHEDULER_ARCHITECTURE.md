@@ -154,7 +154,6 @@ routes/scheduler.tsx
   label: string,           // Event title
   passenger: boolean,      // true for passenger, false for driver
   location_id: string,     // References locations table
-  likelihood: number       // 0-100, affects opacity (95 default)
 }
 ```
 

@@ -1,12 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-// import { DateTime } from 'luxon'
-import { calcStringTime, getTimeSlots } from "../components/Scheduler/helpers";
+import { getTimeSlots } from "../components/Scheduler/helpers";
 import EventModal from "../components/EventModal";
 import { LocalDate, LocalTime } from "@js-joda/core";
-
-// import { calcStringTime, getTimeSlots } from '../Scheduler/helpers'
-
-// import EventModal from './EventModal'
 
 const meta = {
   title: "Components/EventModal",
@@ -21,13 +16,12 @@ const UpdateEventComponent = () => {
   const events = [
     {
       row: 0, // monday
-      start: LocalTime.parse("8:00"),
-      end: LocalTime.parse("8:10"),
+      start: LocalTime.parse("08:00"),
+      end: LocalTime.parse("08:10"),
       text: "JK",
       data: {
         entry: 8,
         mode: "passenger",
-        likelihood: 20,
       },
     },
   ];
@@ -38,11 +32,8 @@ const UpdateEventComponent = () => {
 
   const widthTime = 600;
 
-  let tableStartTime = calcStringTime("7:00");
-  tableStartTime -= tableStartTime % widthTime;
-
-  let tableEndTime = calcStringTime("12:30");
-  tableEndTime -= tableEndTime % widthTime;
+  const tableStartTime = LocalTime.parse("07:00");
+  const tableEndTime = LocalTime.parse("12:30");
 
   const timeSlots = getTimeSlots(tableStartTime, tableEndTime, widthTime);
 

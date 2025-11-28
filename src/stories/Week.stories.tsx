@@ -6,6 +6,8 @@ import { parseDateTime, rowsToDays as rowsToDates } from "../components/Schedule
 
 import Week from "../components/Week";
 import { LocalDate, LocalTime } from "@js-joda/core";
+// Import the mocked triplit client (aliased in .storybook/main.ts)
+import { triplit } from "../../triplit/client";
 
 const meta = {
   title: "Components/Week",
@@ -19,8 +21,8 @@ const CarpoolComponent = () => {
   const before = LocalDate.parse("2023-01-13");
 
   const myConfig: Config = {
-    startTime: LocalTime.parse("6:00"),
-    endTime: LocalTime.parse("9:00"),
+    startTime: LocalTime.parse("06:00"),
+    endTime: LocalTime.parse("09:00"),
   };
 
   const rows = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -30,57 +32,52 @@ const CarpoolComponent = () => {
   const data = [
     {
       row: 0, // monday
-      start: "8:00",
-      end: "8:10",
+      start: LocalTime.parse("08:00"),
+      end: LocalTime.parse("08:10"),
       text: "JK",
       data: {
         entry: 8,
         mode: "passenger",
-        likelihood: 20,
       },
     },
     {
       row: 1, //tuesday
-      start: "6:30",
-      end: "7:10",
+      start: LocalTime.parse("06:30"),
+      end: LocalTime.parse("07:10"),
       text: "Jono",
       data: {
         entry: 4,
         mode: "passenger",
-        likelihood: 95,
       },
     },
     {
       row: 1, // tuesday
-      start: "7:05",
-      end: "7:30",
+      start: LocalTime.parse("07:05"),
+      end: LocalTime.parse("07:30"),
       text: "Jodi",
       data: {
         entry: 5,
         mode: "driver",
-        likelihood: 70,
       },
     },
     {
       row: 1, // tuesday
-      start: "7:40",
-      end: "8:50",
+      start: LocalTime.parse("07:40"),
+      end: LocalTime.parse("08:50"),
       text: "Jono",
       data: {
         entry: 9,
         mode: "passenger",
-        likelihood: 70,
       },
     },
     {
       row: 4, // friday
-      start: "8:40",
-      end: "8:50",
+      start: LocalTime.parse("08:40"),
+      end: LocalTime.parse("08:50"),
       text: "Jono",
       data: {
         entry: 10,
         mode: "passenger",
-        likelihood: 70,
       },
     },
   ];

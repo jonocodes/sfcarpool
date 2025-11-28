@@ -21,7 +21,6 @@ export const schema = S.Collections({
       updated_at: S.Date({}),
       date: S.Date({}),
       passenger: S.Boolean({}),
-      likelihood: S.Number({}), // TODO: remove this
       active: S.Boolean({}),
       location_id: S.Id(),
       label: S.Optional(S.String()),

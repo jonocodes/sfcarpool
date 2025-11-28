@@ -83,7 +83,6 @@ export default function seed(): BulkInsert<typeof schema> {
       // {
       //   date: new Date("2025-10-08"), // Wednesday
       //   passenger: true,
-      //   likelihood: 90,
       //   created_at: new Date("2025-01-01"),
       //   updated_at: new Date("2025-01-01"),
       //   active: true,

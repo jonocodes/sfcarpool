@@ -11,7 +11,7 @@ function Home() {
   useEffect(() => {
     navigate({
       to: "/scheduler",
-      search: { location: "l5PQRRCiuSah4NFM_r6Ln", week: getWeekStartStr() },
+      // search: { location: "l5PQRRCiuSah4NFM_r6Ln", week: getWeekStartStr() },
     });
   }, [navigate]);
 

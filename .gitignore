@@ -24,3 +24,8 @@ yarn.lock
 /playwright/.cache/
 
 *storybook.log
+
+data.db*
+*.sqlite
+.flox/env/manifest.lock
+

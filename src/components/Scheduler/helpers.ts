@@ -123,8 +123,6 @@ export function eventToDb(evnt: Event, startDate: LocalDate, locationId: string)
     // start, // TODO: chop off the :00 ?
     // end,
     date: convert(LocalDate.parse(dateStr)).toDate(),
-
-    likelihood: Number(evnt.data.likelihood),
     active: true,
   };
 

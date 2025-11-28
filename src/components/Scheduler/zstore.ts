@@ -93,7 +93,6 @@ export function _generateEvent(times: LocalTime[], rowCount: number) {
     data: {
       entry: randInt(0, 1000),
       mode: modes[randModeIndex],
-      likelihood: randInt(50, 100),
     },
   };
 

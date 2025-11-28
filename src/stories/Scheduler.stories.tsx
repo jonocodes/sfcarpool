@@ -5,6 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import SchedulerComponent from "../components/Scheduler/Scheduler";
 import { Config } from "../components/Scheduler/types";
 import { createSchedulerStore, SchedulerContext } from "../components/Scheduler/zstore";
+import { LocalTime } from "@js-joda/core";
 
 const meta = {
   title: "Components/Scheduler",
@@ -15,8 +16,8 @@ export default meta;
 
 const BasicWeekComponent = () => {
   const config = {
-    startTime: "06:00", // schedule start time(HH:ii)
-    endTime: "10:00", // schedule end time(HH:ii)
+    startTime: LocalTime.parse("06:00"), // schedule start time(HH:ii)
+    endTime: LocalTime.parse("10:00"), // schedule end time(HH:ii)
     widthTimeX: 20,
     widthTime: 60 * 5, // 5 minutes
     timeLineY: 60, // height(px)
@@ -34,36 +35,36 @@ const BasicWeekComponent = () => {
   const data = [
     {
       row: 0, // monday
-      start: "8:00",
-      end: "8:10",
+      start: LocalTime.parse("08:00"),
+      end: LocalTime.parse("08:10"),
       text: "JK",
       data: {},
     },
     {
       row: 1, //tuesday
-      start: "6:30",
-      end: "7:10",
+      start: LocalTime.parse("06:30"),
+      end: LocalTime.parse("07:10"),
       text: "Jono",
       data: {},
     },
     {
       row: 1, // tuesday
-      start: "7:05",
-      end: "7:30",
+      start: LocalTime.parse("07:05"),
+      end: LocalTime.parse("07:30"),
       text: "Jodi",
       data: {},
     },
     {
       row: 1, // tuesday
-      start: "7:40",
-      end: "8:50",
+      start: LocalTime.parse("07:40"),
+      end: LocalTime.parse("08:50"),
       text: "Jono",
       data: {},
     },
     {
       row: 4, // friday
-      start: "8:40",
-      end: "8:50",
+      start: LocalTime.parse("08:40"),
+      end: LocalTime.parse("08:50"),
       text: "Jono",
       data: {},
     },
@@ -92,22 +93,22 @@ const DemoComponent = () => {
   const data = [
     {
       row: 0,
-      start: "09:00",
-      end: "12:00",
+      start: LocalTime.parse("09:00"),
+      end: LocalTime.parse("12:00"),
       text: "Text Area",
       data: {},
     },
     {
       row: 0,
-      start: "11:00",
-      end: "14:00",
+      start: LocalTime.parse("11:00"),
+      end: LocalTime.parse("14:00"),
       text: "Text Area",
       data: {},
     },
     {
       row: 1,
-      start: "16:00",
-      end: "17:00",
+      start: LocalTime.parse("16:00"),
+      end: LocalTime.parse("17:00"),
       text: "Text Area",
       data: {},
     },
@@ -116,8 +117,8 @@ const DemoComponent = () => {
   const rows = ["Title Area1", "Title Area2"];
 
   const config: Config = {
-    startTime: "07:00", // schedule start time(HH:ii)
-    endTime: "21:00", // schedule end time(HH:ii)
+    startTime: LocalTime.parse("07:00"), // schedule start time(HH:ii)
+    endTime: LocalTime.parse("21:00"), // schedule end time(HH:ii)
     widthTime: 60 * 10, // cell timestamp example 10 minutes
     timeLineY: 60, // height(px)
     verticalScrollbar: 20, // scrollbar (px)

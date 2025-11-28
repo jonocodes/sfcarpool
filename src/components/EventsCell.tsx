@@ -21,7 +21,6 @@ import { LocalDate, LocalTime, nativeJs, ZoneId } from "@js-joda/core";
 //     end: "08:00",
 //     active: true,
 //     passenger: true,
-//     likelihood: 50,
 //   },
 //   {
 //     id: 2,
@@ -30,7 +29,6 @@ import { LocalDate, LocalTime, nativeJs, ZoneId } from "@js-joda/core";
 //     end: "08:15",
 //     active: true,
 //     passenger: false,
-//     likelihood: 80,
 //   },
 // ];
 
@@ -49,7 +47,6 @@ function dbToEvent(item: EventInDb): Event {
     end: LocalTime.parse(item.end),
     data: {
       entry: item.id,
-      likelihood: item.likelihood,
       mode: item.passenger ? "passenger" : "driver",
     },
   };

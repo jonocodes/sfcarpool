@@ -11,6 +11,15 @@
       },
       "openssl": {
         "pkg-path": "openssl"
+      },
+      "playwright": {
+        "pkg-path": "playwright"
+      },
+      "playwright-driver": {
+        "pkg-path": "playwright-driver"
+      },
+      "playwright-mcp": {
+        "pkg-path": "playwright-mcp"
       }
     },
     "hook": {
@@ -30,30 +39,30 @@
     {
       "attr_path": "just",
       "broken": false,
-      "derivation": "/nix/store/82i3lr5c3mqlg33ryzn5wawfd0f8vdn9-just-1.40.0.drv",
+      "derivation": "/nix/store/ayn6in4vyjkki29f9cwv5ai9mg070vyh-just-1.43.1.drv",
       "description": "Handy way to save and run project-specific commands",
       "install_id": "just",
       "license": "CC0-1.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "name": "just-1.40.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "just-1.43.1",
       "pname": "just",
-      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "rev_count": 807377,
-      "rev_date": "2025-05-28T19:24:49Z",
-      "scrape_date": "2025-05-31T04:22:55.744981Z",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T02:53:38.723256Z",
       "stabilities": [
         "unstable"
       ],
       "unfree": false,
-      "version": "1.40.0",
+      "version": "1.43.1",
       "outputs_to_install": [
         "man",
         "out"
       ],
       "outputs": {
-        "doc": "/nix/store/rjc9wn7506xzg21y176cx0cpisx1v7jw-just-1.40.0-doc",
-        "man": "/nix/store/xx75550s34xc75lhk7xqkma498h0c9fn-just-1.40.0-man",
-        "out": "/nix/store/3zr8nrrs7vjpm15bi59wranjyhbdljsh-just-1.40.0"
+        "doc": "/nix/store/g2z02i3a2z17h9cmx04sp7zpzzgzkqh8-just-1.43.1-doc",
+        "man": "/nix/store/y8ggbr7rq06mpqsdckpdsxzhjkspw63g-just-1.43.1-man",
+        "out": "/nix/store/g6cidwix7lzzb0i5lpisvb7gx051qsc1-just-1.43.1"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
@@ -62,30 +71,30 @@
     {
       "attr_path": "just",
       "broken": false,
-      "derivation": "/nix/store/4558j1408zfi01k0n93hm3gjm2zmy78d-just-1.40.0.drv",
+      "derivation": "/nix/store/5z45a9rxb4mwfqhkp0h540pwb8llfhgl-just-1.43.1.drv",
       "description": "Handy way to save and run project-specific commands",
       "install_id": "just",
       "license": "CC0-1.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "name": "just-1.40.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "just-1.43.1",
       "pname": "just",
-      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "rev_count": 807377,
-      "rev_date": "2025-05-28T19:24:49Z",
-      "scrape_date": "2025-05-31T04:41:04.159408Z",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:02:59.792251Z",
       "stabilities": [
         "unstable"
       ],
       "unfree": false,
-      "version": "1.40.0",
+      "version": "1.43.1",
       "outputs_to_install": [
         "man",
         "out"
       ],
       "outputs": {
-        "doc": "/nix/store/vinimf45hxfqykyjz2m54ylw4fpd79wg-just-1.40.0-doc",
-        "man": "/nix/store/ssclxvqvl4cmp0fzpznpccj7awsz7pqf-just-1.40.0-man",
-        "out": "/nix/store/pb4nx8x2nah5djb40dlhh3q8d9f9f52l-just-1.40.0"
+        "doc": "/nix/store/99qn6axss3rk7c681rkhj9zza0ax2i74-just-1.43.1-doc",
+        "man": "/nix/store/59aflmjxv0qbkaqzmjni4yydg873dl5v-just-1.43.1-man",
+        "out": "/nix/store/ni4jn8rsn0h49lng7hdq6584zc4gpy9l-just-1.43.1"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
@@ -94,30 +103,30 @@
     {
       "attr_path": "just",
       "broken": false,
-      "derivation": "/nix/store/jmg41q3af3l5lipax79czrrxjh5xv9li-just-1.40.0.drv",
+      "derivation": "/nix/store/xll0719v4nmmlid72jm90c1f5g49fs0q-just-1.43.1.drv",
       "description": "Handy way to save and run project-specific commands",
       "install_id": "just",
       "license": "CC0-1.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "name": "just-1.40.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "just-1.43.1",
       "pname": "just",
-      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "rev_count": 807377,
-      "rev_date": "2025-05-28T19:24:49Z",
-      "scrape_date": "2025-05-31T04:57:00.211524Z",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:12:39.182444Z",
       "stabilities": [
         "unstable"
       ],
       "unfree": false,
-      "version": "1.40.0",
+      "version": "1.43.1",
       "outputs_to_install": [
         "man",
         "out"
       ],
       "outputs": {
-        "doc": "/nix/store/jw2gqm7r2j4apylww284vrnvp0aswr83-just-1.40.0-doc",
-        "man": "/nix/store/s8qsrpz57zzy582arggg9kzhxc7wzj42-just-1.40.0-man",
-        "out": "/nix/store/2vgr2kh5laq7ly21ahyrmbz4q6gdfd7v-just-1.40.0"
+        "doc": "/nix/store/kqx5lgjwpaipi7whnydwkl72alwvn5jz-just-1.43.1-doc",
+        "man": "/nix/store/j67aa2bj6ssz61x4bh0ga0z1qzzv3prp-just-1.43.1-man",
+        "out": "/nix/store/aa9459rdk1lzj2yd27csaasn9hb98ckr-just-1.43.1"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
@@ -126,30 +135,30 @@
     {
       "attr_path": "just",
       "broken": false,
-      "derivation": "/nix/store/lfqbw93h3s3h3cij3n6cf5dcvjl7n1i4-just-1.40.0.drv",
+      "derivation": "/nix/store/p7inafv7hj3jvm3xc7xfaiag4x75ncmy-just-1.43.1.drv",
       "description": "Handy way to save and run project-specific commands",
       "install_id": "just",
       "license": "CC0-1.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "name": "just-1.40.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "just-1.43.1",
       "pname": "just",
-      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "rev_count": 807377,
-      "rev_date": "2025-05-28T19:24:49Z",
-      "scrape_date": "2025-05-31T05:15:58.808894Z",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:22:07.172968Z",
       "stabilities": [
         "unstable"
       ],
       "unfree": false,
-      "version": "1.40.0",
+      "version": "1.43.1",
       "outputs_to_install": [
         "man",
         "out"
       ],
       "outputs": {
-        "doc": "/nix/store/s70b7w7ndh8fn550xdz0b7hvrxh9zbdm-just-1.40.0-doc",
-        "man": "/nix/store/9j1sxj8p91q99nl7f5hdlb0kfv7kww0a-just-1.40.0-man",
-        "out": "/nix/store/h0agljrxjv0xrxj6y71fsp8sx751vrd6-just-1.40.0"
+        "doc": "/nix/store/idyx9h5gmcnzzqbjb50nwf30i4g1050v-just-1.43.1-doc",
+        "man": "/nix/store/ib17hahpg1vpgh1ll0r7nb6rkmilpiil-just-1.43.1-man",
+        "out": "/nix/store/kkmg0vkp9y4jp9yqgzrml0fgac9lfcyq-just-1.43.1"
       },
       "system": "x86_64-linux",
       "group": "toplevel",
@@ -158,29 +167,29 @@
     {
       "attr_path": "nodejs",
       "broken": false,
-      "derivation": "/nix/store/dv56b2484ciasdm6pqcsabw8b8kgs696-nodejs-22.14.0.drv",
+      "derivation": "/nix/store/qn2ya2cwp8bnlzzlndigkjrc5cb08kwy-nodejs-22.21.1.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
       "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "name": "nodejs-22.14.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "nodejs-22.21.1",
       "pname": "nodejs",
-      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "rev_count": 807377,
-      "rev_date": "2025-05-28T19:24:49Z",
-      "scrape_date": "2025-05-31T04:22:57.749552Z",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T02:53:46.114338Z",
       "stabilities": [
         "unstable"
       ],
       "unfree": false,
-      "version": "22.14.0",
+      "version": "22.21.1",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "dev": "/nix/store/96vpirdcns8zxdwzwl7n804012lwrf1n-nodejs-22.14.0-dev",
-        "libv8": "/nix/store/xph2837xqjnra80mqlk64xp7vb3kkqxs-nodejs-22.14.0-libv8",
-        "out": "/nix/store/g5bv4gi6p7ryhs2hbaryxs6ivsxa6lqc-nodejs-22.14.0"
+        "dev": "/nix/store/bkir3agnj2cvpx80a0z1lj50pg2dhddi-nodejs-22.21.1-dev",
+        "libv8": "/nix/store/ivbmw7d10pxzkrz5397bimhqwwlrc8gp-nodejs-22.21.1-libv8",
+        "out": "/nix/store/92igwjsd6av0pg8dvygirhdwahwq2sh7-nodejs-22.21.1"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
@@ -189,29 +198,29 @@
     {
       "attr_path": "nodejs",
       "broken": false,
-      "derivation": "/nix/store/854x3w5p03fzvyfjxnfl4isb7jb0c4hc-nodejs-22.14.0.drv",
+      "derivation": "/nix/store/v21as4jlvqh2qs8glb1w5kbjrb1bgc96-nodejs-22.21.1.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
       "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "name": "nodejs-22.14.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "nodejs-22.21.1",
       "pname": "nodejs",
-      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "rev_count": 807377,
-      "rev_date": "2025-05-28T19:24:49Z",
-      "scrape_date": "2025-05-31T04:41:12.678085Z",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:03:16.951415Z",
       "stabilities": [
         "unstable"
       ],
       "unfree": false,
-      "version": "22.14.0",
+      "version": "22.21.1",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "dev": "/nix/store/0w5mql46am2qai707a42q983l44l1h9z-nodejs-22.14.0-dev",
-        "libv8": "/nix/store/vy56lahz381ayvw3hym3wj4r4ggv7gbk-nodejs-22.14.0-libv8",
-        "out": "/nix/store/cwb781xbp70f72njqh8vhvbsf1xq87i5-nodejs-22.14.0"
+        "dev": "/nix/store/1akvaqvrp0cf6pd7mkqy7m3gnzc3wfd7-nodejs-22.21.1-dev",
+        "libv8": "/nix/store/ykj9hi9qv7gwxnbg2vh6ca00w9zsbhm0-nodejs-22.21.1-libv8",
+        "out": "/nix/store/hps7k16bd9isj7pfsjzg7q0wgvrw47kn-nodejs-22.21.1"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
@@ -220,29 +229,29 @@
     {
       "attr_path": "nodejs",
       "broken": false,
-      "derivation": "/nix/store/5fg6q2k7q1632y9xn9c09f5xdcfgkn14-nodejs-22.14.0.drv",
+      "derivation": "/nix/store/kb90gm20fllkjw1h62l5gqx65rnqhn8g-nodejs-22.21.1.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
       "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "name": "nodejs-22.14.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "nodejs-22.21.1",
       "pname": "nodejs",
-      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "rev_count": 807377,
-      "rev_date": "2025-05-28T19:24:49Z",
-      "scrape_date": "2025-05-31T04:57:02.318752Z",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:12:46.621985Z",
       "stabilities": [
         "unstable"
       ],
       "unfree": false,
-      "version": "22.14.0",
+      "version": "22.21.1",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "dev": "/nix/store/24n01nfvy908pwzwpgsl0k4227187i7i-nodejs-22.14.0-dev",
-        "libv8": "/nix/store/jiwk0in1wk85crn9vp03gg937gbh1s0w-nodejs-22.14.0-libv8",
-        "out": "/nix/store/086zjv14ipka2vbpgwil3xyvi5ml4vh3-nodejs-22.14.0"
+        "dev": "/nix/store/haa4773lz7wfhnql05181azh4z5141r7-nodejs-22.21.1-dev",
+        "libv8": "/nix/store/0pswqdxlx8y0v54gq0ixwps19agv6bds-nodejs-22.21.1-libv8",
+        "out": "/nix/store/wfjyiwara336j7r1v0ia3kib8779wzwf-nodejs-22.21.1"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
@@ -251,29 +260,29 @@
     {
       "attr_path": "nodejs",
       "broken": false,
-      "derivation": "/nix/store/s7njrwlm4w6855mkjamliyjsp0d37vz1-nodejs-22.14.0.drv",
+      "derivation": "/nix/store/k16sz3xygmjy31qpnni5qyj98fxfznap-nodejs-22.21.1.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
       "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "name": "nodejs-22.14.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "nodejs-22.21.1",
       "pname": "nodejs",
-      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "rev_count": 807377,
-      "rev_date": "2025-05-28T19:24:49Z",
-      "scrape_date": "2025-05-31T05:16:08.935959Z",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:22:24.272658Z",
       "stabilities": [
         "unstable"
       ],
       "unfree": false,
-      "version": "22.14.0",
+      "version": "22.21.1",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "dev": "/nix/store/xw8c1c0inxq3xl1d7axz19vq8c05kjk5-nodejs-22.14.0-dev",
-        "libv8": "/nix/store/s8gnrgh9hgnbkrc1wrn21d6zvkbvm9vi-nodejs-22.14.0-libv8",
-        "out": "/nix/store/c8jxsih8yy2rnncdmx2hyraizf689nvp-nodejs-22.14.0"
+        "dev": "/nix/store/l1idqv7ff0m2kbcqnn1yr415wyga1wxf-nodejs-22.21.1-dev",
+        "libv8": "/nix/store/farc7vk89kr367hsx0qchmahf6i6sbk1-nodejs-22.21.1-libv8",
+        "out": "/nix/store/l85fis49agvp5q1ild1rfh4rrgmn92sr-nodejs-22.21.1"
       },
       "system": "x86_64-linux",
       "group": "toplevel",
@@ -282,32 +291,32 @@
     {
       "attr_path": "openssl",
       "broken": false,
-      "derivation": "/nix/store/4cfr6k8d6a4njryd7y0xjl91wswxw6zh-openssl-3.4.1.drv",
+      "derivation": "/nix/store/6saaicdgbhh5gdflqb7hca89fsblpaxb-openssl-3.6.0.drv",
       "description": "Cryptographic library that implements the SSL and TLS protocols",
       "install_id": "openssl",
       "license": "Apache-2.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "name": "openssl-3.4.1",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "openssl-3.6.0",
       "pname": "openssl",
-      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "rev_count": 807377,
-      "rev_date": "2025-05-28T19:24:49Z",
-      "scrape_date": "2025-05-31T04:22:58.556494Z",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T02:53:48.953810Z",
       "stabilities": [
         "unstable"
       ],
       "unfree": false,
-      "version": "3.4.1",
+      "version": "3.6.0",
       "outputs_to_install": [
         "bin",
         "man"
       ],
       "outputs": {
-        "bin": "/nix/store/bx0b6gvphv01s2px3j1h1ajy036h8bgb-openssl-3.4.1-bin",
-        "dev": "/nix/store/kbs1gz7p2j7qd1lixqzkladkjdxs8nj7-openssl-3.4.1-dev",
-        "doc": "/nix/store/sjmrjajggy3648nkn0ipz8axhj34qqn5-openssl-3.4.1-doc",
-        "man": "/nix/store/pwwqlk8zacsz87xz0gbic7zvhvjid232-openssl-3.4.1-man",
-        "out": "/nix/store/z2js30ib9b11hhcy1zy6x4nzdg75bpxf-openssl-3.4.1"
+        "bin": "/nix/store/z9prisxci5h5lsk3rdknd4jzq7k9q13d-openssl-3.6.0-bin",
+        "dev": "/nix/store/h0qgqik0mk0wn7rmm2kk3grfi1wzly74-openssl-3.6.0-dev",
+        "doc": "/nix/store/yx3ip21fdaaxpjn5fbir02mqnaw9cm4f-openssl-3.6.0-doc",
+        "man": "/nix/store/ii9mnzr3i92mgk9dkgg65739mavd0j6f-openssl-3.6.0-man",
+        "out": "/nix/store/3z54dgks2mz3dhwddj158sdibll8xmq5-openssl-3.6.0"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
@@ -316,33 +325,33 @@
     {
       "attr_path": "openssl",
       "broken": false,
-      "derivation": "/nix/store/a7bp9sy7hyjm64bqshmw6fz66ah9580z-openssl-3.4.1.drv",
+      "derivation": "/nix/store/ssjcnad501j854bf6rxnj6fq7n4pz12q-openssl-3.6.0.drv",
       "description": "Cryptographic library that implements the SSL and TLS protocols",
       "install_id": "openssl",
       "license": "Apache-2.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "name": "openssl-3.4.1",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "openssl-3.6.0",
       "pname": "openssl",
-      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "rev_count": 807377,
-      "rev_date": "2025-05-28T19:24:49Z",
-      "scrape_date": "2025-05-31T04:41:14.399091Z",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:03:21.536115Z",
       "stabilities": [
         "unstable"
       ],
       "unfree": false,
-      "version": "3.4.1",
+      "version": "3.6.0",
       "outputs_to_install": [
         "bin",
         "man"
       ],
       "outputs": {
-        "bin": "/nix/store/x89xyla4b5vdl5i7a417vbnrbhnyv2a9-openssl-3.4.1-bin",
-        "debug": "/nix/store/m9cm6npjkgc7yl008nlfdbqz1gnw1n3n-openssl-3.4.1-debug",
-        "dev": "/nix/store/snmsdv923yl1biv1lfg1as31smff1j7s-openssl-3.4.1-dev",
-        "doc": "/nix/store/ybjya4sv3m3cjm5s3v1gp527lcbavsc5-openssl-3.4.1-doc",
-        "man": "/nix/store/qqrcl2hqav9wrqj887zvsf4ywck4d4pq-openssl-3.4.1-man",
-        "out": "/nix/store/ffdmy5fhjr6m1gkb8mycyf3swakvygd1-openssl-3.4.1"
+        "bin": "/nix/store/wb6q44n9kcb5acmaa4rgqsajadx1fhhl-openssl-3.6.0-bin",
+        "debug": "/nix/store/ci6d4k1sj4bnr892lsrqqmjiihqsk0bl-openssl-3.6.0-debug",
+        "dev": "/nix/store/pq8b7fb3282g68pmk14mbyi20qn6chid-openssl-3.6.0-dev",
+        "doc": "/nix/store/vaplp6w56dyz38986bgkf0pbg3r486b2-openssl-3.6.0-doc",
+        "man": "/nix/store/c9n1alb7ypzjvzd47m16fiwfczz23qs3-openssl-3.6.0-man",
+        "out": "/nix/store/nj50gkyx813dxvfmsg1q8m330hmf3h86-openssl-3.6.0"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
@@ -351,32 +360,32 @@
     {
       "attr_path": "openssl",
       "broken": false,
-      "derivation": "/nix/store/d42msvraw944hvpy73ayka75f0bxlcm3-openssl-3.4.1.drv",
+      "derivation": "/nix/store/pdfnhdd09q2dndh02kyznby80qxrpg8j-openssl-3.6.0.drv",
       "description": "Cryptographic library that implements the SSL and TLS protocols",
       "install_id": "openssl",
       "license": "Apache-2.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "name": "openssl-3.4.1",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "openssl-3.6.0",
       "pname": "openssl",
-      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "rev_count": 807377,
-      "rev_date": "2025-05-28T19:24:49Z",
-      "scrape_date": "2025-05-31T04:57:03.151617Z",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:12:49.424956Z",
       "stabilities": [
         "unstable"
       ],
       "unfree": false,
-      "version": "3.4.1",
+      "version": "3.6.0",
       "outputs_to_install": [
         "bin",
         "man"
       ],
       "outputs": {
-        "bin": "/nix/store/liqdyh2xc61v6g9lhhydijsd79p0ghgq-openssl-3.4.1-bin",
-        "dev": "/nix/store/58m9pn9yksg7xjl6kl7qmmp2dwj9gjg2-openssl-3.4.1-dev",
-        "doc": "/nix/store/iskcy65i66j6x2b8q1y40x0qlmppnk48-openssl-3.4.1-doc",
-        "man": "/nix/store/6vyh0kmpyyaliqrxa01iw56x50c8jrf3-openssl-3.4.1-man",
-        "out": "/nix/store/gf7l76id9931pnshsvvv8izg00hbgaxw-openssl-3.4.1"
+        "bin": "/nix/store/m3xwn9n0jypwjgi256idfzs979g30j29-openssl-3.6.0-bin",
+        "dev": "/nix/store/dirjrfjk8jgsbdpslgb51cav6qaxn2vm-openssl-3.6.0-dev",
+        "doc": "/nix/store/va1zhkz0nfmycvd0h239hi4w40qgaxcx-openssl-3.6.0-doc",
+        "man": "/nix/store/hw43f3y1vl7ydrd4samnwnrwqqwkpisv-openssl-3.6.0-man",
+        "out": "/nix/store/q9a4wssx24xsy28w8kifdqizc01fh7sc-openssl-3.6.0"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
@@ -385,33 +394,381 @@
     {
       "attr_path": "openssl",
       "broken": false,
-      "derivation": "/nix/store/rw3y8k94ib37dc86n0wivr551wyzxgsk-openssl-3.4.1.drv",
+      "derivation": "/nix/store/i9b04l11qz4j0yffk9w9830wljvv72ld-openssl-3.6.0.drv",
       "description": "Cryptographic library that implements the SSL and TLS protocols",
       "install_id": "openssl",
       "license": "Apache-2.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "name": "openssl-3.4.1",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "openssl-3.6.0",
       "pname": "openssl",
-      "rev": "96ec055edbe5ee227f28cdbc3f1ddf1df5965102",
-      "rev_count": 807377,
-      "rev_date": "2025-05-28T19:24:49Z",
-      "scrape_date": "2025-05-31T05:16:10.859061Z",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:22:28.477762Z",
       "stabilities": [
         "unstable"
       ],
       "unfree": false,
-      "version": "3.4.1",
+      "version": "3.6.0",
       "outputs_to_install": [
         "bin",
         "man"
       ],
       "outputs": {
-        "bin": "/nix/store/rjzx8v679rwd6dsb6s08iy3j2rrax72s-openssl-3.4.1-bin",
-        "debug": "/nix/store/yk2g2gfcj2fy1ffyi1g91q7jmp4h8pxa-openssl-3.4.1-debug",
-        "dev": "/nix/store/kcgqglb4iax0zh5jlrxmjdik93wlgsrq-openssl-3.4.1-dev",
-        "doc": "/nix/store/9fz5qmj0z70cbzy7mapml0sbi8z6ap0a-openssl-3.4.1-doc",
-        "man": "/nix/store/1l5b31cnswnbcdcac9rzs9xixnc2n9r5-openssl-3.4.1-man",
-        "out": "/nix/store/8pviily4fgsl02ijm65binz236717wfs-openssl-3.4.1"
+        "bin": "/nix/store/k0gl1zc7f5hk87lylxwbipb0b870bcmk-openssl-3.6.0-bin",
+        "debug": "/nix/store/sqv8kbdgfxlr2d6nysr8c2715qpsi6f5-openssl-3.6.0-debug",
+        "dev": "/nix/store/ydrckgnllgg8nmhdwni81h7xhcpnrlhd-openssl-3.6.0-dev",
+        "doc": "/nix/store/cgp9ig35iwicfb9spcrgyg2m5dmlcgrv-openssl-3.6.0-doc",
+        "man": "/nix/store/a9jdl6xq9fc98ykpvqmc9kf0b0j9y8wh-openssl-3.6.0-man",
+        "out": "/nix/store/61i74yjkj9p1qphfl7018ja4sdwkipx0-openssl-3.6.0"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "playwright",
+      "broken": false,
+      "derivation": "/nix/store/gcizka3z2bl49p95lr4dkmxaniz5gg2n-playwright-core-1.54.1.drv",
+      "description": "Framework for Web Testing and Automation",
+      "install_id": "playwright",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "playwright-core-1.54.1",
+      "pname": "playwright",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T02:54:00.668508Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.54.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/az6p64h0rya6msrc8yadh4nl1c8n3b48-playwright-core-1.54.1"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "playwright",
+      "broken": false,
+      "derivation": "/nix/store/2as448zclcb2h682mkcgh4jg650lxhxx-playwright-core-1.54.1.drv",
+      "description": "Framework for Web Testing and Automation",
+      "install_id": "playwright",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "playwright-core-1.54.1",
+      "pname": "playwright",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:03:38.668656Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.54.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/8m2h2jgrrcc342zxid66paamwbhw94wd-playwright-core-1.54.1"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "playwright",
+      "broken": false,
+      "derivation": "/nix/store/j54s88vcgw22grpl6yld1nlqnwjnji0n-playwright-core-1.54.1.drv",
+      "description": "Framework for Web Testing and Automation",
+      "install_id": "playwright",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "playwright-core-1.54.1",
+      "pname": "playwright",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:13:01.273546Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.54.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/gsd44kylg5ff94axiaqsb5dkcaz22srb-playwright-core-1.54.1"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "playwright",
+      "broken": false,
+      "derivation": "/nix/store/gpbcfc2psqamzwnf8khi701vciwi43ny-playwright-core-1.54.1.drv",
+      "description": "Framework for Web Testing and Automation",
+      "install_id": "playwright",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "playwright-core-1.54.1",
+      "pname": "playwright",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:22:44.049714Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.54.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/9p4gil2ka4riqdvw9ckdl5hzj8zmfz2v-playwright-core-1.54.1"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "playwright-driver",
+      "broken": false,
+      "derivation": "/nix/store/gcizka3z2bl49p95lr4dkmxaniz5gg2n-playwright-core-1.54.1.drv",
+      "description": "Framework for Web Testing and Automation",
+      "install_id": "playwright-driver",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "playwright-core-1.54.1",
+      "pname": "playwright-driver",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T02:54:00.670862Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.54.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/az6p64h0rya6msrc8yadh4nl1c8n3b48-playwright-core-1.54.1"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "playwright-driver",
+      "broken": false,
+      "derivation": "/nix/store/2as448zclcb2h682mkcgh4jg650lxhxx-playwright-core-1.54.1.drv",
+      "description": "Framework for Web Testing and Automation",
+      "install_id": "playwright-driver",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "playwright-core-1.54.1",
+      "pname": "playwright-driver",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:03:38.670961Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.54.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/8m2h2jgrrcc342zxid66paamwbhw94wd-playwright-core-1.54.1"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "playwright-driver",
+      "broken": false,
+      "derivation": "/nix/store/j54s88vcgw22grpl6yld1nlqnwjnji0n-playwright-core-1.54.1.drv",
+      "description": "Framework for Web Testing and Automation",
+      "install_id": "playwright-driver",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "playwright-core-1.54.1",
+      "pname": "playwright-driver",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:13:01.275497Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.54.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/gsd44kylg5ff94axiaqsb5dkcaz22srb-playwright-core-1.54.1"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "playwright-driver",
+      "broken": false,
+      "derivation": "/nix/store/gpbcfc2psqamzwnf8khi701vciwi43ny-playwright-core-1.54.1.drv",
+      "description": "Framework for Web Testing and Automation",
+      "install_id": "playwright-driver",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "playwright-core-1.54.1",
+      "pname": "playwright-driver",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:22:44.051852Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.54.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/9p4gil2ka4riqdvw9ckdl5hzj8zmfz2v-playwright-core-1.54.1"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "playwright-mcp",
+      "broken": false,
+      "derivation": "/nix/store/4l9kmcw4wqshf0iid00vp01h0m159kyv-playwright-mcp-0.0.34.drv",
+      "description": "Playwright MCP server",
+      "install_id": "playwright-mcp",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "playwright-mcp-0.0.34",
+      "pname": "playwright-mcp",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T02:54:00.674616Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.0.34",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/aksl6xwwmiw8gg0mq6pkx8zbbfp4vghm-playwright-mcp-0.0.34"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "playwright-mcp",
+      "broken": false,
+      "derivation": "/nix/store/jfyhxsg40kyxl68dj7d1d3ngr92cv8pf-playwright-mcp-0.0.34.drv",
+      "description": "Playwright MCP server",
+      "install_id": "playwright-mcp",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "playwright-mcp-0.0.34",
+      "pname": "playwright-mcp",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:03:38.673349Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.0.34",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/xl9nahbsik9ll15pss9a8rf203nms4a7-playwright-mcp-0.0.34"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "playwright-mcp",
+      "broken": false,
+      "derivation": "/nix/store/gdkp5qwg5510inw0pc2dij5891y5n291-playwright-mcp-0.0.34.drv",
+      "description": "Playwright MCP server",
+      "install_id": "playwright-mcp",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "playwright-mcp-0.0.34",
+      "pname": "playwright-mcp",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:13:01.278906Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.0.34",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/5hcilllwcgp9f9xjdgdf446xbkn1b5qc-playwright-mcp-0.0.34"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "playwright-mcp",
+      "broken": false,
+      "derivation": "/nix/store/66qr98vq2p3gb0c1yd0vr1ppx13lrn0r-playwright-mcp-0.0.34.drv",
+      "description": "Playwright MCP server",
+      "install_id": "playwright-mcp",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "name": "playwright-mcp-0.0.34",
+      "pname": "playwright-mcp",
+      "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+      "rev_count": 901419,
+      "rev_date": "2025-11-24T06:39:56Z",
+      "scrape_date": "2025-11-26T03:22:44.054129Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.0.34",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/mpqh924n4gh7iprhq2r7sb616qqh4if6-playwright-mcp-0.0.34"
       },
       "system": "x86_64-linux",
       "group": "toplevel",

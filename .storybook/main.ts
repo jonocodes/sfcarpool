@@ -19,6 +19,7 @@ const config: StorybookConfig = {
       resolve: {
         alias: {
           // "@electric-sql/react": path.resolve(__dirname, "../src/electric-sql-react.mock.ts"),
+          "../../triplit/client": path.resolve(__dirname, "../triplit/client.mock.ts"),
         },
       },
     });

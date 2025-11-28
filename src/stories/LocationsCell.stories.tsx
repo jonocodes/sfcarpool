@@ -1,11 +1,8 @@
 import React from "react";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import LocationsCell from "../components/LocationsCell";
-// Import the mocked useShape directly from our mock file
-// import { useShape } from "../../src/electric-sql-react.mock";
-// We don't need createMock, getMock, or renderWithMock from the addon anymore
-
-// TODO: get these mocks to work here since "storybook-addon-vite-mock" does not work
+// Import the mocked triplit client (aliased in .storybook/main.ts)
+import { triplit } from "../../triplit/client";
 
 // Define Props type for better type safety with Storybook
 type LocationsCellProps = React.ComponentProps<typeof LocationsCell>;
@@ -26,47 +23,32 @@ export default meta;
 type Story = StoryObj<LocationsCellProps>;
 
 const mockLocationsData = [
-  { id: 1, name: "Berkeley -> SF (Mocked by Alias)" },
-  { id: 2, name: "Oakland -> SF (Mocked by Alias)" },
-  { id: 3, name: "Orinda -> SF (Mocked by Alias)" },
+  { id: "1", name: "Berkeley -> SF (Mocked by Alias)" },
+  { id: "2", name: "Oakland -> SF (Mocked by Alias)" },
+  { id: "3", name: "Orinda -> SF (Mocked by Alias)" },
 ];
-
-// Helper to ensure the mock is correctly typed and referred to
-const mockedUseShape = useShape as any; // Cast to any to access .mock property
 
 export const Default: Story = {
   args: { locationId: "1", week: "2024-W28" },
   beforeEach: async () => {
-    // Ensure this is called before the story renders
-    mockedUseShape.mockReturnValue({ data: mockLocationsData, isLoading: false, error: null });
+    // Set mock data using the triplit mock's helper method
+    (triplit as any).__setMockData(mockLocationsData);
   },
-  // render: (args) => { // Storybook will use the component's default render with args
-  //   return <LocationsCell {...args} />;
-  // },
 };
 
 export const Loading: Story = {
   args: { locationId: "1", week: "2024-W28" },
   beforeEach: async () => {
-    mockedUseShape.mockReturnValue({ data: [], isLoading: true, error: null });
-  },
-};
-
-export const ErrorState: Story = {
-  args: { locationId: "1", week: "2024-W28" },
-  beforeEach: async () => {
-    mockedUseShape.mockReturnValue({
-      data: [],
-      isLoading: false,
-      error: new Error("Failed to load locations (Mocked by Alias Error)"),
-    });
+    // Note: The current component doesn't show loading state with Triplit
+    // This story shows what happens when data is being fetched
+    (triplit as any).__setMockData([]);
   },
 };
 
 export const Empty: Story = {
   args: { locationId: "1", week: "2024-W28" },
   beforeEach: async () => {
-    mockedUseShape.mockReturnValue({ data: [], isLoading: false, error: null });
+    (triplit as any).__setMockData([]);
   },
 };
 
