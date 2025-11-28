@@ -1,38 +1,16 @@
-// import React from "react";
-// import { useQuery } from '@tanstack/react-query'
 import { Row, Spinner } from "react-bootstrap";
 import { rowsToDays as rowsToDates } from "./Scheduler/helpers";
 import { Config } from "./Scheduler/types";
 import Week from "./Week";
-
 import { Event, EventInDb } from "~/utils/models";
-
 import { triplit } from "../../triplit/client";
 import { useEffect, useState } from "react";
 import { LocalDate, LocalTime, nativeJs, ZoneId } from "@js-joda/core";
 
-// Mock data for events
-// const mockEvents = [
-//   {
-//     id: 1,
-//     label: "Morning Carpool",
-//     date: "2025-05-13",
-//     start: "07:00",
-//     end: "08:00",
-//     active: true,
-//     passenger: true,
-//   },
-//   {
-//     id: 2,
-//     date: "2025-05-12",
-//     start: "07:45",
-//     end: "08:15",
-//     active: true,
-//     passenger: false,
-//   },
-// ];
-
-const myConfig: Config = { startTime: LocalTime.parse("06:00"), endTime: LocalTime.parse("11:00") };
+const myConfig: Config = {
+  startTime: LocalTime.parse("06:00"),
+  endTime: LocalTime.parse("11:00"),
+};
 
 const rows = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -88,40 +66,17 @@ const EventsCell = ({
     ]);
 
     const unsubscribe = triplit.subscribe(query, (data) => {
-      console.log("live query fetching events");
-      console.log(data);
-      // Handle null/undefined label to match EventInDb interface
       const convertedData = data.map((item) => ({
         ...item,
-        start: item.start, // Keep as string for EventInDb
-        end: item.end, // Keep as string for EventInDb
-        label: item.label || "", // Convert null/undefined to empty string
+        start: item.start,
+        end: item.end,
+        label: item.label || "",
       }));
       setDbEvents(convertedData);
-      console.log("convertedData", convertedData);
     });
 
     return () => unsubscribe();
   }, [before, after, locationId]);
-
-  // const {
-  //   data: dbEvents,
-  //   isLoading,
-  //   error,
-  // } = useShape<EventInDb>({
-  //   url: "http://localhost:5133/v1/shape",
-  //   params: {
-  //     table: "events",
-  //   },
-  // });
-
-  // if (isLoading) {
-  //   return <Loading />;
-  // }
-
-  // if (error) {
-  //   return <Failure error={error} />;
-  // }
 
   const events: Event[] = dbEvents
     .filter((event) => event.active && event.location_id === locationId)

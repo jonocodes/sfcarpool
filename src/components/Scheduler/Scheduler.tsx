@@ -125,7 +125,6 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
         const startT = tableStartTimeSeconds + offset;
         const endT = tableStartTimeSeconds + offset + lengthTime;
 
-        console.log("onDrag", data, offset, startT);
 
         events[props.eventIndex].start = LocalTime.ofSecondOfDay(startT);
         events[props.eventIndex].end = LocalTime.ofSecondOfDay(endT);
@@ -137,17 +136,14 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
         setTimeStr(newTime);
       }}
       onDragStart={(e, data) => {
-        console.log("onDragStart", data);
       }}
       onDragStop={(e, data) => {
         const deltaX = data.lastX - geometries[props.eventIndex].x;
         const deltaY = data.lastY - geometries[props.eventIndex].y;
 
-        console.log("onDragStop", e, data, data.lastX, data.lastY);
 
         // handle the case where the drag seems like a click
         if (Math.abs(deltaX) <= 2 && Math.abs(deltaY) <= 2) {
-          console.log("that drag seemed like a click!", deltaX, config.widthTimeX);
           if (config.onClick) {
             config.onClick(events[props.eventIndex], props.rowNum, props.eventIndex);
           }
@@ -157,7 +153,6 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
 
           for (let i = 0; i < events[props.eventIndex].row; i++) {
             origTopY += computed.rowHeights[i];
-            // console.log(origTopY)
           }
 
           const newTopY = origTopY + data.lastY;
@@ -184,13 +179,10 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
           updateEvent(props.eventIndex, events[props.eventIndex]);
         }
 
-        console.log("onDragStop completed");
       }}
       onResizeStart={(e, dir, ref) => {
-        console.log("onResizeStart", dir, ref);
       }}
       onResize={(e, dir, ref, delta, pos) => {
-        console.log("onResize", dir, delta, pos, ref);
 
         // using ref width to workaround https://github.com/bokuweb/react-rnd/issues/901
 
@@ -214,7 +206,6 @@ const Event = (props: { eventIndex: number; rowNum: number }) => {
         setTimeStr(newTime);
       }}
       onResizeStop={(e, dir, ref, delta, pos) => {
-        console.log("onResizeStop", dir, delta, pos);
 
         if (config.onChange) {
           config.onChange(events[props.eventIndex], props.eventIndex);
@@ -369,7 +360,6 @@ const Main = () => {
   const scrollWidth = useStore(store, (state) => state.computed.scrollWidth);
 
   const events = useStore(store, (state) => state.events);
-  console.log("Main events", events);
 
   const config = useStore(store, (state) => state.config);
 

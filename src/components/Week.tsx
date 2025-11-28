@@ -1,25 +1,6 @@
-// import { useRef, useState } from 'react'
-
 import { Button } from "react-bootstrap";
-// import {
-//   CreateEventMutation,
-//   CreateEventMutationVariables,
-//   UpdateEventMutation,
-//   UpdateEventMutationVariables,
-// } from 'types/graphql'
-// import { createStore, useStore } from 'zustand'
 import { create } from "zustand";
-
-// import { useMutation } from '@redwoodjs/web'
-// import { Toaster } from '@redwoodjs/web/toast'
-
-import {
-  // CREATE_EVENT,
-  eventToDb,
-  formatTime,
-  getTimeSlots,
-  // UPDATE_EVENT,
-} from "../components/Scheduler/helpers";
+import { eventToDb, getTimeSlots } from "../components/Scheduler/helpers";
 import SchedulerComponent from "../components/Scheduler/Scheduler";
 import { Config as SchedulerConfig, SchedulerState } from "../components/Scheduler/types";
 import { Event as EventModel } from "~/utils/models";
@@ -27,11 +8,7 @@ import {
   createSchedulerStore,
   _generateEvent,
   SchedulerContext,
-  configDefault,
-  refreshComputed,
 } from "../components/Scheduler/zstore";
-
-// import 'bootstrap/dist/css/bootstrap.min.css'
 import EventModal from "./EventModal";
 import { Toaster } from "react-hot-toast";
 import { triplit } from "triplit/client";
@@ -54,111 +31,6 @@ const usePageStore = create<PageState>()((set) => ({
   hideModal: () => set(() => ({ modalVisible: false })),
   setEvent: (index, event) => set(() => ({ currentEventIndex: index, currentEvent: event })),
 }));
-
-// const store = createStore<SchedulerState>((set) => ({
-//   rows: [],
-//   events: [],
-//   config: {},
-//   computed: {
-//     rowMap: [],
-//     geometries: [],
-//     rowHeights: [],
-//     tableHeight: 0,
-//     tableStartTime: 0,
-//     tableEndTime: 0,
-//     cellsWide: 0,
-//     scrollWidth: 0,
-//   },
-//   onClickEvent: null,
-//   currentEvent: null,
-//   currentEventIndex: null,
-//   // count: 1,
-//   // inc: () => set((state) => ({ count: state.count + 1 })),
-
-//   setup: (config, rows, events) =>
-//     set((state) => {
-//       state.config = { ...configDefault, ...config }
-//       state.rows = rows
-//       state.events = events
-
-//       const computed = refreshComputed(config, rows, events)
-
-//       return {
-//         rows: state.rows,
-//         config: state.config,
-//         events: state.events,
-//         computed: computed,
-//       }
-//     }),
-
-//   clearEvents: () =>
-//     // this is a helper function for dev and testing only
-//     set((state) => {
-//       state.events = []
-
-//       const computed = refreshComputed(state.config, state.rows, state.events)
-
-//       return {
-//         events: state.events,
-//         computed: computed,
-//       }
-//     }),
-
-//   addEvent: (event: Event) =>
-//     set((state) => {
-//       state.events.push(event)
-//       const computed = refreshComputed(state.config, state.rows, state.events)
-
-//       return {
-//         currentEvent: event,
-//         events: state.events,
-//         computed: computed,
-//       }
-//     }),
-
-//   removeEvent: (eventIndex: number) =>
-//     set((state) => {
-//       state.events.splice(eventIndex, 1)
-
-//       const computed = refreshComputed(state.config, state.rows, state.events)
-
-//       console.log('removeEvent', eventIndex, state.events, computed)
-
-//       return {
-//         // currentEvent: event,
-//         events: state.events,
-//         computed: computed,
-//       }
-//     }),
-
-//   updateEvent: (eventIndex: number, event: Event) =>
-//     set((state) => {
-//       console.log('updateEvent', eventIndex, event)
-
-//       state.events[eventIndex] = event
-//       const computed = refreshComputed(state.config, state.rows, state.events)
-
-//       console.log(
-//         'updateEvent finished',
-//         eventIndex,
-//         event,
-//         state.events[eventIndex],
-//         computed.geometries[eventIndex]
-//       )
-
-//       return {
-//         currentEvent: event,
-//         events: state.events,
-//         computed: computed,
-//       }
-//     }),
-// }))
-
-// const store = createSchedulerStore({
-//   rows: [],
-//   events: [],
-//   config: {},
-// })
 
 const Week = (props: {
   locationId: string;
@@ -194,15 +66,12 @@ const Week = (props: {
     onClick: function (eventModel, rowNum, eventIndex) {
       if (rowNum < 0) throw new Error("rowNum must be >= 0");
 
-      console.log("onClick external method", eventModel, rowNum, eventIndex);
-
       setEvent(eventIndex, eventModel);
       showModal();
     },
 
     onChange: async function (eventModel: EventModel, eventIndex: number) {
       const db_data = eventToDb(eventModel, startDate, props.locationId);
-      console.log("update db data", db_data);
 
       const eventId = String(eventModel.data.entry);
 
@@ -215,8 +84,6 @@ const Week = (props: {
     },
     onScheduleClick: async function (colNum, rowNum) {
       if (rowNum < 0) throw new Error("rowNum must be >= 0");
-
-      console.log("onScheduleClick external method", colNum, rowNum);
 
       // seconds since midnight?
       const startTimeValue =
@@ -244,14 +111,12 @@ const Week = (props: {
       };
 
       const db_data = eventToDb(event, startDate, props.locationId);
-      console.log("create db data", db_data);
 
       const insertedEntity = await triplit.insert("events", {
         ...db_data,
         created_at: new Date(),
         updated_at: new Date(),
       });
-      console.log("new id", insertedEntity, event);
       event.data.entry = insertedEntity.id;
 
       // TODO: handle db failure promise, toast. show loading?
@@ -265,7 +130,6 @@ const Week = (props: {
         }
       }
 
-      // setEvent(i, event)
       showModal();
     },
   };
@@ -283,38 +147,11 @@ const Week = (props: {
     addEvent(newEvent);
   }
 
-  // const [evnts, setEvnts] = useState(props.data)
-
-  // props.data[0].data['rand'] = Math.random().toString()
-
   const useStore = createSchedulerStore({
     rows: props.rows,
-    events: props.data, // TODO: the location switch issue is probably here
+    events: props.data,
     config: myConfig,
   });
-
-  // const store2 = createSchedulerStore({
-  //   rows: props.rows,
-  //   events: props.data, // TODO: the location switch issue is probably here
-  //   config: myConfig,
-  // })
-
-  // const storeRef = useRef(_store)
-
-  // const store = useRef(_store).current
-
-  // useEffect(() => _store.subscribe(
-  //   scratches => (scratchRef.current = scratches),
-  //   state => state.scratches
-  // ), [])
-
-  // console.log('store', store)
-
-  // const store = createSchedulerStore({
-  //   rows: props.rows,
-  //   events: props.data, // TODO: the location switch issue is probably here
-  //   config: myConfig,
-  // })
 
   const computed = useStore((state) => state.computed);
   const events = useStore((state) => state.events);
@@ -332,12 +169,6 @@ const Week = (props: {
   const _updateEvent = useStore((state) => state.updateEvent);
   const _removeEvent = useStore((state) => state.removeEvent);
 
-  // const setup = useStore(store, (state) => state.setup)
-  // setup(myConfig, props.rows, props.data)
-
-  console.log("week store events", events);
-
-  // TODO: maybe move this to computed? so it does not regen with every change to the Week
   const timeSlots = getTimeSlots(
     computed.tableStartTime,
     computed.tableEndTime,
@@ -361,7 +192,6 @@ const Week = (props: {
     );
   }
 
-  // I could not figure out how to inject this from stories, so for now rand is initiated in this component
   let rand = <></>;
   if (props.provideCreateRandom) {
     rand = (
