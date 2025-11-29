@@ -15,12 +15,12 @@ version = 1
 ## -------------------------------------------------------------------
 [install]
 just.pkg-path = "just"
-nodejs.pkg-path = "nodejs"
 openssl.pkg-path = "openssl"
 # still dont have playwright working in Nix/Flox
 playwright-driver.pkg-path = "playwright-driver"
 playwright-mcp.pkg-path = "playwright-mcp"
 playwright.pkg-path = "playwright"
+nodejs_24.pkg-path = "nodejs_24"
 
 ## Environment Variables ---------------------------------------------
 ##  ... available for use in the activated environment
