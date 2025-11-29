@@ -2,49 +2,33 @@
 
 This is an experimental web app to help initiate carpools to San Francisco during the morning commute.
 
-REWRITE IN PROGRESS: moving from redwood/hasura to tanstack/triplit
-
 ## Screenshot
 
 ![screenshot](screenshot.png?raw=true "screenshot")
 
 ## Features
 
-<!-- * Live updates (GraphQL subscription)
-* No-code backend (Hasura) -->
-
+- Local first offline PWA using triplit db
 - Storybook preview
-<!-- * Audit logging -->
+
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/en/) 20
-- docker with compose
 - Just
 
 ## Development setup
 
-Start the backend. Run Hasura backed by Postgres:
+Start the backend. Run tirplit:
 
 ```
-just be
-```
-
-If this is the first time setting up the db:
-
-- setup connection
-- run migrations
-- track tables
-- set permissions
-
-```
-TBD...
+just setup be
 ```
 
 In a new terminal start the development server:
 
 ```
-just setup fe
+just fe
 ```
 
 You may see a bunch of prisma errors, but we are not using prisma, so you can ignore them.
@@ -56,4 +40,29 @@ For additional common commands run:
 
 ```
 just
+```
+
+## Prod DB Setup
+
+First deploy triplit to a remote location. I use docker.
+
+Now seed it.
+
+(example uses fish shell)
+```
+set -x JWT_SECRET "xxxx"
+
+set -x TRIPLIT_TOKEN "yyyy"
+
+set -x TRIPLIT_REMOTE "https://zzzz"
+
+npx triplit schema push --token=$TRIPLIT_TOKEN --remote=$TRIPLIT_REMOTE
+
+npx triplit seed run --all --token=$TRIPLIT_TOKEN --remote=$TRIPLIT_REMOTE
+```
+
+To run the local frontend against the remote db
+
+```
+just fe-prod
 ```
