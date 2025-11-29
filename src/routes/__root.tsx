@@ -30,13 +30,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <>
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
-          <Navbar.Brand href={"/scheduler"}>
+          <Navbar.Brand as={Link} href={"/scheduler"}>
             <img
               style={{
                 marginRight: "5px",
               }}
               alt=""
-              src="/icons8-carpool-ios-16-filled-96.png"
+              src="./icons8-carpool-ios-16-filled-96.png"
               width="30"
               height="30"
               className="d-inline-block align-top"

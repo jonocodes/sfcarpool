@@ -89,9 +89,3 @@ export const About: React.FC = () => {
     </Container>
   );
 };
-
-// export const Route = createFileRoute("/about")({
-//   component: About,
-// });
-
-// export default Route;
