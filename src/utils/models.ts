@@ -16,7 +16,6 @@ export interface EventInDb extends DbModel {
   date: Date;
   start: string;
   end: string;
-  active: boolean;
   passenger: boolean;
   location_id: string;
 }

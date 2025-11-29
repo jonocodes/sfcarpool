@@ -71,7 +71,6 @@ describe("EventsCell", () => {
         date: new Date("2023-01-09T08:00:00.000Z"),
         start: "08:00",
         end: "09:00",
-        active: true,
         passenger: true,
         location_id: "loc1",
         created_at: new Date(),
@@ -83,7 +82,6 @@ describe("EventsCell", () => {
       expect(mockDbEvent).toHaveProperty("date");
       expect(mockDbEvent).toHaveProperty("start");
       expect(mockDbEvent).toHaveProperty("end");
-      expect(mockDbEvent).toHaveProperty("active");
       expect(mockDbEvent).toHaveProperty("passenger");
       expect(mockDbEvent).toHaveProperty("location_id");
     });
@@ -171,7 +169,6 @@ describe("EventsCell", () => {
           start: "08:00",
           end: "09:00",
           label: "Event 1",
-          active: true,
           passenger: true,
           created_at: new Date(),
           updated_at: new Date(),
@@ -183,7 +180,6 @@ describe("EventsCell", () => {
           start: "09:00",
           end: "10:00",
           label: "Event 2",
-          active: true,
           passenger: false,
           created_at: new Date(),
           updated_at: new Date(),
@@ -193,39 +189,6 @@ describe("EventsCell", () => {
       const filtered = mockDbEvents.filter((e) => e.location_id === locationId);
       expect(filtered).toHaveLength(1);
       expect(filtered[0].id).toBe("evt1");
-    });
-
-    it("should filter by active status", () => {
-      const mockDbEvents: EventInDb[] = [
-        {
-          id: "evt1",
-          location_id: "loc1",
-          date: new Date("2023-01-09T08:00:00.000Z"),
-          start: "08:00",
-          end: "09:00",
-          label: "Active Event",
-          active: true,
-          passenger: true,
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
-        {
-          id: "evt2",
-          location_id: "loc1",
-          date: new Date("2023-01-09T09:00:00.000Z"),
-          start: "09:00",
-          end: "10:00",
-          label: "Inactive Event",
-          active: false,
-          passenger: false,
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
-      ];
-
-      const filtered = mockDbEvents.filter((e) => e.active);
-      expect(filtered).toHaveLength(1);
-      expect(filtered[0].label).toBe("Active Event");
     });
   });
 });

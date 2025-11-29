@@ -79,7 +79,7 @@ const EventsCell = ({
   }, [before, after, locationId]);
 
   const events: Event[] = dbEvents
-    .filter((event) => event.active && event.location_id === locationId)
+    .filter((event) => event.location_id === locationId)
     .map(dbToEvent);
   const dates = rowsToDates(rows, after, before);
 

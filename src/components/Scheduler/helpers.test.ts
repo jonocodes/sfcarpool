@@ -226,7 +226,6 @@ describe("Scheduler Helpers", () => {
 
       expect(result).toMatchObject({
         label: "words",
-        active: true,
         start: "09:10",
         end: "12:20",
         location_id: "1",
@@ -254,7 +253,6 @@ describe("Scheduler Helpers", () => {
 
       expect(result).toMatchObject({
         label: "Morning Drive",
-        active: true,
         start: "08:00",
         end: "09:00",
         location_id: "loc-123",

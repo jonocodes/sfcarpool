@@ -123,7 +123,6 @@ export function eventToDb(evnt: Event, startDate: LocalDate, locationId: string)
     // start, // TODO: chop off the :00 ?
     // end,
     date: convert(LocalDate.parse(dateStr)).toDate(),
-    active: true,
   };
 
   console.log("eventToDb", result);

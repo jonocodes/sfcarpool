@@ -7,9 +7,10 @@ export const triplit = new TriplitClient({
     type: "indexeddb",
     name: "carpool",
   },
-
   serverUrl: import.meta.env.VITE_TRIPLIT_SERVER,
   token: import.meta.env.VITE_TRIPLIT_ANON_KEY,
+  autoConnect: true,
+  syncSchema: true,
 });
 
 console.log("import.meta.env", import.meta.env);
