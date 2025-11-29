@@ -1,0 +1,382 @@
+import { createContext } from "react";
+
+import { createStore, create } from "zustand";
+// import create from 'zustand/react'
+import { LocalDate, LocalTime } from "@js-joda/core";
+
+import { calcStringTime, formatTime, timeToSeconds } from "./helpers";
+import { Computed, Config, SchedulerProps, SchedulerState } from "./types";
+import { Event } from "~/utils/models";
+
+const modes = ["passenger", "driver"];
+
+export const configDefault: Config = {
+  className: "r-schedule",
+  startTime: LocalTime.parse("07:00"), // TODO: LocalTime.parse("07:00"),
+  endTime: LocalTime.parse("19:30"),
+  widthTimeX: 25,
+  widthTime: 600, // cell timestamp example 10 minutes
+  timeLineY: 50, // timeline height(px)
+  timeLineBorder: 1, // timeline height border
+  timeBorder: 1, // border width
+  timeLinePaddingTop: 0,
+  timeLinePaddingBottom: 0,
+  headTimeBorder: 1, // time border width
+  // dataWidth: 160, // data width
+  verticalScrollbar: 0, // vertical scrollbar width
+  bundleMoveWidth: 1,
+  // width to move all schedules to the right of the clicked time cell
+  draggable: true,
+  resizable: true,
+  resizableLeft: false,
+  // event
+  // onInitRow: null,
+  // onChange: null,
+  onClick: undefined,
+  // onAppendRow: null,
+  // onAppendSchedule: null,
+  onScheduleClick: undefined,
+};
+
+function generateRowMap(rows: string[], events: Event[]) {
+  const dataRowMap: number[][] = [];
+  for (let j = 0; j < rows.length; j++) {
+    // doing this since Array.fill([]) causes issues
+    dataRowMap.push([]);
+  }
+
+  console.log("generateRowMap", dataRowMap);
+
+  // if (events.length == 0) return dataRowMap;
+
+  for (let i = 0; i < events.length; i++) {
+    dataRowMap[events[i].row].push(i);
+  }
+
+  return dataRowMap;
+}
+
+function calculateGeometry(event: Event, config: Config, tableStartTimeSeconds: number) {
+  const startTimeSeconds = timeToSeconds(event.start);
+  const endTimeSeconds = timeToSeconds(event.end);
+
+  // const tableStartTime = computed.tableStartTime
+
+  const st = Math.ceil((startTimeSeconds - tableStartTimeSeconds) / config.widthTime);
+  const et = Math.floor((endTimeSeconds - tableStartTimeSeconds) / config.widthTime);
+
+  return {
+    x: config.widthTimeX * st,
+    y: 0, // NOTE: this is set outside this function
+    width: config.widthTimeX * (et - st),
+    height: config.timeLineY,
+  };
+}
+
+function randInt(x: number, y: number) {
+  return x + Math.floor(Math.random() * y);
+}
+
+export function _generateEvent(times: LocalTime[], rowCount: number) {
+  const randStartIndex = Math.floor(Math.random() * (times.length - 8));
+  const randEndIndex = randStartIndex + 2 + Math.floor(Math.random() * 8);
+
+  // const modes = ['passenger', 'driver']
+
+  const randModeIndex = Math.floor(Math.random() * modes.length);
+
+  const event = {
+    row: randInt(0, rowCount),
+    start: times[randStartIndex],
+    end: times[randEndIndex],
+    text: "random " + modes[randModeIndex],
+    data: {
+      entry: randInt(0, 1000),
+      mode: modes[randModeIndex],
+    },
+  };
+
+  console.log("generated", event);
+
+  return event;
+}
+
+type SchedulerStore = ReturnType<typeof createSchedulerStore>;
+
+export const SchedulerContext = createContext<SchedulerStore | null>(null);
+
+// update row heights, and manage overlapping events in a row
+export function calculateGeometries(
+  config: Config,
+  events: Event[],
+  rows: string[],
+  rowMap: number[][],
+  tableStartTimeSeconds: number
+) {
+  let tableHeight = 0;
+  const geometries = [];
+  const rowHeights = [];
+
+  for (let rowNum = 0; rowNum < rows.length; rowNum++) {
+    const items_map = rowMap[rowNum];
+
+    const items = [];
+    for (let i = 0; i < items_map.length; i++) {
+      items.push(events[items_map[i]]);
+    }
+
+    const codes: Array<{ code: number; x: number }> = [],
+      check: number[][] = [];
+    let h = 0;
+    let c1, c2, s1, s2, e1, e2;
+    let i;
+
+    for (i = 0; i < items.length; i++) {
+      const eventIndex = rowMap[rowNum][i];
+
+      const geometry = calculateGeometry(items[i], config, tableStartTimeSeconds); // TODO: cache this for later use, or precompute
+
+      // const geometry = getOrSetGeometry(eventIndex, config)
+
+      // setGeometry(geometry, eventIndex)
+      geometries[eventIndex] = geometry;
+
+      codes[i] = {
+        code: i,
+        x: geometry.x,
+      };
+    }
+
+    codes.sort(function (a, b) {
+      if (a.x < b.x) {
+        return -1;
+      }
+
+      if (a.x > b.x) {
+        return 1;
+      }
+
+      return 0;
+    });
+
+    for (i = 0; i < codes.length; i++) {
+      c1 = codes[i].code;
+
+      const geometry1 = calculateGeometry(items[c1], config, tableStartTimeSeconds); // items[c1].geometry
+
+      for (h = 0; h < check.length; h++) {
+        let next = false;
+
+        for (let j = 0; j < check[h].length; j++) {
+          c2 = check[h][j];
+          const geometry2 = calculateGeometry(items[c2], config, tableStartTimeSeconds);
+          s1 = geometry1.x;
+          e1 = geometry1.x + geometry1.width;
+          s2 = geometry2.x;
+          e2 = geometry2.x + geometry2.width;
+
+          if (s1 < e2 && e1 > s2) {
+            next = true;
+            continue;
+          }
+        }
+
+        if (!next) {
+          break;
+        }
+      }
+
+      if (!check[h]) {
+        check[h] = [];
+      }
+
+      const geometry = calculateGeometry(items[c1], config, tableStartTimeSeconds);
+      geometry.y = h * config.timeLineY + config.timeLinePaddingTop;
+
+      const eventIndex = rowMap[rowNum][c1];
+
+      // console.log('setGeometryB', eventIndex, geometry)
+
+      // setGeometry(geometry, eventIndex)
+      geometries[eventIndex] = geometry;
+
+      // items[c1].geometry.y = h * config.timeLineY + config.timeLinePaddingTop
+
+      check[h][check[h].length] = c1;
+    }
+
+    const height =
+      Math.max(check.length, 1) * config.timeLineY +
+      config.timeLineBorder +
+      config.timeLinePaddingTop +
+      config.timeLinePaddingBottom;
+
+    // store.state.rowHeights[rowNum] = height
+    // setRowHeight(height, rowNum)
+    rowHeights[rowNum] = height;
+
+    // store.state.tableHeight += height
+    tableHeight += height;
+  }
+  // setTableHeight(tableHeight)
+
+  // console.log('updateGeometries finished', tableHeight, geometries, rowHeights)
+
+  return {
+    tableHeight: tableHeight,
+    geometries: geometries,
+    rowHeights: rowHeights,
+  };
+}
+
+export function refreshComputed(userConf: Config, rows: string[], events: Event[]): Computed {
+  const config = { ...configDefault, ...userConf };
+
+  let tableStartTimeSeconds = timeToSeconds(config.startTime);
+  tableStartTimeSeconds -= tableStartTimeSeconds % config.widthTime;
+  // tableStartTime = 0
+
+  let tableEndTimeSeconds = timeToSeconds(config.endTime);
+  tableEndTimeSeconds -= tableEndTimeSeconds % config.widthTime;
+  // tableEndTime = 0
+
+  const cellsWide = Math.floor((tableEndTimeSeconds - tableStartTimeSeconds) / config.widthTime);
+
+  const rowMap = generateRowMap(rows, events);
+
+  const geos = calculateGeometries(config, events, rows, rowMap, tableStartTimeSeconds);
+
+  return {
+    tableEndTime: config.endTime,
+    tableStartTime: config.startTime,
+
+    cellsWide,
+    rowMap: rowMap,
+    geometries: geos.geometries,
+    rowHeights: geos.rowHeights,
+    tableHeight: geos.tableHeight,
+    scrollWidth: config.widthTimeX * cellsWide,
+  };
+}
+
+export const createSchedulerStore = (initProps?: Partial<SchedulerProps>) => {
+  const config = { ...configDefault, ...initProps?.config };
+
+  console.log("createStore initProps.events", initProps?.events);
+
+  // return createStore<SchedulerState>()((set) => ({
+  return create<SchedulerState>()((set) => ({
+    events: initProps?.events || [],
+    rows: initProps?.rows || [],
+    config: config,
+    computed: refreshComputed(config, initProps?.rows || [], initProps?.events || []),
+    onClickEvent: null,
+    currentEvent: null,
+    currentEventIndex: null,
+
+    setup: (config, rows, events) =>
+      set((state) => {
+        state.config = config;
+        state.rows = rows;
+        state.events = events;
+
+        console.log("setup events", state.events.length);
+
+        const computed = refreshComputed(config, rows, events);
+
+        return {
+          rows: state.rows,
+          config: state.config,
+          events: state.events,
+          computed: computed,
+        };
+      }),
+
+    clearEvents: () =>
+      // this is a helper function for dev and testing only
+      set((state) => {
+        state.events = [];
+
+        console.log("clearing events");
+
+        const computed = refreshComputed(config, initProps?.rows || [], []);
+
+        return {
+          events: [],
+          computed: computed,
+        };
+      }),
+
+    addEvent: (event: Event) =>
+      set((state) => {
+        state.events.push(event);
+        const computed = refreshComputed(config, initProps?.rows || [], state.events);
+
+        return {
+          currentEvent: event,
+          events: state.events,
+          computed: computed,
+        };
+      }),
+
+    removeEvent: (eventIndex: number) =>
+      set((state) => {
+        // return _removeEvent(state, eventIndex, config, initProps)
+
+        // const resp = _delete({
+        //   variables: { id: Number(state.events[eventIndex].data.entry) },
+        // }).then(function () {
+        //   return 8
+        // })
+
+        // ;(async function () {
+        //   const result = await resp
+        //   console.log('Woo done!', result)
+
+        //   // But the best part is, we can just keep awaiting different stuff, without ugly .then()s
+        //   // const somethingElse = await getSomethingElse()
+        //   // const moreThings = await getMoreThings()
+        // })()
+
+        // toast.success('removing event')
+
+        // _delete({
+        //   variables: { id: Number(state.events[eventIndex].data.entry) },
+        // })
+
+        state.events.splice(eventIndex, 1);
+
+        const computed = refreshComputed(config, initProps?.rows || [], state.events);
+
+        console.log("removeEvent", eventIndex, state.events, computed);
+
+        return {
+          // currentEvent: event,
+          events: state.events,
+          computed: computed,
+        };
+      }),
+
+    updateEvent: (eventIndex: number, event: Event) =>
+      set((state) => {
+        console.log("updateEvent", eventIndex, event);
+
+        state.events[eventIndex] = event;
+        const computed = refreshComputed(config, initProps?.rows || [], state.events);
+
+        console.log(
+          "updateEvent finished",
+          eventIndex,
+          event,
+          state.events[eventIndex],
+          computed.geometries[eventIndex]
+        );
+
+        return {
+          currentEvent: event,
+          events: state.events,
+          computed: computed,
+        };
+      }),
+  }));
+};
