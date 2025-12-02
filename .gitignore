@@ -29,3 +29,4 @@ data.db*
 *.sqlite
 .flox/env/manifest.lock
 
+storybook-static/

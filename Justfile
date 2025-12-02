@@ -1,4 +1,4 @@
-export JWT_SECRET := env_var("JWT_SECRET")
+export JWT_SECRET := env_var_or_default("JWT_SECRET", "")
 
 # show list of commands
 help:
@@ -16,9 +16,8 @@ fe:
 fe-prod:
 	npm run dev:prod
 
-
-# test: ## Run tests
-# 	yarn rw test
+test: ## Run tests
+	npm test
 
 # Run local backend. uses built in default secret
 be:

@@ -1,5 +1,6 @@
 import { ConnectionStatus, TriplitClient } from "@triplit/client";
 import { schema } from "./schema";
+import { useConnectionStatusStore } from "../src/stores/connectionStatusStore";
 
 export const triplit = new TriplitClient({
   schema,
@@ -15,7 +16,17 @@ export const triplit = new TriplitClient({
 
 console.log("import.meta.env", import.meta.env);
 
+// Load persisted timestamp on initialization
+useConnectionStatusStore.getState().loadFromStorage();
+
 triplit.onConnectionStatusChange((status: ConnectionStatus) => {
   console.log("Triplit connection status:", status);
-  // update some global store / React state here
+
+  const store = useConnectionStatusStore.getState();
+  store.setConnectionStatus(status);
+
+  // Record timestamp when connection is established
+  if (status === "OPEN") {
+    store.setLastConnectionTime(Date.now());
+  }
 });
