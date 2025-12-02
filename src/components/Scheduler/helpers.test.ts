@@ -151,11 +151,11 @@ describe("Scheduler Helpers", () => {
       expect(date).toBeInstanceOf(LocalDate);
     });
 
-    it("should return a Sunday", () => {
+    it("should return a Monday", () => {
       const result = getWeekStartStr();
       const date = LocalDate.parse(result);
-      // Sunday is day 7 in js-joda
-      expect(date.dayOfWeek().value()).toBe(7);
+      // Monday is day 1 in js-joda
+      expect(date.dayOfWeek().value()).toBe(1);
     });
   });
 

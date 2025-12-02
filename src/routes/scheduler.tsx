@@ -55,7 +55,7 @@ const caret_left = (
 
 const SchedulerPage = () => {
   const { location, week } = Route.useSearch();
-  // 'week' is a string for the first day of the week. no time. starting sunday
+  // 'week' is a string for the first day of the week
   // Parse the date string using js-joda to avoid timezone issues
   const weekStart = LocalDate.parse(week);
   const start = weekStart.plusDays(1); // Move to Monday
