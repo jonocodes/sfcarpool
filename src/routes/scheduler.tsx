@@ -3,10 +3,15 @@ import { Col, Form, Row } from "react-bootstrap";
 import EventsCell from "../components/EventsCell";
 import LocationsCell from "../components/LocationsCell";
 import ConnectionStatus from "../components/ConnectionStatus";
-import { formatDateSpan, getWeekStartStr } from "../components/Scheduler/helpers";
+import {
+  getWeekStartStr,
+  getWeekDates,
+  getPreviousWeekStr,
+  getNextWeekStr,
+  getWeekDateSpanStr,
+} from "../components/Scheduler/helpers";
 // import { routes } from 'vinxi/dist/types/lib/plugins/routes'
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
-import { LocalDate, DateTimeFormatter } from "@js-joda/core";
 import { useEffect } from "react";
 
 const LOCATION_STORAGE_KEY = "scheduler_selected_location";
@@ -55,24 +60,16 @@ const caret_left = (
 
 const SchedulerPage = () => {
   const { location, week } = Route.useSearch();
-  // 'week' is a string for the first day of the week
-  // Parse the date string using js-joda to avoid timezone issues
-  const weekStart = LocalDate.parse(week);
-  const start = weekStart.plusDays(1); // Move to Monday
-  const end = start.plusDays(4);
-  const prevWeekStr = weekStart.minusDays(7);
-  const nextWeekStr = weekStart.plusDays(7);
+  const { start, end } = getWeekDates(week);
+  const prevWeekStr = getPreviousWeekStr(week);
+  const nextWeekStr = getNextWeekStr(week);
+  const dateSpanStr = getWeekDateSpanStr(week);
   const loc = location ?? "zzxdc";
 
   // Save location to localStorage whenever it changes
   useEffect(() => {
     setStoredLocation(loc);
   }, [loc]);
-
-  // Convert LocalDate to Date for compatibility with existing functions
-  const startDate = new Date(start.toString());
-  const endDate = new Date(end.toString());
-  const dateSpanStr = formatDateSpan(startDate, endDate);
 
   return (
     <>
@@ -84,7 +81,7 @@ const SchedulerPage = () => {
               to="/scheduler"
               search={{
                 location: loc,
-                week: prevWeekStr.format(DateTimeFormatter.ISO_LOCAL_DATE),
+                week: prevWeekStr,
               }}
             >
               {caret_left}
@@ -96,7 +93,7 @@ const SchedulerPage = () => {
               to="/scheduler"
               search={{
                 location: loc,
-                week: nextWeekStr.format(DateTimeFormatter.ISO_LOCAL_DATE),
+                week: nextWeekStr,
               }}
             >
               {caret_right}

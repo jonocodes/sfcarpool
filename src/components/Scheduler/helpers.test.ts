@@ -11,6 +11,11 @@ import {
   parseDateTime,
   rowsToDays,
   assertDefined,
+  localDateToDate,
+  getWeekDates,
+  getPreviousWeekStr,
+  getNextWeekStr,
+  getWeekDateSpanStr,
 } from "./helpers";
 
 describe("Scheduler Helpers", () => {
@@ -22,9 +27,7 @@ describe("Scheduler Helpers", () => {
     });
 
     it("should throw when value is undefined", () => {
-      expect(() => assertDefined(undefined, "Value is undefined")).toThrow(
-        "Value is undefined"
-      );
+      expect(() => assertDefined(undefined, "Value is undefined")).toThrow("Value is undefined");
     });
   });
 
@@ -191,9 +194,7 @@ describe("Scheduler Helpers", () => {
       const start = LocalDate.of(2023, 1, 9);
       const end = LocalDate.of(2023, 1, 13);
 
-      expect(() => rowsToDays(rows, start, end)).toThrow(
-        "Row count and day span do not match"
-      );
+      expect(() => rowsToDays(rows, start, end)).toThrow("Row count and day span do not match");
     });
 
     it("should generate consecutive dates", () => {
@@ -279,5 +280,132 @@ describe("Scheduler Helpers", () => {
       expect(result.date.toISOString()).toMatch(/2023-01-13/);
     });
   });
-});
 
+  describe("localDateToDate", () => {
+    it("should convert LocalDate to Date", () => {
+      const localDate = LocalDate.of(2023, 1, 15);
+      const result = localDateToDate(localDate);
+
+      expect(result).toBeInstanceOf(Date);
+      expect(result.getFullYear()).toBe(2023);
+      expect(result.getMonth()).toBe(0); // January is 0-indexed
+      expect(result.getDate()).toBe(15);
+    });
+
+    it("should handle dates correctly without timezone issues", () => {
+      const localDate = LocalDate.of(2023, 12, 31);
+      const result = localDateToDate(localDate);
+
+      expect(result.getFullYear()).toBe(2023);
+      expect(result.getMonth()).toBe(11); // December is 11
+      expect(result.getDate()).toBe(31);
+    });
+  });
+
+  describe("getWeekDates", () => {
+    it("should return Monday as start and Friday as end", () => {
+      const week = "2023-01-09"; // Monday
+      const { start, end } = getWeekDates(week);
+
+      expect(start.dayOfWeek().value()).toBe(1); // Monday
+      expect(end.dayOfWeek().value()).toBe(5); // Friday
+      expect(start.toString()).toBe("2023-01-09");
+      expect(end.toString()).toBe("2023-01-13");
+    });
+
+    it("should handle week spanning month boundary", () => {
+      const week = "2023-01-30"; // Monday
+      const { start, end } = getWeekDates(week);
+
+      expect(start.toString()).toBe("2023-01-30");
+      expect(end.toString()).toBe("2023-02-03"); // Friday in February
+    });
+
+    it("should always return 5 days span", () => {
+      const week = "2023-06-05"; // Monday
+      const { start, end } = getWeekDates(week);
+
+      const daysDiff = start.until(end).days();
+      expect(daysDiff).toBe(4); // 4 days difference = 5 days total (inclusive)
+    });
+  });
+
+  describe("getPreviousWeekStr", () => {
+    it("should return previous Monday", () => {
+      const week = "2023-01-16"; // Monday
+      const result = getPreviousWeekStr(week);
+
+      expect(result).toBe("2023-01-09");
+    });
+
+    it("should handle month boundary", () => {
+      const week = "2023-02-06"; // Monday
+      const result = getPreviousWeekStr(week);
+
+      expect(result).toBe("2023-01-30");
+    });
+
+    it("should return valid ISO date string", () => {
+      const week = "2023-01-09";
+      const result = getPreviousWeekStr(week);
+
+      expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    });
+  });
+
+  describe("getNextWeekStr", () => {
+    it("should return next Monday", () => {
+      const week = "2023-01-09"; // Monday
+      const result = getNextWeekStr(week);
+
+      expect(result).toBe("2023-01-16");
+    });
+
+    it("should handle month boundary", () => {
+      const week = "2023-01-30"; // Monday
+      const result = getNextWeekStr(week);
+
+      expect(result).toBe("2023-02-06");
+    });
+
+    it("should return valid ISO date string", () => {
+      const week = "2023-01-09";
+      const result = getNextWeekStr(week);
+
+      expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    });
+  });
+
+  describe("getWeekDateSpanStr", () => {
+    it("should format week dates in same month", () => {
+      const week = "2023-01-09"; // Monday
+      const result = getWeekDateSpanStr(week);
+
+      expect(result).toMatch(/Jan 09 - 13, 2023/);
+    });
+
+    it("should format week dates spanning month boundary", () => {
+      const week = "2023-01-30"; // Monday
+      const result = getWeekDateSpanStr(week);
+
+      expect(result).toMatch(/Jan 30 - Feb 03, 2023/);
+    });
+
+    it("should format week dates spanning year boundary", () => {
+      const week = "2022-12-26"; // Monday, Dec 26, 2022
+      const result = getWeekDateSpanStr(week);
+
+      // Should be Dec 26 - 30, 2022 (Monday to Friday)
+      expect(result).toMatch(/Dec 26 - 30, 2022/);
+    });
+
+    it("should format week dates that actually span year boundary", () => {
+      // Find a Monday that results in Friday being in the next year
+      // Dec 30, 2024 is a Monday, so Friday would be Jan 3, 2025
+      const week = "2024-12-30"; // Monday
+      const result = getWeekDateSpanStr(week);
+
+      expect(result).toMatch(/Dec 30, 2024 - Jan 03, 2025/);
+    });
+  });
+});

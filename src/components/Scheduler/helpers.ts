@@ -121,6 +121,60 @@ export function parseDateTime(dateStr: string) {
   return new Date(localDate.toString());
 }
 
+/**
+ * Converts a LocalDate to a JavaScript Date object, avoiding timezone issues
+ * by using year/month/day components directly.
+ */
+export function localDateToDate(localDate: LocalDate): Date {
+  return new Date(localDate.year(), localDate.monthValue() - 1, localDate.dayOfMonth());
+}
+
+/**
+ * Gets the start (Monday) and end (Friday) dates for a week.
+ * @param week - ISO date string for Monday (the start of the week)
+ * @returns Object with start (Monday) and end (Friday) as LocalDate
+ */
+export function getWeekDates(week: string): { start: LocalDate; end: LocalDate } {
+  const weekStart = LocalDate.parse(week);
+  const start = weekStart; // week is already Monday
+  const end = start.plusDays(4); // Friday
+  return { start, end };
+}
+
+/**
+ * Gets the previous week's Monday as an ISO date string.
+ * @param week - ISO date string for Monday (the start of the week)
+ * @returns ISO date string for the previous Monday
+ */
+export function getPreviousWeekStr(week: string): string {
+  const weekStart = LocalDate.parse(week);
+  const prevWeek = weekStart.minusDays(7);
+  return prevWeek.format(DateTimeFormatter.ISO_LOCAL_DATE);
+}
+
+/**
+ * Gets the next week's Monday as an ISO date string.
+ * @param week - ISO date string for Monday (the start of the week)
+ * @returns ISO date string for the next Monday
+ */
+export function getNextWeekStr(week: string): string {
+  const weekStart = LocalDate.parse(week);
+  const nextWeek = weekStart.plusDays(7);
+  return nextWeek.format(DateTimeFormatter.ISO_LOCAL_DATE);
+}
+
+/**
+ * Gets the formatted date span string for a week (e.g., "Jan 13 - 17, 2025").
+ * @param week - ISO date string for Monday (the start of the week)
+ * @returns Formatted date span string
+ */
+export function getWeekDateSpanStr(week: string): string {
+  const { start, end } = getWeekDates(week);
+  const startDate = localDateToDate(start);
+  const endDate = localDateToDate(end);
+  return formatDateSpan(startDate, endDate);
+}
+
 export function rowsToDays(rows: string[], startDate: LocalDate, endDate: LocalDate) {
   // Use js-joda to handle dates without timezone issues
   const startLocal = startDate; // LocalDate.parse(startDate.toISOString().split("T")[0]);
