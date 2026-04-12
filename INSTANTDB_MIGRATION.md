@@ -89,23 +89,39 @@ db.transact(tx.events[id].delete());
 | Deployment weight | Lightweight | Heavier (JVM + PostgreSQL) |
 | Docker | Not required | Docker Compose recommended |
 
-### Open Question: PGlite as a lighter alternative to PostgreSQL
+### PGlite as a lighter alternative to PostgreSQL
 
 [PGlite](https://github.com/electric-sql/pglite) is an embedded PostgreSQL engine
 compiled to WASM (~3MB gzipped). It runs in-process in Node.js/Bun without a separate
 PostgreSQL server, using the filesystem for persistence -- conceptually similar to how
 Triplit uses SQLite today.
 
-**However**: There is no confirmed support for using PGlite as InstantDB's storage
-backend. The InstantDB server expects a `DATABASE_URL` pointing to a real PostgreSQL
-instance. PGlite *does* expose a PostgreSQL-compatible interface, so it may be possible
-in theory, but this is **untested and unsupported** as of April 2026.
+The [`pglite-socket`](https://pglite.dev/docs/pglite-socket) package exposes PGlite
+over the PostgreSQL wire protocol on a TCP port. Any app that connects via a standard
+`DATABASE_URL` sees a normal PostgreSQL server. This is designed as a drop-in replacement:
 
-This is worth tracking. If PGlite compatibility is confirmed or added, it would make
-the self-hosted InstantDB deployment nearly as lightweight as the current Triplit setup.
+```bash
+# Wraps a server process and injects DATABASE_URL pointing at PGlite
+pglite-server --db=./data --run "node instantdb-server.js" --include-database-url
+```
+
+Standard PostgreSQL clients (`node-postgres`, `postgres.js`, etc.) connect normally.
+No application code changes needed -- just swap the connection string.
+
+**Concurrency caveat**: PGlite is fundamentally single-connection. As of v0.4, a
+multiplexer serializes concurrent connections, but it's not equivalent to real Postgres
+under heavy load. For a small app like this carpool scheduler, this is unlikely to
+matter. For high-concurrency workloads, it would be a bottleneck.
+
+**Status**: There is no confirmed testing of InstantDB's Clojure server running against
+PGlite via `pglite-socket`. It _should_ work since PGlite speaks the Postgres wire
+protocol, but edge cases in InstantDB's query patterns or connection handling could
+surface. Worth a quick spike to validate before committing to this path.
+
 Relevant issues to watch:
 - https://github.com/instantdb/instant/issues/1240 (self-hosting docs)
 - https://github.com/instantdb/instant/issues/34 (docker-compose setup)
+- https://pglite.dev/docs/pglite-socket (pglite-socket docs)
 
 ## What We Gain
 
